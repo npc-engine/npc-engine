@@ -8,7 +8,6 @@ import os
 import simpleaudio as sa
 from chatbot_server.speech_synthesis import TacotronSpeechSynthesizer
 import time
-import logging
 
 
 def test_reply_default():

@@ -3,7 +3,6 @@ import numpy as np
 import onnxruntime as rt
 import os
 from .text import text_to_sequence
-import logging
 
 
 def prepare_input_sequence(texts, cpu_run=False):
@@ -26,10 +25,13 @@ class TacotronSpeechSynthesizer:
             sess_options=sess_options,
         )
 
-    def create_voice(self, speaker_id: int, traits: List[str] = None):
+    def create_voice(self, speaker_id: str, traits: List[str] = None):
         pass
 
-    def tts(self, speaker_id: int, line: str) -> np.ndarray:
+    def delete_voice(self, speaker_id: str):
+        pass
+
+    def tts(self, speaker_id: str, line: str) -> np.ndarray:
         del speaker_id
 
         seq, lengths = prepare_input_sequence([line])

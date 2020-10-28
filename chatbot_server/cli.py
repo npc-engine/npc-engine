@@ -20,6 +20,7 @@ It can be used as a handy facility for running the task from a command line.
 """
 import logging
 import click
+import os
 import zmq
 from chatbot_server.version import __version__
 from chatbot_server.chatbot import Chatbot
@@ -73,27 +74,31 @@ def cli(info: Info, verbose: int):
 
 
 @cli.command()
-@click.option("--gpt-model", default="./gpt2.onnx")
-@click.option("--tacotron2", default="./gpt2.onnx")
-def run(gpt_model: str, tacotron2: str):
+@click.option("--models-path", default="./gpt2.onnx")
+def run(models_path: str):
     print("starting server")
     context = zmq.Context()
     socket = context.socket(zmq.REP)
     socket.bind("tcp://*:5555")
     # session = rt.InferenceSession(gpt_model, providers=["CUDAExecutionProvider"]) # Noqa:
-    chatbot = Chatbot(gpt_model, tacotron2)
+    gpt_model = os.path.join(models_path, "gpt")
+    tacotron = os.path.join(models_path, "tacotron")
+    roberta_semb = os.path.join(models_path, "roberta_semb")
+
+    chatbot = Chatbot(gpt_model, tacotron, roberta_semb)
 
     try:
         while True:
             #  Wait for next request from client
             message = socket.recv_json()
-            logging.warning("Received request: %s" % message)
+            logging.info("Received request: %s" % message)
 
             start = time.time()
             reply = chatbot.handle_message(message)
             end = time.time()
 
-            logging.warning("Handle message time: %d" % (end-start))
+            logging.info("Handle message time: %d" % (end-start))
+            logging.info("Message reply: %s" % (reply))
             #  Send reply back to client
             socket.send_json(reply)
     except Exception as e:

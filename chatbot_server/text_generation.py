@@ -23,40 +23,61 @@ class GPTTextGenerator:
         self.min_length = min_length
         self.repetition_penalty = repetition_penalty
 
-    def add_speaker(self, speaker_id: int, persona: str) -> int:
-        self.personas[speaker_id] = persona
+    def add_speaker(self, speaker_id: str, persona: str) -> int:
+        self.personas[speaker_id] = self.tokenizer.encode(
+            persona + self.tokenizer.eos_token
+        )
         self.histories[speaker_id] = []
 
-    def step_dialog(self, speaker_id: int, line: str, response=None):
-        self.histories[speaker_id].append(line)
+    def step_dialog(self, speaker_id: str, line: str, response=None):
+        self.histories[speaker_id].append(
+            self.tokenizer.encode(line + self.tokenizer.eos_token)
+        )
+        print(self.histories[speaker_id][-1])
         if response is None:
             response = self._generate_response(
                 self.personas[speaker_id], self.histories[speaker_id]
             )
-        self.histories[speaker_id].append(response)
-        return response
+            self.histories[speaker_id].append(response)
+            return self.tokenizer.decode(response, skip_special_tokens=True)
+        else:
+            self.histories[speaker_id].append(
+                self.tokenizer.encode(response + self.tokenizer.eos_token)
+            )
+            return response
 
-    def _generate_response(self, persona: str, history: List[str]):
-        history = [persona] + history
+    def _generate_response(self, persona: List[int], history: List[List[int]]):
         utterance = []
         token = None
-        for i in range(self.max_steps):
+        total = [persona] + history
+        total_token_types = np.concatenate([
+            np.zeros([1, len(step)], dtype=np.int64) if (i % 2) == 0 else
+            np.ones([1, len(step)], dtype=np.int64)
+            for i, step in enumerate(total)
+        ], axis=1)
 
-            total = history
-            total = "<|endoftext|>".join(total) + "<|endoftext|>"
-            ids = self.tokenizer.encode(total)
-            ids += utterance
-            ids = np.asarray(ids).astype(np.int64).reshape([1, -1])
-            o = self.model.run(None, {'input_ids': ids})
+        ids_list = []
+        for el in total:
+            ids_list += el
+        for i in range(self.max_steps):
+            ids = np.asarray(
+                ids_list + utterance
+            ).astype(np.int64).reshape([1, -1])
+            o = self.model.run(None, {
+                'input_ids': ids, 'token_type_ids': total_token_types
+            })
             logits = o[0][:, -1, :]
             if i < self.min_length:
                 logits[:, -1] = -float("inf")
             token = np.argmax(logits, axis=-1)[0]
+            utterance += [token]
             if token == self.tokenizer.eos_token_id:
                 break
-            utterance += [token]
-        return self.tokenizer.decode(utterance)
+            total_token_types = np.concatenate(
+                [total_token_types, np.zeros([1, 1], dtype=np.int64)], axis=1
+            )
+        return utterance
 
-    def delete_speaker(self, speaker_id: int):
+    def delete_speaker(self, speaker_id: str):
         del self.personas[speaker_id]
         del self.histories[speaker_id]
