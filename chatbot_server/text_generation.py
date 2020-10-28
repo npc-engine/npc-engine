@@ -81,3 +81,6 @@ class GPTTextGenerator:
     def delete_speaker(self, speaker_id: str):
         del self.personas[speaker_id]
         del self.histories[speaker_id]
+
+    def empty_history(self, speaker_id: str):
+        self.histories[speaker_id] = []

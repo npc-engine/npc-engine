@@ -22,6 +22,8 @@ class Chatbot:
             return self.script_line(message)
         elif message['cmd'] == "delete_speaker":
             return self.delete_speaker(message)
+        elif message['cmd'] == "end_dialog":
+            return self.end_dialog(message)
 
     def create_speaker(self, message: Dict[str, Any]):
         if not self._validate_msg_fields(message, ['speaker_id', 'persona']):
@@ -61,8 +63,8 @@ class Chatbot:
         if not self._validate_msg_fields(
             message, [
                 'speaker_id',
-                'cue_line',
-                'script_line',
+                'cue_lines',
+                'script_lines',
                 'parent',
                 'node_id',
                 'expires_after',
@@ -74,8 +76,8 @@ class Chatbot:
             message['speaker_id'],
             message['parent'],
             message['node_id'],
-            message['cue_line'],
-            message['script_line'],
+            message['cue_lines'],
+            message['script_lines'],
             message['expires_after'],
             message['threshold']
         )
@@ -89,6 +91,15 @@ class Chatbot:
         self.text_generator.delete_speaker(message['speaker_id'])
         self.speech_synthesizer.delete_voice(message['speaker_id'])
         self.dialog_script.delete_speaker(message['speaker_id'])
+        return {'status': 0}
+
+    def end_dialog(self, message: Dict[str, Any]):
+        if not self._validate_msg_fields(
+            message, ['speaker_id']
+        ):
+            return {'status': self.INCORRECT_MSG}
+        self.text_generator.empty_history(message['speaker_id'])
+        self.dialog_script.reset_state(message['speaker_id'])
         return {'status': 0}
 
     def _validate_msg_fields(
