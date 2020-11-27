@@ -3,7 +3,7 @@ from .text_generation import GPTTextGenerator
 from .speech_synthesis import TacotronSpeechSynthesizer
 from .dialog_script import DialogScriptSystem
 import logging
-
+import traceback
 
 class Chatbot:
 
@@ -26,7 +26,7 @@ class Chatbot:
             return self.end_dialog(message)
 
     def create_speaker(self, message: Dict[str, Any]):
-        if not self._validate_msg_fields(message, ['speaker_id', 'persona']):
+        if not self._validate_msg_fields(message, ['speaker_id', 'persona', 'temperature']):
             return {'status': self.INCORRECT_MSG}
 
         self.speech_synthesizer.create_voice(
@@ -34,7 +34,7 @@ class Chatbot:
             if 'traits' in message.keys() else None
         )
         self.text_generator.add_speaker(
-            message['speaker_id'], message['persona']
+            message['speaker_id'], message['persona'], message['temperature']
         )
         self.dialog_script.add_speaker(message['speaker_id'])
         return {'status': 0}
@@ -42,19 +42,27 @@ class Chatbot:
     def step_dialog(self, message: Dict[str, Any]):
         if not self._validate_msg_fields(message, ['speaker_id', 'line']):
             return {'status': self.INCORRECT_MSG}
-        reply = self.dialog_script.step_dialog(
-            message['speaker_id'], message['line']
-        )
-        if reply is not None:
-            reply, triggered_id = reply
-        else:
+        try:
+            reply = self.dialog_script.step_dialog(
+                message['speaker_id'], message['line']
+            )
+            if reply is not None:
+                reply, triggered_id = reply
+            else:
+                triggered_id = None
+        except Exception:
+            logging.error("Error in dialog scripting:")
+            traceback.print_exc()
             triggered_id = None
+            reply = None
+
         reply = self.text_generator.step_dialog(
             message['speaker_id'], message['line'], reply
         )
         audio_clip = self.speech_synthesizer.tts(message['speaker_id'], reply)
         return {
             'reply': audio_clip.reshape([-1]).tolist(),
+            'reply_text': reply,
             'script_triggered': triggered_id,
             'status': 0
         }
