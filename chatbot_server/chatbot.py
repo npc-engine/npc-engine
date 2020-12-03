@@ -26,12 +26,18 @@ class Chatbot:
             return self.end_dialog(message)
 
     def create_speaker(self, message: Dict[str, Any]):
-        if not self._validate_msg_fields(message, ['speaker_id', 'persona', 'temperature']):
+        if not self._validate_msg_fields(message, ['speaker_id', 'persona', 'temperature', 'traits']):
             return {'status': self.INCORRECT_MSG}
 
+        # Convert first trait to id
+        try:
+            voice_id = int(message['traits'][0])
+        except Exception:
+            logging.warn("Voice id unrecognized, setting 0")
+            voice_id = 0
+
         self.speech_synthesizer.create_voice(
-            message['speaker_id'], message['traits']
-            if 'traits' in message.keys() else None
+            message['speaker_id'], voice_id
         )
         self.text_generator.add_speaker(
             message['speaker_id'], message['persona'], message['temperature']

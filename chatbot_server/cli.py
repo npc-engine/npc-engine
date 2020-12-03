@@ -63,6 +63,11 @@ def cli(info: Info, verbose: int):
             if verbose in LOGGING_LEVELS
             else logging.DEBUG
         )
+        logging.getLogger().setLevel(
+            LOGGING_LEVELS[verbose]
+            if verbose in LOGGING_LEVELS
+            else logging.DEBUG
+        )
         click.echo(
             click.style(
                 f"Verbose logging is enabled. "
@@ -103,7 +108,6 @@ def run(models_path: str):
             socket.send_json(reply)
     except Exception as e:
         logging.error(e)
-        exit(1)
 
 
 @cli.command()
