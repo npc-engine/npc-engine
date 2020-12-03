@@ -26,12 +26,14 @@ class DialogScriptSystem:
         self.tokenizer = RobertaTokenizerFast.from_pretrained(model_path, fast=True)
         self.dialog_trees: Dict[str, Tree] = {}
         self.current_nodes: Dict[str, List[str]] = {}
+        self.visited_nodes: Dict[str, List[str]] = {}
         self.no_activation_cnts: Dict[str, List[int]] = {}
 
     def add_speaker(self, speaker_id: str):
         self.dialog_trees[speaker_id] = Tree()
         self.dialog_trees[speaker_id].create_node("Root node", "root")
         self.current_nodes[speaker_id] = ["root"]
+        self.visited_nodes[speaker_id] = []
         self.no_activation_cnts[speaker_id] = [0]
 
     def reset_state(self, speaker_id: str):
@@ -40,15 +42,32 @@ class DialogScriptSystem:
 
     def step_dialog(self, speaker_id: str, line: str) -> Union[None, Tuple[str, str]]:
         reply = self._get_reply(speaker_id, line)
+        self._update_inactivity_(speaker_id, reply)
+        self._filter_nodes_(speaker_id)
+        return reply
+
+    def _update_inactivity_(self, speaker_id, reply):
         if reply is None:
-            self.no_activation_cnts[speaker_id] += 1
+            self.no_activation_cnts[speaker_id] = [el + 1 for el in self.no_activation_cnts[speaker_id]]
+
+    def _filter_nodes_(self, speaker_id):
         for node_arr_id, node_id in enumerate(self.current_nodes[speaker_id]):
             node = self.dialog_trees[speaker_id].get_node(node_id)
-            if (node_id != 'root' and self.no_activation_cnts[speaker_id][node_arr_id] >= node.data.expires_after):
-                del self.current_nodes[speaker_id][node_arr_id]
-            if node.is_leaf() and not self.dialog_trees[speaker_id].contains(node.bpointer):
-                del self.current_nodes[speaker_id][node_arr_id]
-        return reply
+            if node_id != 'root':
+                if self.no_activation_cnts[speaker_id][node_arr_id] >= node.data.expires_after:
+                    del self.current_nodes[speaker_id][node_arr_id]
+                    del self.no_activation_cnts[speaker_id][node_arr_id]
+                elif node.is_leaf():
+                    del self.current_nodes[speaker_id][node_arr_id]
+                    del self.no_activation_cnts[speaker_id][node_arr_id]
+                if node.bpointer != 'root' and all([
+                    child in self.visited_nodes[speaker_id]
+                    for child in
+                    self.dialog_trees[speaker_id].get_node(node.bpointer).fpointer
+                ]):  # If all children of the parent are visited, drop the parent
+                    parent_id = self.current_nodes[speaker_id].index(node.bpointer)
+                    del self.current_nodes[speaker_id][parent_id]
+                    del self.no_activation_cnts[speaker_id][parent_id]
 
     def _get_reply(self, speaker_id: str, line: str) -> Union[None, Tuple[str, str]]:
         child_nodes = [
@@ -76,9 +95,9 @@ class DialogScriptSystem:
         if reply_id is None:
             return None
         else:
-            self.current_nodes[speaker_id] += [
-                child_nodes[reply_id].identifier
-            ]
+            self.current_nodes[speaker_id] += [child_nodes[reply_id].identifier]
+            self.visited_nodes[speaker_id] += [child_nodes[reply_id].identifier]
+            self.no_activation_cnts[speaker_id] += [0]
             return (
                 random.choice(child_nodes[reply_id].data.response),
                 child_nodes[reply_id].identifier
