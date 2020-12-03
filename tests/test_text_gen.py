@@ -27,4 +27,5 @@ def test_reply_default():
     answer = chatbot_model.step_dialog(0, "Hello my niggah")
     end = time.time()
     assert answer is not None
+    print("Answer: {}".format(answer))
     print("done in {} seconds".format(end-start))

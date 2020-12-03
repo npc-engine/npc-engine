@@ -6,35 +6,59 @@ Speech synthesis test.
 """
 import os
 import simpleaudio as sa
-from chatbot_server.text_generation import GPTTextGenerator
-from chatbot_server.speech_synthesis import TacotronSpeechSynthesizer
+from chatbot_server.chatbot import Chatbot
 import time
 import logging
 
 
-def test_total():
+def test_run():
     """Check if chatbot works
     """
-    chatbot_model = GPTTextGenerator(
-        os.path.join(os.path.dirname(__file__), '..\\chatbot_server\\resources\\models\\gpt')
-    )
-    chatbot_model.add_speaker(0, """
-        I am old gray haired man
-        I am a regular person
-        I kill people for money
-        I like chocolate cookies
-    """)
+    models_path = os.path.join(os.path.dirname(__file__), '..\\chatbot_server\\resources\\models')
+    gpt_model = os.path.join(models_path, "gpt")
+    tacotron = os.path.join(models_path, "tacotron")
+    roberta_semb = os.path.join(models_path, "roberta_semb")
 
-    tts_module = TacotronSpeechSynthesizer(
-        os.path.join(os.path.dirname(__file__), '..\\chatbot_server\\resources\\models')
-    )
-    tts_module.create_voice(speaker_id=0)
+    chatbot = Chatbot(gpt_model, tacotron, roberta_semb)
 
+    create_speaker_msg = {
+        'cmd': "create_speaker",
+        'speaker_id': "test_speaker",
+        'persona': "Test persona.", 
+        'temperature': 0.85, 
+        'traits': ['1']
+    }
+
+    script_line_msg = {        
+        'cmd': "script_line",
+        'speaker_id': "test_speaker",
+        'cue_lines': ["Test cue"],
+        'script_lines': ["Test response"],
+        'parent': "root",
+        'node_id': "test_node",
+        'expires_after': 5,
+        'threshold': 0.6
+    }
+
+    step_dialog_msg = {
+        'cmd': "step_dialog",
+        'speaker_id': "test_speaker", 
+        'line': "Hello world"
+    }
     start = time.time()
-    answer, trig = chatbot_model.step_dialog(0, "Hello my niggah")
-    audio = tts_module.tts(0, answer)
+
+    resp = chatbot.handle_message(create_speaker_msg)
+    assert resp['status'] == 0 
+    
+    resp = chatbot.handle_message(script_line_msg)
+    assert resp['status'] == 0 
+    
+    resp = chatbot.handle_message(step_dialog_msg)
+    assert resp['status'] == 0
+    assert resp['reply'] is not None
+    assert resp['reply_text'] is not None
+    assert resp['script_triggered'] is None
+    
     end = time.time()
-    sa.play_buffer(audio, 1, 4, 22050)
-    time.sleep(4)
-    assert answer is not None
+
     print("done in {} seconds".format(end-start))
