@@ -1,5 +1,6 @@
 from typing import List
 import numpy as np
+import scipy.special as scp
 import onnxruntime as rt
 from chatbot_server.tokenization.tokenization_gpt2 import GPT2TokenizerFast
 import os
@@ -22,12 +23,14 @@ class GPTTextGenerator:
         self.max_steps = max_steps
         self.min_length = min_length
         self.repetition_penalty = repetition_penalty
+        self.speaker_temperatures = {}
 
-    def add_speaker(self, speaker_id: str, persona: str) -> int:
+    def add_speaker(self, speaker_id: str, persona: str, temperature: float = 0.8) -> int:
         self.personas[speaker_id] = self.tokenizer.encode(
             persona + self.tokenizer.eos_token
         )
         self.histories[speaker_id] = []
+        self.speaker_temperatures[speaker_id] = temperature
 
     def step_dialog(self, speaker_id: str, line: str, response=None):
         self.histories[speaker_id].append(
@@ -36,7 +39,7 @@ class GPTTextGenerator:
         print(self.histories[speaker_id][-1])
         if response is None:
             response = self._generate_response(
-                self.personas[speaker_id], self.histories[speaker_id]
+                self.personas[speaker_id], self.histories[speaker_id], self.speaker_temperatures[speaker_id]
             )
             self.histories[speaker_id].append(response)
             return self.tokenizer.decode(response, skip_special_tokens=True)
@@ -46,7 +49,7 @@ class GPTTextGenerator:
             )
             return response
 
-    def _generate_response(self, persona: List[int], history: List[List[int]]):
+    def _generate_response(self, persona: List[int], history: List[List[int]], temperature: float):
         utterance = []
         token = None
         total = [persona] + history
@@ -68,8 +71,10 @@ class GPTTextGenerator:
             })
             logits = o[0][:, -1, :]
             if i < self.min_length:
-                logits[:, -1] = -float("inf")
-            token = np.argmax(logits, axis=-1)[0]
+                logits = logits[:, :-1]
+            probs = scp.softmax(logits[0, :] / temperature, axis=0)
+            token = np.random.choice(np.arange(probs.shape[0]), p=probs)
+            # token = np.argmax(logits, axis=-1)[0]
             utterance += [token]
             if token == self.tokenizer.eos_token_id:
                 break
