@@ -44,6 +44,7 @@ class DialogScriptSystem:
         reply = self._get_reply(speaker_id, line)
         self._update_inactivity_(speaker_id, reply)
         self._filter_nodes_(speaker_id)
+        print("Script reply ", reply)
         return reply
 
     def _update_inactivity_(self, speaker_id, reply):
@@ -93,11 +94,13 @@ class DialogScriptSystem:
                 reply_id = idx
                 break
         if reply_id is None:
+            print("script return None")
             return None
         else:
             self.current_nodes[speaker_id] += [child_nodes[reply_id].identifier]
             self.visited_nodes[speaker_id] += [child_nodes[reply_id].identifier]
             self.no_activation_cnts[speaker_id] += [0]
+            print("script return smth")
             return (
                 random.choice(child_nodes[reply_id].data.response),
                 child_nodes[reply_id].identifier
@@ -142,6 +145,7 @@ class DialogScriptSystem:
         ids = np.asarray(
             self.tokenizer.encode(line)
         ).reshape([1, -1]).astype(np.int64)
+        print("String:", line, " IDs:", ids)
         attention_mask = np.ones_like(ids)
         outp = self.model.run(None, {
             'input_ids': ids, 'attention_mask': attention_mask

@@ -4,8 +4,7 @@ import re
 from . import cleaners
 from .symbols import symbols
 from .symbols import _punctuation as punctuation_symbols
-from .utils import get_resource_path
-
+from .data import heteronyms
 
 # Mappings from symbol to numeric ID and vice versa:
 _symbol_to_id = {s: i for i, s in enumerate(symbols)}
@@ -121,4 +120,5 @@ def files_to_list(filename):
     files = [f.rstrip() for f in files]
     return files
 
-HETERONYMS = set(files_to_list(get_resource_path('heteronyms')))
+
+HETERONYMS = heteronyms
