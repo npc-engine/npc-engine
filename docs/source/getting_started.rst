@@ -10,11 +10,11 @@ Getting Started
 Installing the Library
 ======================
 
-You can use pip to install `chatbot_server`.
+You can use pip to install `inference_engine`.
 
 .. code-block:: sh
 
-    pip install chatbot_server
+    pip install inference_engine
 
 
 

@@ -1,8 +1,8 @@
-.. chatbot_server documentation master file
+.. inference_engine documentation master file
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-chatbot_server
+inference_engine
 ==============
 
 ZMQ server for providing onnx runtime predictions for text generation and speech synthesis

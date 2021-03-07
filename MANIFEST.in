@@ -1,1 +1,1 @@
-include chatbot_server/text/*
+include inference_engine/text/*

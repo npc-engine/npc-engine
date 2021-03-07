@@ -6,7 +6,7 @@
 API Documentation
 =================
 
-.. automodule:: chatbot_server
+.. automodule:: inference_engine
     :members:
     :undoc-members:
     :show-inheritance:
