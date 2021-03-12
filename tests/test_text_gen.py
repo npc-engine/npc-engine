@@ -17,7 +17,9 @@ def test_reply_default():
     chatbot_model = BartChatbot(
         os.path.join(
             os.path.dirname(__file__), "..\\inference_engine\\resources\\models\\bart"
-        )
+        ),
+        min_length=10,
+        max_steps=20,
     )
     start = time.time()
     answer = chatbot_model.generate_reply(
@@ -36,9 +38,9 @@ def test_reply_default():
             My wife is great at baking but she is lousy at washing my clothes.  
             They keep shrinking!
         """.strip(),
-        history=[],
+        history=["<speaker_other>Hello friend!"],
         temperature=0.8,
-        topk=75,
+        topk=None,
     )
     end = time.time()
     assert answer is not None

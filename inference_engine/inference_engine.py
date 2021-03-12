@@ -2,8 +2,6 @@ from typing import Dict, List, Any
 from .text_generation import BartChatbot
 from .speech_synthesis import TTS
 from .semantic_tests import SemanticTests
-import logging
-import traceback
 
 
 class InferenceEngine:
@@ -31,7 +29,7 @@ class InferenceEngine:
             "audio": self.tts.tts(message["voice_id"], message["line"]),
         }
 
-    def add_test(self, message: Dict[str, Any]):
+    def handle_add_test(self, message: Dict[str, Any]):
         if not self._validate_msg_fields(message, ["test_id", "lines"]):
             return {"status": self.INCORRECT_MSG}
         self.semantic_tests.add_test(message["test_id"], message["lines"])

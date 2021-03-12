@@ -20,10 +20,14 @@ def test_custom_test():
             "..\\inference_engine\\resources\\models\\roberta_semb",
         )
     )
+    start = time.time()
     test_result = semantic_tests.test_custom(
-        "Can I have a beer", ["Can I have a beer", "Give me a beer"],
+        "Can I have a beer",
+        ["Can I have a beer", "Give me a beer"],
+        method=semantic_tests.OR_METHOD,
     )
-    assert test_result > 0.5
+    print("custom test time elapsed", time.time() - start)
+    assert test_result == 1
 
 
 def test_custom_():
@@ -38,7 +42,10 @@ def test_custom_():
     semantic_tests.add_test(
         "beer", ["Can I have a beer", "Give me a beer"],
     )
+    start = time.time()
     test_result = semantic_tests.test(
-        "I need a beer", ["beer"], semantic_tests.OR_METHOD
+        "Can I have a beer", ["beer"], semantic_tests.OR_METHOD
     )
-    assert test_result > 0.5
+    print("predefined test time elapsed", time.time() - start)
+    print(test_result)
+    assert test_result["beer"] == 1

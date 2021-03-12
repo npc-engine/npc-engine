@@ -26,9 +26,7 @@ class SemanticTests:
         self.tests = {}
 
     def add_test(self, test_id, test_strings):
-        self.tests[test_id] = [
-            self._compute_embedding(test_string) for test_string in test_strings
-        ]
+        self.tests[test_id] = self._compute_embedding_batch(test_strings)
 
     def test(self, line, tests, method: str):
         line_embedding = self._compute_embedding(line)
@@ -54,9 +52,10 @@ class SemanticTests:
     def _test(self, line_embedding, query_embeddings, method):
         if method == self.AND_METHOD:
             mean_emb = query_embeddings.mean(axis=0)
-            return cosine(line_embedding, mean_emb)
+            return 1 - cosine(line_embedding, mean_emb)
         elif method == self.OR_METHOD:
-            return cosine(line_embedding, query_embeddings).max()
+            scores = [cosine(line_embedding, q) for q in query_embeddings]
+            return 1 - min(scores)
         return -1
 
     def _compute_embedding(self, line: str) -> np.ndarray:
@@ -65,13 +64,20 @@ class SemanticTests:
         outp = self.model.run(
             None, {"input_ids": ids, "attention_mask": attention_mask}
         )
-        return outp[1]
+        return self._mean_pooling(outp, attention_mask)
 
     def _compute_embedding_batch(self, lines: List[str]) -> np.ndarray:
-        tokenized = self.tokenizer(lines)
+        tokenized = self.tokenizer(lines, padding=True, return_attention_mask=True)
         ids = np.asarray(tokenized.input_ids).astype(np.int64)
         attention_mask = np.asarray(tokenized.attention_mask).astype(np.int64)
         outp = self.model.run(
             None, {"input_ids": ids, "attention_mask": attention_mask}
         )
-        return outp[1]
+        return self._mean_pooling(outp, attention_mask)
+
+    def _mean_pooling(self, model_output, attention_mask):
+        token_embeddings = model_output[0]
+        attention_mask = np.expand_dims(attention_mask, -1)
+        sum_embeddings = np.sum(token_embeddings * attention_mask, 1)
+        sum_mask = np.clip(attention_mask.sum(1), a_min=1e-9, a_max=None)
+        return sum_embeddings / sum_mask

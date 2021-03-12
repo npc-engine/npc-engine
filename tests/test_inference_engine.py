@@ -18,8 +18,10 @@ def test_run():
         os.path.dirname(__file__), "..\\inference_engine\\resources\\models"
     )
     bart_model = os.path.join(models_path, "bart")
-    tacotron = os.path.join(models_path, "tacotron")
+    tacotron = os.path.join(models_path, "flowtron_squeezewave")
     roberta_semb = os.path.join(models_path, "roberta_semb")
+
+    inference_engine = InferenceEngine(bart_model, tacotron, roberta_semb)
 
     tts_msg = {"cmd": "tts", "voice_id": 0, "line": "Hello this is a test"}
 
@@ -60,30 +62,30 @@ def test_run():
             My wife is great at baking but she is lousy at washing my clothes.  
             They keep shrinking!
         """.strip(),
-        history: [],
-        temperature: 0.8,
-        topk: 75,
+        "history": [],
+        "temperature": 0.8,
+        "topk": 75,
     }
     start = time.time()
 
-    resp = chatbot.handle_message(tts_msg)
+    resp = inference_engine.handle_message(tts_msg)
     assert resp["status"] == 0
     assert len(resp["audio"]) > 0
 
-    resp = chatbot.handle_message(semantic_test_add)
+    resp = inference_engine.handle_message(semantic_test_add)
     assert resp["status"] == 0
 
-    resp = chatbot.handle_message(semantic_test)
+    resp = inference_engine.handle_message(semantic_test)
     assert resp["status"] == 0
 
-    resp_custom = chatbot.handle_message(semantic_test_custom)
+    resp_custom = inference_engine.handle_message(semantic_test_custom)
     assert resp["status"] == 0
     assert abs(resp["results"]["name test"] - resp_custom["results"]) <= 1e-4
 
-    resp = chatbot.handle_message(chatbot_message)
+    resp = inference_engine.handle_message(chatbot_message)
     assert resp["status"] == 0
     assert resp["reply"] is not None
-
     end = time.time()
+    print("reply", resp["reply"])
 
     print("done in {} seconds".format(end - start))
