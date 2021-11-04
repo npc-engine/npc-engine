@@ -2,18 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-This is the entry point for the command-line interface (CLI) application.
-
-It can be used as a handy facility for running the task from a command line.
-
-.. note::
-
-    To learn more about Click visit the
-    `project website <http://click.pocoo.org/5/>`_.  There is also a very
-    helpful `tutorial video <https://www.youtube.com/watch?v=kNke39OZ2k0>`_.
-
-    To learn more about running Luigi, visit the Luigi project's
-    `Read-The-Docs <http://luigi.readthedocs.io/en/stable/>`_ page.
+This is the entry point for the command-line interface that starts npc-engine server.
 
 .. currentmodule:: inference_engine.cli
 .. moduleauthor:: evil.unicorn1 <evil.unicorn1@gmail.com>
@@ -49,8 +38,6 @@ class Info(object):
 pass_info = click.make_pass_decorator(Info, ensure=True)
 
 
-# Change the options to below to suit the actual options for your task (or
-# tasks).
 @click.group()
 @click.option("--verbose", "-v", count=True, help="Enable verbose output.")
 @pass_info

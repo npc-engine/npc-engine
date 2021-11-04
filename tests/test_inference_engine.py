@@ -23,7 +23,8 @@ def test_run():
 
     inference_engine = InferenceEngine(bart_model, tacotron, roberta_semb)
 
-    tts_msg = {"cmd": "tts", "voice_id": 0, "line": "Hello this is a test"}
+    tts_msg = {"cmd": "start_tts", "voice_id": 0, "line": "Hello this is a test"}
+    next_tts_msg = {"cmd": "tts_next"}
 
     semantic_test_add = {
         "cmd": "add_test",
@@ -68,22 +69,27 @@ def test_run():
     }
     start = time.time()
 
+    resp = inference_engine.handle_message(next_tts_msg)
+    assert resp["status"] != "OK"
+
     resp = inference_engine.handle_message(tts_msg)
-    assert resp["status"] == 0
+    assert resp["status"] == "OK"
+
+    resp = inference_engine.handle_message(next_tts_msg)
     assert len(resp["audio"]) > 0
 
     resp = inference_engine.handle_message(semantic_test_add)
-    assert resp["status"] == 0
+    assert resp["status"] == "OK"
 
     resp = inference_engine.handle_message(semantic_test)
-    assert resp["status"] == 0
+    assert resp["status"] == "OK"
 
     resp_custom = inference_engine.handle_message(semantic_test_custom)
-    assert resp["status"] == 0
+    assert resp["status"] == "OK"
     assert abs(resp["results"]["name test"] - resp_custom["results"]) <= 1e-4
 
     resp = inference_engine.handle_message(chatbot_message)
-    assert resp["status"] == 0
+    assert resp["status"] == "OK"
     assert resp["reply"] is not None
     end = time.time()
     print("reply", resp["reply"])

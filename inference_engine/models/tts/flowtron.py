@@ -61,13 +61,28 @@ class FlowtronTTS:
         )
 
         residual = self.run_backward_flow(residual, enc_outps_ortvalue)
-        residual = self.run_forward_flow(residual, enc_outps_ortvalue)
-
-        residual = np.transpose(residual, axes=(1, 2, 0))
-        audio = self.vocoder.run(None, {"mels": residual})
-        audio = audio[0].reshape(-1)[1000:]
-        audio = audio / np.abs(audio).max()
-        return audio
+        residual = self.run_forward_flow(residual, enc_outps_ortvalue, num_split=20)
+        last_audio = None
+        for residual in residual:
+            residual = np.transpose(residual, axes=(1, 2, 0))
+            audio = self.vocoder.run(None, {"mels": residual})[0]
+            audio = np.where(
+                (audio > (audio.mean() - audio.std()))
+                | (audio < (audio.mean() + audio.std())),
+                audio,
+                audio.mean(),
+            )
+            tmp = audio
+            if last_audio is not None:
+                cumsum_vec = np.cumsum(
+                    np.concatenate([last_audio, audio], axis=1), axis=1
+                )
+                ma_vec = (cumsum_vec[:, 5:] - cumsum_vec[:, :-5]) / 5
+                audio = ma_vec[:, last_audio.shape[1] :]
+            last_audio = tmp
+            audio = audio.reshape(-1)
+            # audio = audio / np.abs(audio).max()
+            yield audio
 
     def get_text(self, text: str):
         text = _clean_text(text, ["english_cleaners"])
@@ -165,7 +180,7 @@ class FlowtronTTS:
 
         return residual
 
-    def run_forward_flow(self, residual, enc_outps_ortvalue):
+    def run_forward_flow(self, residual, enc_outps_ortvalue, num_split):
 
         residual_o, hidden_att, hidden_lstm = self.init_states(residual)
 
@@ -200,7 +215,7 @@ class FlowtronTTS:
         )
 
         residual_outp = [residual_ortvalue]
-
+        last_output = residual_ortvalue
         for i in range(residual.shape[0]):
 
             io_binding = self.forward_flow.io_binding()
@@ -208,7 +223,7 @@ class FlowtronTTS:
             io_binding.bind_cpu_input("residual", residual[i])
 
             io_binding.bind_ortvalue_input("text", enc_outps_ortvalue)
-            io_binding.bind_ortvalue_input("last_output", residual_outp[-1])
+            io_binding.bind_ortvalue_input("last_output", last_output)
 
             io_binding.bind_ortvalue_input("hidden_att", hidden_att_ortvalue)
             io_binding.bind_ortvalue_input("hidden_att_c", hidden_att_c_ortvalue)
@@ -227,6 +242,7 @@ class FlowtronTTS:
             outp = io_binding.get_outputs()
             gates = outp[1].numpy()
             residual_outp.append(outp[0])
+            last_output = outp[0]
             if (gates > self.gate_threshold).any():
                 break
 
@@ -247,12 +263,20 @@ class FlowtronTTS:
                 hidden_lstm_o_c_ortvalue,
                 hidden_lstm_c_ortvalue,
             )
+            if len(residual_outp) % num_split == 0 and i != 0:
 
-        residual = np.concatenate(
-            [residual_ort.numpy() for residual_ort in residual_outp], axis=0
-        )
+                residual_o = np.concatenate(
+                    [residual_ort.numpy() for residual_ort in residual_outp], axis=0
+                )
 
-        return residual
+                yield residual_o
+                residual_outp = []
+        if len(residual_outp) > 0:
+            residual_o = np.concatenate(
+                [residual_ort.numpy() for residual_ort in residual_outp], axis=0
+            )
+
+            yield residual_o
 
     def init_states(self, residual):
         last_outputs = np.zeros(
