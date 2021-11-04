@@ -4,7 +4,6 @@ import scipy.special as scp
 import onnxruntime as rt
 from inference_engine.tokenization.tokenization_roberta import RobertaTokenizerFast
 import os
-import time
 
 
 class BartChatbot:

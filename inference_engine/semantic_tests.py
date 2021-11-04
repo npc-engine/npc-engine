@@ -1,4 +1,4 @@
-from typing import Union, Dict, Tuple, List
+from typing import List
 from collections import namedtuple
 import numpy as np
 import onnxruntime as rt
@@ -37,7 +37,7 @@ class SemanticTests:
                     line_embedding, self.tests[test_id], method
                 )
             except Exception as e:
-                logging.error("{} test failed to compute {}".format(test_id, e))
+                logging.error("{} test failed to compute {}".format(test_id, str(e)))
         return results
 
     def test_custom(self, line, query_lines, method: str):
