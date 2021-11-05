@@ -1,12 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-This file is used to create the package we'll publish to PyPI.
-
-.. currentmodule:: setup.py
-.. moduleauthor:: evil.unicorn1 <evil.unicorn1@gmail.com>
-"""
 
 import importlib.util
 import os
@@ -51,9 +45,9 @@ setup(
     [console_scripts]
     inference_engine=inference_engine.cli:cli
     """,
-    python_requires=">=0.0.1",
-    license=None,  # noqa
-    author="evil.unicorn1",
+    python_requires=">=3.6.0",
+    license="MIT",  # noqa
+    author="eublefar",
     author_email="evil.unicorn1@gmail.com",
     # Use the URL to the github repo.
     url="https://github.com/eublefar/inference_engine",

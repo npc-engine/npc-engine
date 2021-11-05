@@ -6,7 +6,7 @@ Speech synthesis test.
 """
 import os
 import simpleaudio as sa
-from inference_engine.text_generation import BartChatbot
+from inference_engine.models import Model
 import time
 import logging
 
@@ -14,12 +14,10 @@ import logging
 def test_reply_default():
     """Check if chatbot works
     """
-    chatbot_model = BartChatbot(
+    chatbot_model = Model.load(
         os.path.join(
             os.path.dirname(__file__), "..\\inference_engine\\resources\\models\\bart"
-        ),
-        min_length=10,
-        max_steps=20,
+        )
     )
     start = time.time()
     answer = chatbot_model.generate_reply(

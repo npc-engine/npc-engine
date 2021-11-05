@@ -1,4 +1,5 @@
 from os import path
+from typing import List
 import numpy as np
 import onnxruntime
 from inference_engine.text import (
@@ -7,12 +8,22 @@ from inference_engine.text import (
 )
 import re
 import logging
+from inference_engine.models.tts import TextToSpeech
+import yaml
 
 
-class FlowtronTTS:
-    def __init__(
-        self, model_path, max_frames=500, gate_threshold=0.5,
-    ):
+class FlowtronTTS(TextToSpeech):
+    """Implements Flowtron architecture inference.
+
+    Onnx export script can be found in this fork https://github.com/npc-engine/flowtron.
+
+    Paper:
+    [arXiv:2005.05957](https://arxiv.org/abs/2005.05957)
+    Code:
+    https://github.com/NVIDIA/flowtron
+    """
+
+    def __init__(self, model_path, max_frames=400, gate_threshold=0.5, *args, **kwargs):
         sess_options = onnxruntime.SessionOptions()
         sess_options.graph_optimization_level = (
             onnxruntime.GraphOptimizationLevel.ORT_DISABLE_ALL
@@ -42,10 +53,15 @@ class FlowtronTTS:
             providers=[provider],
             sess_options=sess_options,
         )
+        self.speaker_ids = [str(i) for i in range(127)]
+        self.speaker_ids_map = {idx: i for i, idx in enumerate(self.speaker_ids)}
 
-    def run(self, speaker_id, text):
+    def get_speaker_ids(self) -> List[str]:
+        return self.speaker_ids
+
+    def run(self, speaker_id, text, n_chunks):
         text = self.get_text(text)
-
+        speaker_id = np.asarray([[self.speaker_ids_map[speaker_id]]], dtype=np.int64)
         enc_outps_ortvalue = onnxruntime.OrtValue.ortvalue_from_shape_and_type(
             [text.shape[1], 1, 640], np.float32, "cpu", 0
         )
@@ -61,7 +77,9 @@ class FlowtronTTS:
         )
 
         residual = self.run_backward_flow(residual, enc_outps_ortvalue)
-        residual = self.run_forward_flow(residual, enc_outps_ortvalue, num_split=20)
+        residual = self.run_forward_flow(
+            residual, enc_outps_ortvalue, num_split=self.max_frames // n_chunks
+        )
         last_audio = None
         for residual in residual:
             residual = np.transpose(residual, axes=(1, 2, 0))
