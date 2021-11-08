@@ -66,6 +66,11 @@ def cli(info: Info, verbose: int):
 @cli.command()
 @click.option("--models-path", default="./Assets/StreamingAssets")
 def run(models_path: str):
+    """Run a npc-engine server.
+
+    Args:
+        models_path: A path to scan for models.
+    """
     print("starting server")
     context = zmq.Context()
     socket = context.socket(zmq.REP)

@@ -1,5 +1,5 @@
+"""Main module that implements npc engine message handling and model management."""
 from typing import Dict, List, Any
-from .semantic_tests import SemanticTests
 from inference_engine import models
 
 
@@ -8,7 +8,7 @@ class InferenceEngine:
         print(f"models {models.Model.models}")
         self.chatbot = models.Model.load(chatbot_path)
         self.tts = models.Model.load(tts_path)
-        self.semantic_tests = SemanticTests(roberta_path)
+        self.semantic_tests = models.Model.load(roberta_path)
         self._tts_generator = None
         self.STATUS_OK = "OK"
         self.INCORRECT_MSG = "Incorrect message received"

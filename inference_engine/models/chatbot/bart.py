@@ -1,22 +1,33 @@
+from typing import Dict
 import numpy as np
 import scipy.special as scp
 import onnxruntime as rt
-from inference_engine.models.chatbot.chatbot_base import Chatbot
-from inference_engine.tokenization.tokenization_roberta import RobertaTokenizerFast
+from inference_engine.models.chatbot.chatbot_base import ChatbotAPI
+from tokenizers import Tokenizer
 import os
+import json
 
 
-class BartChatbot(Chatbot):
+class BartChatbot(ChatbotAPI):
     def __init__(
         self,
         model_path,
         max_steps=100,
         min_length=2,
         repetition_penalty=1,
+        bos_token_id=0,
+        eos_token_id=2,
+        pad_token_id=1,
+        sep_token_id=None,
         *args,
         **kwargs
     ):
         super().__init__(*args, **kwargs)
+        self.bos_token_id = bos_token_id
+        self.eos_token_id = eos_token_id
+        self.sep_token_id = eos_token_id if sep_token_id is None else sep_token_id
+        self.pad_token_id = pad_token_id
+
         sess_options = rt.SessionOptions()
         sess_options.graph_optimization_level = rt.GraphOptimizationLevel.ORT_ENABLE_ALL
         self.encoder_model = rt.InferenceSession(
@@ -29,19 +40,51 @@ class BartChatbot(Chatbot):
             providers=[rt.get_available_providers()[0]],
             sess_options=sess_options,
         )
-        self.tokenizer = RobertaTokenizerFast.from_pretrained(model_path, fast=True)
+        self.tokenizer = Tokenizer.from_file(os.path.join(model_path, "tokenizer.json"))
+        added_tokens_path = os.path.join(model_path, "added_tokens.txt")
+        if os.path.exists(added_tokens_path):
+            with open(added_tokens_path) as f:
+                added_tokens = json.load(f)
+            added_tokens = [
+                key for key, _ in sorted(list(added_tokens.items()), key=lambda x: x[1])
+            ]
+        self.tokenizer.add_tokens(added_tokens)
+        self.special_tokens = {
+            "bos_token": self.tokenizer.decode(
+                [bos_token_id], skip_special_tokens=False
+            ),
+            "eos_token": self.tokenizer.decode(
+                [eos_token_id], skip_special_tokens=False
+            ),
+            "sep_token": self.tokenizer.decode(
+                [self.sep_token_id], skip_special_tokens=False
+            ),
+            "pad_token": self.tokenizer.decode(
+                [pad_token_id], skip_special_tokens=False
+            ),
+        }
+
         self.max_steps = max_steps
         self.min_length = min_length
         self.repetition_penalty = repetition_penalty
 
     def run(self, prompt: str, temperature: float, topk: int = None):
-        tokens = self.tokenizer(prompt)
-        total = np.asarray(tokens["input_ids"], dtype=np.int64).reshape([1, -1])
+        """Implementation of text generation via BART architecture.
+
+        Args:
+            prompt: Fromatted prompt.
+            temperature: Temperature parameter for sampling.
+                Controls how random model output is: more temperature - more randomness
+            topk: If not none selects top n of predictions to sample from during generation.
+
+        Returns:
+            Generated text
+        """
+        tokens = self.tokenizer.encode(prompt)
+        total = np.asarray(tokens.ids, dtype=np.int64).reshape([1, -1])
         total_enc = self.encoder_model.run(None, {"input_ids": total})[0]
 
-        utterance = np.asarray([self.tokenizer.eos_token_id], dtype=np.int64).reshape(
-            [1, 1]
-        )
+        utterance = np.asarray([self.eos_token_id], dtype=np.int64).reshape([1, 1])
 
         for i in range(self.max_steps):
             o = self.decoder_model.run(
@@ -51,7 +94,7 @@ class BartChatbot(Chatbot):
             logits = o[0][0, -1, :]
 
             if i < self.min_length:
-                logits[self.tokenizer.eos_token_id] = float("-inf")
+                logits[self.eos_token_id] = float("-inf")
             if topk is not None:
                 ind = np.argpartition(logits, -topk)[-topk:]
                 new_logits = np.zeros(logits.shape)
@@ -63,8 +106,10 @@ class BartChatbot(Chatbot):
             token = np.random.choice(np.arange(probs.shape[0]), p=probs)
             token = token.reshape([1, 1])
             utterance = np.concatenate([utterance, token], axis=1)
-            if token[0, 0] == self.tokenizer.eos_token_id:
+            if token[0, 0] == self.eos_token_id:
                 break
-        return self.tokenizer.batch_decode(
-            utterance.tolist(), skip_special_tokens=True
-        )[0]
+        return self.tokenizer.decode(utterance[0, :].tolist(), skip_special_tokens=True)
+
+    def get_special_tokens(self) -> Dict[str, str]:
+        """Retrun dict of special tokens to be renderable from template."""
+        return self.special_tokens

@@ -12,7 +12,7 @@ Example:
     ```
 """
 
-from .tts_base import TextToSpeech  # noqa: F401
+from .tts_base import TextToSpeechAPI  # noqa: F401
 
 from os.path import dirname, basename, isfile, join
 import glob
