@@ -12,8 +12,7 @@ import logging
 
 
 def test_reply_default():
-    """Check if chatbot works
-    """
+    """Check if chatbot works"""
     chatbot_model = Model.load(
         os.path.join(
             os.path.dirname(__file__), "..\\inference_engine\\resources\\models\\bart"
