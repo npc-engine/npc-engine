@@ -18,12 +18,12 @@ def test_run():
         os.path.dirname(__file__), "..\\inference_engine\\resources\\models"
     )
     bart_model = os.path.join(models_path, "bart")
-    tacotron = os.path.join(models_path, "flowtron_squeezewave")
+    tacotron = os.path.join(models_path, "flowtron")
     roberta_semb = os.path.join(models_path, "roberta_semb")
 
     inference_engine = InferenceEngine(bart_model, tacotron, roberta_semb)
 
-    tts_msg = {"cmd": "start_tts", "voice_id": 0, "line": "Hello this is a test"}
+    tts_msg = {"cmd": "start_tts", "voice_id": "0", "line": "Hello this is a test"}
     next_tts_msg = {"cmd": "tts_next"}
 
     semantic_test_add = {

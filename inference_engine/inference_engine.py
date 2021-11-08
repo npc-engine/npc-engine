@@ -1,13 +1,13 @@
 from typing import Dict, List, Any
-from .text_generation import BartChatbot
-from .speech_synthesis import TTS
 from .semantic_tests import SemanticTests
+from inference_engine import models
 
 
 class InferenceEngine:
     def __init__(self, chatbot_path, tts_path, roberta_path):
-        self.chatbot = BartChatbot(chatbot_path)
-        self.tts = TTS(tts_path)
+        print(f"models {models.Model.models}")
+        self.chatbot = models.Model.load(chatbot_path)
+        self.tts = models.Model.load(tts_path)
         self.semantic_tests = SemanticTests(roberta_path)
         self._tts_generator = None
         self.STATUS_OK = "OK"
@@ -33,7 +33,9 @@ class InferenceEngine:
     def handle_tts(self, message: Dict[str, Any]):
         if not self._validate_msg_fields(message, ["voice_id", "line"]):
             return {"status": self.INCORRECT_MSG}
-        self._tts_generator = self.tts.tts(message["voice_id"], message["line"])
+        self._tts_generator = self.tts.run(
+            message["voice_id"], message["line"], message.get("n_chunks", 10)
+        )
         return {
             "status": self.STATUS_OK,
         }
@@ -82,10 +84,7 @@ class InferenceEngine:
         return {
             "status": self.STATUS_OK,
             "reply": self.chatbot.generate_reply(
-                message["persona"],
-                message["history"],
-                message["temperature"],
-                message["topk"],
+                message, message["temperature"], message["topk"],
             ),
         }
 
