@@ -1,11 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-"""
-ZMQ server for providing onnx runtime predictions for text generation and speech synthesis
+"""Server for providing onnx runtime predictions for text generation and speech synthesis.
 
-.. currentmodule:: inference_engine
-.. moduleauthor:: evil.unicorn1 <evil.unicorn1@gmail.com>
+Uses 0MQ REP/REQ sockets with JSONRPC 2.0 protocol.
 """
 
 from .version import __version__, __release__  # noqa

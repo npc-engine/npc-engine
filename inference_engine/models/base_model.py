@@ -1,3 +1,4 @@
+"""Module with Model base class."""
 from abc import ABC
 import os
 import yaml
