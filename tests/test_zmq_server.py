@@ -1,4 +1,4 @@
-"""Dialog scripted test."""
+"""ZMQ server test."""
 import json
 from inference_engine.zmq_server import ZMQServer
 
