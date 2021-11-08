@@ -32,7 +32,7 @@ class Chatbot(Model):
                 "Can not generate replies before base Chatbot class was initialized"
             )
         prompt = self.template.render(**context)
-        self.run(prompt, *args, **kwargs)
+        return self.run(prompt, *args, **kwargs)
 
     @abstractmethod
     def run(self, prompt: str, temperature: float, topk: int = None) -> str:

@@ -1,4 +1,3 @@
-from typing import Dict, Any
 import numpy as np
 import scipy.special as scp
 import onnxruntime as rt
@@ -19,9 +18,7 @@ class BartChatbot(Chatbot):
     ):
         super().__init__(*args, **kwargs)
         sess_options = rt.SessionOptions()
-        sess_options.graph_optimization_level = (
-            rt.GraphOptimizationLevel.ORT_ENABLE_BASIC
-        )
+        sess_options.graph_optimization_level = rt.GraphOptimizationLevel.ORT_ENABLE_ALL
         self.encoder_model = rt.InferenceSession(
             os.path.join(model_path, "encoder_bart.onnx"),
             providers=[rt.get_available_providers()[0]],
@@ -38,10 +35,8 @@ class BartChatbot(Chatbot):
         self.repetition_penalty = repetition_penalty
 
     def run(self, prompt: str, temperature: float, topk: int = None):
-        print(prompt)
         tokens = self.tokenizer(prompt)
-        total = np.asarray(tokens, dtype=np.int64).reshape([1, -1])
-        print(total.shape)
+        total = np.asarray(tokens["input_ids"], dtype=np.int64).reshape([1, -1])
         total_enc = self.encoder_model.run(None, {"input_ids": total})[0]
 
         utterance = np.asarray([self.tokenizer.eos_token_id], dtype=np.int64).reshape(
