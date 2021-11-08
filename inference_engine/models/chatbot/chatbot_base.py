@@ -1,3 +1,4 @@
+"""Module that implements chatbot model API."""
 from typing import Dict, Any, List
 
 from abc import abstractmethod
@@ -6,18 +7,25 @@ from jinja2 import Template
 import json
 
 
-class Chatbot(Model):
-    """Abstract base class for Chatbot models.
-    """
+class ChatbotAPI(Model):
+    """Abstract base class for Chatbot models."""
 
-    def __init__(self, template_string, default_context, *args, **kwargs):
+    API_METHODS = ["generate_reply", "get_context_fields", "get_prompt_template"]
+
+    def __init__(self, template_string: str, default_context: str, *args, **kwargs):
+        """Initialize prompt formatting variables.
+
+        Args:
+            template_string: Template string to be rendered.
+            default_context: Context example with empty fields.
+        """
         self.template_string = template_string
         self.default_context = json.loads(default_context)
         self.template = Template(template_string)
         self.initialized = True
 
     def generate_reply(self, context: Dict[str, Any], *args, **kwargs) -> str:
-        """Formats model prompt and generates response.
+        """Format the model prompt and generates response.
 
         Args:
             context: Prompt context.
@@ -31,7 +39,7 @@ class Chatbot(Model):
             raise AssertionError(
                 "Can not generate replies before base Chatbot class was initialized"
             )
-        prompt = self.template.render(**context)
+        prompt = self.template.render(**context, **self.get_special_tokens())
         return self.run(prompt, *args, **kwargs)
 
     @abstractmethod
@@ -45,12 +53,23 @@ class Chatbot(Model):
             topk: If not none selects top n of predictions to sample from during generation.
 
         Returns:
-            Generator that yields next chunk of speech in the form of f32 ndarray.
+            Generated text
+        """
+        return None
+
+    @abstractmethod
+    def get_special_tokens(self) -> Dict[str, str]:
+        """Return dictionary mapping for special tokens.
+
+        To be implemented by child class.
+        Can then be used in template string as fields
+        Returns:
+            Dictionary of special tokens
         """
         return None
 
     def get_context_fields(self) -> List[str]:
-        """Returns context template used for formatting model prompt
+        """Return context template used for formatting model prompt.
 
         Returns:
             A template context dict with empty fields.
@@ -58,7 +77,7 @@ class Chatbot(Model):
         return self.default_context
 
     def get_prompt_template(self) -> str:
-        """Returns prompt template string used to render model prompt.
+        """Return prompt template string used to render model prompt.
 
         Returns:
             A template string.

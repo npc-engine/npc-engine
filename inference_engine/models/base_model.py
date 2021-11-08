@@ -4,17 +4,18 @@ import yaml
 
 
 class Model(ABC):
-    """Abstract base class for managed models.
-    """
+    """Abstract base class for managed models."""
 
     models = {}
 
     def __init_subclass__(cls, **kwargs):
+        """Init subclass where model classes get registered to be loadable."""
         super().__init_subclass__(**kwargs)
         cls.models[cls.__name__] = cls
 
     @classmethod
     def load(cls, path: str):
+        """Load the model from the path."""
         config_path = os.path.join(path, "config.yml")
         with open(config_path) as f:
             config_dict = yaml.load(f, Loader=yaml.Loader)

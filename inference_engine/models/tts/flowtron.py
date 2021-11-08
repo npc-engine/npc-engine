@@ -2,16 +2,16 @@ from os import path
 from typing import List
 import numpy as np
 import onnxruntime
+from inference_engine.models.tts.tts_base import TextToSpeechAPI
 from inference_engine.text import (
     text_to_sequence,
     _clean_text,
 )
 import re
 import logging
-from inference_engine.models.tts import TextToSpeech
 
 
-class FlowtronTTS(TextToSpeech):
+class FlowtronTTS(TextToSpeechAPI):
     """Implements Flowtron architecture inference.
 
     Onnx export script can be found in this fork https://github.com/npc-engine/flowtron.

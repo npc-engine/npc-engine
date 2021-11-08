@@ -14,8 +14,7 @@ import sounddevice as sd
 
 
 def test_reply_default():
-    """Check if voice with no traits works
-    """
+    """Check if voice with no traits works."""
     tts_module = Model.load(
         os.path.join(
             os.path.dirname(__file__),
