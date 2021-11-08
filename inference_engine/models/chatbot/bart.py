@@ -1,3 +1,4 @@
+"""BART based chatbot implementation."""
 from typing import Dict
 import numpy as np
 import scipy.special as scp
@@ -9,6 +10,8 @@ import json
 
 
 class BartChatbot(ChatbotAPI):
+    """BART based chatbot implementation class."""
+
     def __init__(
         self,
         model_path,
@@ -22,6 +25,20 @@ class BartChatbot(ChatbotAPI):
         *args,
         **kwargs
     ):
+        """Create the chatbot from config args and kwargs.
+
+        Args:
+            model_path: path to scan for model files (weights and configs)
+            max_steps: stop generation at this number of tokens
+            min_length: model can't stop generating text before it's atleast
+                this long in tokens
+            repetition_penalty: probability coef for same tokens to appear multiple times
+            bos_token_id: beginning of sequence token id
+            eos_token_id: end of sequence token id
+            pad_token_id: padding token id
+            sep_token_id: token id for separating sequence into multiple parts
+
+        """
         super().__init__(*args, **kwargs)
         self.bos_token_id = bos_token_id
         self.eos_token_id = eos_token_id
@@ -69,7 +86,7 @@ class BartChatbot(ChatbotAPI):
         self.repetition_penalty = repetition_penalty
 
     def run(self, prompt: str, temperature: float, topk: int = None):
-        """Implementation of text generation via BART architecture.
+        """Run text generation from given prompt and parameters.
 
         Args:
             prompt: Fromatted prompt.

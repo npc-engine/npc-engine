@@ -1,11 +1,6 @@
-import re
-from unidecode import unidecode
-from .numbers import normalize_numbers
-from .datestime import normalize_datestime
+# flake8: noqa D103
+"""adapted from https://github.com/keithito/tacotron.
 
-""" adapted from https://github.com/keithito/tacotron """
-
-"""
 Cleaners are transformations that run over the input text at both training and eval time.
 
 Cleaners can be selected by passing a comma-delimited list of cleaner names as the "cleaners"
@@ -16,6 +11,11 @@ hyperparameter. Some cleaners are English-specific. You'll typically want to use
     3. "basic_cleaners" if you do not want to transliterate (in this case, you should also update
          the symbols in symbols.py to match your data).
 """
+
+import re
+from unidecode import unidecode
+from .numbers import normalize_numbers
+from .datestime import normalize_datestime
 
 
 # Regular expression matching whitespace:
@@ -96,6 +96,7 @@ def convert_to_ascii(text):
 
 
 def flowtron_cleaners(text):
+    """Clean text with a set of cleaners."""
     text = collapse_whitespace(text)
     text = remove_hyphens(text)
     text = expand_datestime(text)

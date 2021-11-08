@@ -1,3 +1,4 @@
+"""Flowtron (https://github.com/NVIDIA/flowtron) text to speech inference implementation."""
 from os import path
 from typing import List
 import numpy as np
@@ -23,6 +24,7 @@ class FlowtronTTS(TextToSpeechAPI):
     """
 
     def __init__(self, model_path, max_frames=400, gate_threshold=0.5, *args, **kwargs):
+        """Create and load Flowtron and vocoder models."""
         super().__init__(*args, **kwargs)
         sess_options = onnxruntime.SessionOptions()
         sess_options.graph_optimization_level = (
@@ -57,10 +59,21 @@ class FlowtronTTS(TextToSpeechAPI):
         self.speaker_ids_map = {idx: i for i, idx in enumerate(self.speaker_ids)}
 
     def get_speaker_ids(self) -> List[str]:
+        """Return available ids of different speakers."""
         return self.speaker_ids
 
     def run(self, speaker_id, text, n_chunks):
-        text = self.get_text(text)
+        """Create a generator for iterative generation of speech.
+
+        Args:
+            speaker_id: Id of the speaker.
+            text: Text to generate speech from.
+            n_chunks: Number of chunks to split generation into.
+
+        Returns:
+            Generator that yields next chunk of speech in the form of f32 ndarray.
+        """
+        text = self._get_text(text)
         speaker_id = np.asarray([[self.speaker_ids_map[speaker_id]]], dtype=np.int64)
         enc_outps_ortvalue = onnxruntime.OrtValue.ortvalue_from_shape_and_type(
             [text.shape[1], 1, 640], np.float32, "cpu", 0
@@ -76,8 +89,8 @@ class FlowtronTTS(TextToSpeechAPI):
             np.float32
         )
 
-        residual = self.run_backward_flow(residual, enc_outps_ortvalue)
-        residual = self.run_forward_flow(
+        residual = self._run_backward_flow(residual, enc_outps_ortvalue)
+        residual = self._run_forward_flow(
             residual, enc_outps_ortvalue, num_split=self.max_frames // n_chunks
         )
         last_audio = None
@@ -102,16 +115,16 @@ class FlowtronTTS(TextToSpeechAPI):
             # audio = audio / np.abs(audio).max()
             yield audio
 
-    def get_text(self, text: str):
+    def _get_text(self, text: str):
         text = _clean_text(text, ["flowtron_cleaners"])
         words = re.findall(r"\S*\{.*?\}\S*|\S+", text)
         text = " ".join(words)
         text_norm = np.asarray(text_to_sequence(text), dtype=np.int64).reshape([1, -1])
         return text_norm
 
-    def run_backward_flow(self, residual, enc_outps_ortvalue):
+    def _run_backward_flow(self, residual, enc_outps_ortvalue):
 
-        residual_o, hidden_att, hidden_lstm = self.init_states(residual)
+        residual_o, hidden_att, hidden_lstm = self._init_states(residual)
 
         hidden_att_ortvalue = onnxruntime.OrtValue.ortvalue_from_numpy(
             hidden_att[0], "cpu", 0
@@ -198,9 +211,9 @@ class FlowtronTTS(TextToSpeechAPI):
 
         return residual
 
-    def run_forward_flow(self, residual, enc_outps_ortvalue, num_split):
+    def _run_forward_flow(self, residual, enc_outps_ortvalue, num_split):
 
-        residual_o, hidden_att, hidden_lstm = self.init_states(residual)
+        residual_o, hidden_att, hidden_lstm = self._init_states(residual)
 
         hidden_att_ortvalue = onnxruntime.OrtValue.ortvalue_from_numpy(
             hidden_att[0], "cpu", 0
@@ -296,7 +309,7 @@ class FlowtronTTS(TextToSpeechAPI):
 
             yield residual_o
 
-    def init_states(self, residual):
+    def _init_states(self, residual):
         last_outputs = np.zeros(
             [1, residual.shape[1], residual.shape[2]], dtype=np.float32
         )
