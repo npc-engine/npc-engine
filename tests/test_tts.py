@@ -41,7 +41,6 @@ def test_reply_default():
         channels=1, samplerate=22050, callback=callback, blocksize=10240
     ).__enter__()
     full_audio = []
-    start = time.time()
     for i, audio_el in enumerate(audio):
         end = time.time()
         process_time = end - start
@@ -56,9 +55,5 @@ def test_reply_default():
 
     while not queue.empty():
         sd.sleep(int(10240 / 22.05))
-    end = time.time()
-    process_time = end - start
+    sd.sleep(int(10240 / 22.05))
     audio_time = len(full_audio) / 22050
-    print(f" > Processing time: {process_time}")
-    print(f" > Real-time factor: {process_time / audio_time}")
-

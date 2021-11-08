@@ -4,6 +4,7 @@ min_length: 2
 repetition_penalty: 1
 template_string: >
   {{ persona }}
+
   {% for line in history -%}
   {{line}}
 

@@ -9,7 +9,6 @@ from inference_engine.text import (
 import re
 import logging
 from inference_engine.models.tts import TextToSpeech
-import yaml
 
 
 class FlowtronTTS(TextToSpeech):
@@ -24,9 +23,10 @@ class FlowtronTTS(TextToSpeech):
     """
 
     def __init__(self, model_path, max_frames=400, gate_threshold=0.5, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         sess_options = onnxruntime.SessionOptions()
         sess_options.graph_optimization_level = (
-            onnxruntime.GraphOptimizationLevel.ORT_DISABLE_ALL
+            onnxruntime.GraphOptimizationLevel.ORT_ENABLE_ALL
         )
         provider = onnxruntime.get_available_providers()[0]
         logging.info("FlowtronTTS using provider {}".format(provider))
@@ -103,7 +103,7 @@ class FlowtronTTS(TextToSpeech):
             yield audio
 
     def get_text(self, text: str):
-        text = _clean_text(text, ["english_cleaners"])
+        text = _clean_text(text, ["flowtron_cleaners"])
         words = re.findall(r"\S*\{.*?\}\S*|\S+", text)
         text = " ".join(words)
         text_norm = np.asarray(text_to_sequence(text), dtype=np.int64).reshape([1, -1])
