@@ -3,8 +3,8 @@ from os import path
 from typing import List
 import numpy as np
 import onnxruntime
-from inference_engine.models.tts.tts_base import TextToSpeechAPI
-from inference_engine.text import (
+from npc_engine.models.tts.tts_base import TextToSpeechAPI
+from npc_engine.text import (
     text_to_sequence,
     _clean_text,
 )

@@ -1,3 +1,0 @@
-model_type: "FlowtronTTS"
-max_frames: 400
-gate_threshold: 0.5

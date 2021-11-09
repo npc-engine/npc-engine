@@ -2,8 +2,8 @@
 from typing import Dict, List
 
 from abc import abstractmethod
-from inference_engine.models.base_model import Model
-from inference_engine.models.utils.lru_cache import NumpyLRUCache
+from npc_engine.models.base_model import Model
+from npc_engine.models.utils.lru_cache import NumpyLRUCache
 import numpy as np
 
 

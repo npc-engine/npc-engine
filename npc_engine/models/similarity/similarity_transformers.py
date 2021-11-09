@@ -4,7 +4,7 @@ import numpy as np
 import onnxruntime as rt
 from onnxruntime import GraphOptimizationLevel as opt_level
 from tokenizers import Tokenizer
-from inference_engine.models.similarity.similarity_base import SimilarityAPI
+from npc_engine.models.similarity.similarity_base import SimilarityAPI
 import os
 from scipy.spatial.distance import cdist
 

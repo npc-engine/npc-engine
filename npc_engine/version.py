@@ -4,7 +4,7 @@
 """
 This module contains project version information.
 
-.. currentmodule:: inference_engine.version
+.. currentmodule:: npc_engine.version
 .. moduleauthor:: evil.unicorn1 <evil.unicorn1@gmail.com>
 """
 

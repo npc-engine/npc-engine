@@ -4,14 +4,14 @@
 """
 This is the entry point for the command-line interface that starts npc-engine server.
 
-.. currentmodule:: inference_engine.cli
+.. currentmodule:: npc_engine.cli
 .. moduleauthor:: evil.unicorn1 <evil.unicorn1@gmail.com>
 """
 import click
 import sys
-from inference_engine.models.model_manager import ModelManager
-from inference_engine.version import __version__
-from inference_engine.zmq_server import ZMQServer
+from npc_engine.models.model_manager import ModelManager
+from npc_engine.version import __version__
+from npc_engine.zmq_server import ZMQServer
 from loguru import logger
 
 

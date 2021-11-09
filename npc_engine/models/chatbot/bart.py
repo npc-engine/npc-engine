@@ -3,7 +3,7 @@ from typing import Dict
 import numpy as np
 import scipy.special as scp
 import onnxruntime as rt
-from inference_engine.models.chatbot.chatbot_base import ChatbotAPI
+from npc_engine.models.chatbot.chatbot_base import ChatbotAPI
 from tokenizers import Tokenizer
 import os
 import json
@@ -85,7 +85,7 @@ class BartChatbot(ChatbotAPI):
         self.min_length = min_length
         self.repetition_penalty = repetition_penalty
 
-    def run(self, prompt: str, temperature: float, topk: int = None):
+    def run(self, prompt: str, temperature: float = 1.0, topk: int = None):
         """Run text generation from given prompt and parameters.
 
         Args:

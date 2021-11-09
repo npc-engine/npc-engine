@@ -14,8 +14,8 @@ steps from top to bottom you should be ready to roll by the end.
 Get the Source
 ==============
 
-The source code for the `inference_engine` project lives at
-`github <https://github.com/eublefar/inference_engine>`_.  
+The source code for the `npc_engine` project lives at
+`github <https://github.com/eublefar/npc_engine>`_.  
 You can use `git clone` to get it.
 
 .. code-block:: bash

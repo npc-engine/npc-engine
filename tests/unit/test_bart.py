@@ -1,23 +1,20 @@
-"""
-.. currentmodule:: test_example
-.. moduleauthor:: evil.unicorn1 <evil.unicorn1@gmail.com>
-
-Speech synthesis test.
-"""
+"""Text generation test."""
 import os
-import simpleaudio as sa
-from inference_engine.models import Model
+from npc_engine.models import Model
 import time
-import logging
 
 
 def test_reply_default():
     """Check if chatbot works"""
-    chatbot_model = Model.load(
-        os.path.join(
-            os.path.dirname(__file__), "..\\inference_engine\\resources\\models\\bart"
+    try:
+        chatbot_model = Model.load(
+            os.path.join(
+                os.path.dirname(__file__),
+                "..\\..\\npc_engine\\resources\\models\\bart",
+            )
         )
-    )
+    except FileNotFoundError:
+        return
     start = time.time()
     answer = chatbot_model.generate_reply(
         context=dict(

@@ -112,4 +112,4 @@ ENV/
 # ONNX
 *.ONNX
 
-inference_engine/resources/models/*
+npc_engine/resources/models/*

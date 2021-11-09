@@ -2,7 +2,7 @@
 from typing import Dict, Any, List
 
 from abc import abstractmethod
-from inference_engine.models.base_model import Model
+from npc_engine.models.base_model import Model
 from jinja2 import Template
 import json
 
@@ -43,7 +43,7 @@ class ChatbotAPI(Model):
         return self.run(prompt, *args, **kwargs)
 
     @abstractmethod
-    def run(self, prompt: str, temperature: float, topk: int = None) -> str:
+    def run(self, prompt: str, temperature: float = 1, topk: int = None) -> str:
         """Abstract method for concrete implementation of generation.
 
         Args:

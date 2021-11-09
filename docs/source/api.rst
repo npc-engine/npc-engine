@@ -6,7 +6,7 @@
 API Documentation
 =================
 
-.. automodule:: inference_engine
+.. automodule:: npc_engine
     :members:
     :undoc-members:
     :show-inheritance:

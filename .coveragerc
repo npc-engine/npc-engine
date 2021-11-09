@@ -6,8 +6,12 @@ omit =
     */docs/*
     */dist/*
     setup.py
-    scratch*.py
+    scratch*.py    
+    */.tox/*
+    */npc_engine/text/*
 
 [html]
 directory=./htmlcov
 
+[report]
+fail_under=94
