@@ -2,6 +2,7 @@
 import os
 
 from inference_engine import models
+from loguru import logger
 
 
 class ModelManager:
@@ -16,6 +17,18 @@ class ModelManager:
         ]
         self.models = [models.Model.load(subdir) for subdir in subdirs]
 
+    def _build_api_call(self, model, method):
+        method_callable = getattr(model, method)
+
+        def api_call(*args, **kwargs):
+            logger.debug(
+                f"Api call to {method} from model {type(model).__name__} "
+                + f"with *args = {args} **kwargs = {kwargs}",
+            )
+            return method_callable(*args, **kwargs)
+
+        return api_call
+
     def build_api_dict(self):
         """Build api dict.
 
@@ -26,7 +39,8 @@ class ModelManager:
         api_dict = {}
         for model in self.models:
             for method in type(model).API_METHODS:
-                api_dict[method] = lambda *args, **kwargs: getattr(model, method)(
-                    *args, **kwargs
+                logger.info(
+                    f"Registering method {method} for model {type(model).__name__}"
                 )
+                api_dict[method] = self._build_api_call(model, method)
         return api_dict
