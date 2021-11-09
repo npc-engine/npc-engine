@@ -1,6 +1,6 @@
 """Dialog scripted test."""
 import os
-from inference_engine import models
+from npc_engine import models
 import time
 
 
@@ -9,7 +9,7 @@ def test_custom_test():
     semantic_tests = models.Model.load(
         os.path.join(
             os.path.dirname(__file__),
-            "..\\..\\inference_engine\\resources\\models\\roberta_semb",
+            "..\\..\\npc_engine\\resources\\models\\roberta_semb",
         )
     )
     start = time.time()

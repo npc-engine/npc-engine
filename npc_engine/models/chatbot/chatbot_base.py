@@ -2,7 +2,7 @@
 from typing import Dict, Any, List
 
 from abc import abstractmethod
-from inference_engine.models.base_model import Model
+from npc_engine.models.base_model import Model
 from jinja2 import Template
 import json
 

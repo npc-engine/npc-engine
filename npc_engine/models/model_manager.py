@@ -1,7 +1,7 @@
 """Module that implements management and loading of the models."""
 import os
 
-from inference_engine import models
+from npc_engine import models
 from loguru import logger
 
 

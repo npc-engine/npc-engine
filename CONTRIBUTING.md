@@ -22,9 +22,9 @@ Here is the prefered workflow for creating pull requests:
 2. Clone the project to your machine
 3. Create a branch locally with a succinct but descriptive name
 4. Commit changes to the branch
-5. Make sure that `tox` passes.
+5. Make sure that `tox` passes
 6. Push changes to your fork
-7. Open a PR in our repository and follow the PR template so that we can efficiently review the changes.
+7. Open a PR
 
 ### Spreading the word
 

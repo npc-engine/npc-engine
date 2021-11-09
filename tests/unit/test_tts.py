@@ -6,7 +6,7 @@ Speech synthesis test.
 """
 import os
 import simpleaudio as sa
-from inference_engine.models import Model
+from npc_engine.models import Model
 import time
 from queue import Queue
 import numpy as np
@@ -18,7 +18,7 @@ def test_reply_default():
     tts_module = Model.load(
         os.path.join(
             os.path.dirname(__file__),
-            "..\\..\\inference_engine\\resources\\models\\flowtron",
+            "..\\..\\npc_engine\\resources\\models\\flowtron",
         )
     )
     start = time.time()

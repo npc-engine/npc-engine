@@ -1,8 +1,8 @@
-.. inference_engine documentation master file
+.. npc_engine documentation master file
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-inference_engine
+npc_engine
 ==============
 
 ZMQ server for providing onnx runtime predictions for text generation and speech synthesis

@@ -1,6 +1,6 @@
 """ZMQ server test."""
 import json
-from inference_engine.zmq_server import ZMQServer
+from npc_engine.zmq_server import ZMQServer
 
 
 class StubSocket:

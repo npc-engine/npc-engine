@@ -19,7 +19,7 @@ with open(path.join(here, "README.rst"), encoding="utf-8") as f:
 # Get the base version from the library.  (We'll find it in the `version.py`
 # file in the src directory, but we'll bypass actually loading up the library.)
 vspec = importlib.util.spec_from_file_location(
-    "version", str(Path(__file__).resolve().parent / "inference_engine" / "version.py")
+    "version", str(Path(__file__).resolve().parent / "npc_engine" / "version.py")
 )
 vmod = importlib.util.module_from_spec(vspec)
 vspec.loader.exec_module(vmod)
@@ -33,7 +33,7 @@ if os.getenv("buildnum") is not None:
     )
 
 setup(
-    name="inference_engine",
+    name="npc-engine",
     description="ZMQ server for providing onnx runtime predictions for text generation and speech synthesis",
     long_description=long_description,
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
@@ -44,16 +44,16 @@ setup(
     ],
     entry_points="""
     [console_scripts]
-    inference_engine=inference_engine.cli:cli
+    npc-engine=npc_engine.cli:cli
     """,
     python_requires=">=3.6.0",
     license="MIT",  # noqa
     author="eublefar",
     author_email="evil.unicorn1@gmail.com",
     # Use the URL to the github repo.
-    url="https://github.com/eublefar/inference_engine",
+    url="https://github.com/eublefar/npc-engine",
     download_url=(
-        f"https://github.com/eublefar/" f"inference_engine/archive/{version}.tar.gz"
+        f"https://github.com/eublefar/" f"npc_engine/archive/{version}.tar.gz"
     ),
     keywords=[
         # Add package keywords here.

@@ -10,11 +10,11 @@ Getting Started
 Installing the Library
 ======================
 
-You can use pip to install `inference_engine`.
+You can use pip to install `npc_engine`.
 
 .. code-block:: sh
 
-    pip install inference_engine
+    pip install npc_engine
 
 
 

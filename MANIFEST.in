@@ -1,1 +1,1 @@
-include inference_engine/text/*
+include npc_engine/text/*
