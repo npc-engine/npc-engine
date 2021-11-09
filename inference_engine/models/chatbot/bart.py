@@ -85,7 +85,7 @@ class BartChatbot(ChatbotAPI):
         self.min_length = min_length
         self.repetition_penalty = repetition_penalty
 
-    def run(self, prompt: str, temperature: float, topk: int = None):
+    def run(self, prompt: str, temperature: float = 1.0, topk: int = None):
         """Run text generation from given prompt and parameters.
 
         Args:
