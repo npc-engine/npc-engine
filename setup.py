@@ -32,7 +32,7 @@ with open(path.join(here, "requirements_dev.txt"), encoding="utf-8") as f:
 
 setup(
     name="npc-engine",
-    description="ZMQ JSONRPC 2.0 server for providing onnx runtime predictions for text generation and speech synthesis",
+    description="ZMQ JSONRPC 2.0 server for text generation and speech synthesis.",
     long_description=long_description,
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     version=version,
@@ -43,7 +43,7 @@ setup(
     npc-engine=npc_engine.cli:cli
     """,
     python_requires=">=3.7.0",
-    license="MIT",  # noqa
+    license="MIT",
     author="eublefar",
     author_email="evil.unicorn1@gmail.com",
     # Use the URL to the github repo.
