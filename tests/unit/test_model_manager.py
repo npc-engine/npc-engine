@@ -1,7 +1,6 @@
 """Model manager test."""
 import os
 from npc_engine import models
-import time
 
 from npc_engine.models.model_manager import ModelManager
 

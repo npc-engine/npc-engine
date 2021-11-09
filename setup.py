@@ -2,17 +2,14 @@
 # -*- coding: utf-8 -*-
 """Setup script."""
 
-
 import importlib.util
 from pathlib import Path
 from setuptools import setup, find_packages
-from codecs import open  # Use a consistent encoding.
-from os import path
+from codecs import open
 
-here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the relevant file
-with open(path.join(here, "README.md"), encoding="utf-8") as f:
+with open("README.md", encoding="utf-8") as f:
     long_description = f.read()
 
 # Get the base version from the library.  (We'll find it in the `version.py`
@@ -24,10 +21,10 @@ vmod = importlib.util.module_from_spec(vspec)
 vspec.loader.exec_module(vmod)
 version = getattr(vmod, "__version__")
 
-with open(path.join(here, "requirements.txt"), encoding="utf-8") as f:
+with open("requirements.txt", encoding="utf-8") as f:
     requirements = f.readlines()
 
-with open(path.join(here, "requirements_dev.txt"), encoding="utf-8") as f:
+with open("requirements_dev.txt", encoding="utf-8") as f:
     requirements_dev = f.readlines()
 
 setup(

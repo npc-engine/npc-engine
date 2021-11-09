@@ -113,4 +113,3 @@ def test_zmq_json_rpc_server_incorrect_signature():
         server.run(api_dict)
     except KeyboardInterrupt:
         pass
-
