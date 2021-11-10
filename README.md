@@ -2,7 +2,7 @@
 
 NPC-Engine is a deep learning inference engine for designing NPC AI with natural language.
 
-[![Build Status]((https://github.com/npc-engine/npc-engine/actions/workflows/Documentation.yml/badge.svg)](https://npc-engine.github.io/npc-engine/)
+[![Build Status](https://github.com/npc-engine/npc-engine/actions/workflows/Documentation.yml/badge.svg)](https://npc-engine.github.io/npc-engine/)
 
 ## Features
 

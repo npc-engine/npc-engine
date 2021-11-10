@@ -50,3 +50,5 @@ markdown_extensions:
   - attr_list
   - abbr
   - pymdownx.snippets
+extra_css:
+  - css/style.css
