@@ -9,7 +9,7 @@ import os
 import json
 
 
-class BartChatbot(ChatbotAPI):  # pragma: no cover
+class BartChatbot(ChatbotAPI):
     """BART based chatbot implementation class.
 
     This model class requires two ONNX models `encoder_bart.onnx` and `decoder_bart.onnx`

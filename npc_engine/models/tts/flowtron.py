@@ -12,7 +12,7 @@ import re
 import logging
 
 
-class FlowtronTTS(TextToSpeechAPI):  # pragma: no cover
+class FlowtronTTS(TextToSpeechAPI):
     """Implements Flowtron architecture inference.
 
     Paper:  
