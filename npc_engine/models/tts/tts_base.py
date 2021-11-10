@@ -29,7 +29,7 @@ class TextToSpeechAPI(Model):
         Returns:
             Generator that yields next chunk of speech in the form of f32 ndarray.
         """
-        self.generator = self.run(voice_id, text, n_chunks)
+        self.generator = self.run(speaker_id, text, n_chunks)
 
     def tts_get_results(self) -> Iterable[np.ndarray]:
         """Retrieve the next chunk of generated speech.
