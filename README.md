@@ -108,7 +108,7 @@ print(f"Response message {message}")
     You can use default models from [here](https://drive.google.com/drive/folders/1_3iOrhgvDyrKnC-tWEdysxpJyUcun0X3?usp=sharing)
     + Run tests with
     ```
-    > pytest npc-engine\tests
+    > tox
     ```
 
 - Compile to exe with:

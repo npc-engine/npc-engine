@@ -27,6 +27,10 @@ with open("requirements.txt", encoding="utf-8") as f:
 with open("requirements_dev.txt", encoding="utf-8") as f:
     requirements_dev = f.readlines()
 
+with open("requirements_doc.txt", encoding="utf-8") as f:
+    requirements_doc = f.readlines()
+
+
 setup(
     name="npc-engine",
     description="ZMQ JSONRPC 2.0 server for text generation and speech synthesis.",
@@ -34,7 +38,7 @@ setup(
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     version=version,
     install_requires=requirements,
-    extras_require={"dev": requirements_dev},
+    extras_require={"dev": requirements_dev, "doc": requirements_doc},
     entry_points="""
     [console_scripts]
     npc-engine=npc_engine.cli:cli

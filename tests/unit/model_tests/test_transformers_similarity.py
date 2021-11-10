@@ -2,8 +2,13 @@
 import os
 from npc_engine import models
 import time
+import pytest
 
 
+@pytest.mark.skipif(
+    not os.path.exists("..\\..\\npc_engine\\resources\\models\\roberta_semb"),
+    reason="Model missing",
+)
 def test_transformers_similarity():
     """Check custom testing"""
     try:

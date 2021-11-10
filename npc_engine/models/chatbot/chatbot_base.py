@@ -10,7 +10,11 @@ import json
 class ChatbotAPI(Model):
     """Abstract base class for Chatbot models."""
 
-    API_METHODS = ["generate_reply", "get_context_fields", "get_prompt_template"]
+    API_METHODS: List[str] = [
+        "generate_reply",
+        "get_context_fields",
+        "get_prompt_template",
+    ]
 
     def __init__(self, template_string: str, default_context: str, *args, **kwargs):
         """Initialize prompt formatting variables.

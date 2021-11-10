@@ -1,6 +1,6 @@
 """Flowtron (https://github.com/NVIDIA/flowtron) text to speech inference implementation."""
 from os import path
-from typing import List
+from typing import Iterator, List
 import numpy as np
 import onnxruntime
 from npc_engine.models.tts.tts_base import TextToSpeechAPI
@@ -15,12 +15,12 @@ import logging
 class FlowtronTTS(TextToSpeechAPI):
     """Implements Flowtron architecture inference.
 
-    Onnx export script can be found in this fork https://github.com/npc-engine/flowtron.
+    Onnx export script can be found in this fork https://github.com/npc-engine/flowtron.  
 
-    Paper:
-    [arXiv:2005.05957](https://arxiv.org/abs/2005.05957)
-    Code:
-    https://github.com/NVIDIA/flowtron
+    Paper:  
+    [arXiv:2005.05957](https://arxiv.org/abs/2005.05957)  
+    Code:  
+    https://github.com/NVIDIA/flowtron  
     """
 
     def __init__(self, model_path, max_frames=400, gate_threshold=0.5, *args, **kwargs):
@@ -62,7 +62,7 @@ class FlowtronTTS(TextToSpeechAPI):
         """Return available ids of different speakers."""
         return self.speaker_ids
 
-    def run(self, speaker_id, text, n_chunks):
+    def run(self, speaker_id: str, text: str, n_chunks: int) -> Iterator[np.ndarray]:
         """Create a generator for iterative generation of speech.
 
         Args:
