@@ -18,7 +18,7 @@ class TextToSpeechAPI(Model):
         super().__init__()
         self.initialized = True
 
-    def tts_start(self, voice_id: str, text: str, n_chunks: int) -> None:
+    def tts_start(self, speaker_id: str, text: str, n_chunks: int) -> None:
         """Initiate iterative generation of speech.
 
         Args:

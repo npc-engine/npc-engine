@@ -10,7 +10,7 @@ import numpy as np
 class SimilarityAPI(Model):
     """Abstract base class for text classification models."""
 
-    API_METHODS = ["compare", "cache"]
+    API_METHODS: List[str] = ["compare", "cache"]
 
     def __init__(self, cache_size=0, *args, **kwargs) -> None:
         """Empty initialization method for API to be similar to other model base classes."""
