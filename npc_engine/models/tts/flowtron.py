@@ -12,15 +12,22 @@ import re
 import logging
 
 
-class FlowtronTTS(TextToSpeechAPI):
+class FlowtronTTS(TextToSpeechAPI):  # pragma: no cover
     """Implements Flowtron architecture inference.
-
-    Onnx export script can be found in this fork https://github.com/npc-engine/flowtron.  
 
     Paper:  
     [arXiv:2005.05957](https://arxiv.org/abs/2005.05957)  
     Code:  
     https://github.com/NVIDIA/flowtron  
+
+    Onnx export script can be found in this fork https://github.com/npc-engine/flowtron.  
+
+    This model class requires four ONNX models `encoder.onnx`, `backward_flow.onnx`,
+    `forward_flow.onnx` and `vocoder.onnx` where first three are layers from Flowtron 
+    architecture (`flow` corresponding to one direction pass of affine coupling layers)
+    and `vocoder.onnx` is neural vocoder.
+
+    For detailed specs refer to https://github.com/npc-engine/flowtron.
     """
 
     def __init__(self, model_path, max_frames=400, gate_threshold=0.5, *args, **kwargs):

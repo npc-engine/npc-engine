@@ -14,4 +14,4 @@ omit =
 directory=./htmlcov
 
 [report]
-fail_under=94
+fail_under=90

@@ -15,7 +15,7 @@ class Model(ABC):
         cls.models[cls.__name__] = cls
 
     @classmethod
-    def load(cls, path: str):
+    def load(cls, path: str):  # pragma: no cover
         """Load the model from the path."""
         config_path = os.path.join(path, "config.yml")
         with open(config_path) as f:

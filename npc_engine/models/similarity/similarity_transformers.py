@@ -9,11 +9,20 @@ import os
 from scipy.spatial.distance import cdist
 
 
-class TransformerSemanticSimilarity(SimilarityAPI):
+class TransformerSemanticSimilarity(SimilarityAPI):  # pragma: no cover
     """Huggingface transformers semantic similarity.
 
     Uses ONNX export of Huggingface transformers
     (https://huggingface.co/models) with biencoder architecture.
+    Also requires a tokenizer.json with huggingface tokenizers definition.
+
+    model.onnx spec:
+
+        - inputs:  
+            `input_ids` of shape `(batch_size, sequence)`  
+            `attention_mask` of shape `(batch_size, sequence)`  
+        - outputs:  
+            `token_embeddings` of shape `(batch_size, sequence, hidden_size)`  
     """
 
     def __init__(
