@@ -5,8 +5,13 @@ import time
 from queue import Queue
 import numpy as np
 import sounddevice as sd
+import pytest
 
 
+@pytest.mark.skipif(
+    not os.path.exists("..\\..\\npc_engine\\resources\\models\\flowtron"),
+    reason="Model missing",
+)
 def test_flowtron():
     """Run flowtron inference, skip if no models in resources."""
     try:

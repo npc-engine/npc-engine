@@ -2,19 +2,21 @@
 import os
 from npc_engine.models import Model
 import time
+import pytest
 
 
+@pytest.mark.skipif(
+    not os.path.exists("..\\..\\npc_engine\\resources\\models\\bart"),
+    reason="Model missing",
+)
 def test_reply_default():
     """Check if chatbot works"""
-    try:
-        chatbot_model = Model.load(
-            os.path.join(
-                os.path.dirname(__file__),
-                "..\\..\\npc_engine\\resources\\models\\bart",
-            )
+    chatbot_model = Model.load(
+        os.path.join(
+            os.path.dirname(__file__), "..\\..\\npc_engine\\resources\\models\\bart",
         )
-    except FileNotFoundError:
-        return
+    )
+
     start = time.time()
     answer = chatbot_model.generate_reply(
         context=dict(
