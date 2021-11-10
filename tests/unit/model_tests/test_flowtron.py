@@ -8,19 +8,18 @@ import sounddevice as sd
 import pytest
 
 
+model_fp = os.path.join(
+    os.path.dirname(__file__), "..\\..\\..\\npc_engine\\resources\\models\\flowtron",
+)
+
+
 @pytest.mark.skipif(
-    not os.path.exists("..\\..\\npc_engine\\resources\\models\\flowtron"),
-    reason="Model missing",
+    not os.path.exists(model_fp), reason="Model missing",
 )
 def test_flowtron():
     """Run flowtron inference, skip if no models in resources."""
     try:
-        tts_module = Model.load(
-            os.path.join(
-                os.path.dirname(__file__),
-                "..\\..\\npc_engine\\resources\\models\\flowtron",
-            )
-        )
+        tts_module = Model.load(model_fp)
     except FileNotFoundError:
         return
     start = time.time()
