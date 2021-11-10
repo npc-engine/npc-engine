@@ -9,7 +9,7 @@ import os
 import json
 
 
-class BartChatbot(ChatbotAPI):
+class BartChatbot(ChatbotAPI):  # pragma: no cover
     """BART based chatbot implementation class."""
 
     def __init__(

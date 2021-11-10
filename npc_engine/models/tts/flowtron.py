@@ -12,7 +12,7 @@ import re
 import logging
 
 
-class FlowtronTTS(TextToSpeechAPI):
+class FlowtronTTS(TextToSpeechAPI):  # pragma: no cover
     """Implements Flowtron architecture inference.
 
     Onnx export script can be found in this fork https://github.com/npc-engine/flowtron.  

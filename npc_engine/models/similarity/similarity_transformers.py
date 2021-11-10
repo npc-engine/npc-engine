@@ -9,7 +9,7 @@ import os
 from scipy.spatial.distance import cdist
 
 
-class TransformerSemanticSimilarity(SimilarityAPI):
+class TransformerSemanticSimilarity(SimilarityAPI):  # pragma: no cover
     """Huggingface transformers semantic similarity.
 
     Uses ONNX export of Huggingface transformers
