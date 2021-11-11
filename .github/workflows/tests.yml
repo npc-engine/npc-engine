@@ -1,8 +1,9 @@
 name: Tests
 
-on: push
+on: [push, pull_request]
+
 jobs:
-  Tests:
+  tests:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
@@ -15,7 +16,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install tox tox-gh-actions
       - name: Download test models
-        run: |
-          pip install .[dev,cpu] && python npc_engine\cli.py download-default-models --models-path .\npc_engine\resources\models
+        run: python npc_engine\cli.py download-default-models --models-path .\npc_engine\resources\models
       - name: Run tox
         run: tox
