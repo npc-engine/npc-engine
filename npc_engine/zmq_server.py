@@ -24,14 +24,14 @@ class ZMQServer:
         dispatcher.update(api_dict)
         while True:
             message = self.socket.recv_string()
-            logger.info("Received request: %s" % message)
+            logger.trace("Received request: %s" % message)
 
             start = time.time()
             response = JSONRPCResponseManager.handle(message, dispatcher)
             end = time.time()
 
             logger.info("Handle message time: %d" % (end - start))
-            logger.info("Message reply: %s" % (response.json))
+            logger.trace("Message reply: %s" % (response.json))
 
             #  Send reply back to client
             self.socket.send_string(response.json)
