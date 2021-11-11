@@ -38,7 +38,13 @@ setup(
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     version=version,
     install_requires=requirements,
-    extras_require={"dev": requirements_dev, "doc": requirements_doc},
+    extras_require={
+        "dev": requirements_dev,
+        "doc": requirements_doc,
+        "benchmarks": ["py3nvml"],
+        "dml": ["onnxruntime-directml>=1.8.0,<2.0.0"],
+        "cpu": ["onnxruntime>=1.8.0,<2.0.0"],
+    },
     entry_points="""
     [console_scripts]
     npc-engine=npc_engine.cli:cli

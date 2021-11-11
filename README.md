@@ -96,7 +96,7 @@ print(f"Response message {message}")
 - Install dependencies
 
     ```
-    > pip install -e .[dev]
+    > pip install -e .[dev,dml]
     ```
 
 - (Optional) Compile, build and install your custom ONNX python runtime

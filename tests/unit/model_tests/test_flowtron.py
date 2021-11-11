@@ -43,9 +43,14 @@ def test_flowtron():
             arr[: inp.shape[0], 0] = inp
             outdata[:] = arr
 
-    stream = sd.Stream(
-        channels=1, samplerate=22050, callback=callback, blocksize=10240
-    ).__enter__()
+    play_audio = True
+    try:
+        stream = sd.Stream(
+            channels=1, samplerate=22050, callback=callback, blocksize=10240
+        ).__enter__()
+    except sd.PortAudioError:
+        play_audio = False
+
     full_audio = []
     for i, audio_el in enumerate(audio):
         end = time.time()
@@ -53,13 +58,15 @@ def test_flowtron():
         audio_time = len(audio_el) / 22050
         if i == 0:
             audio_el[:1000] = 0
-        queue.put(audio_el)
+        if play_audio:
+            queue.put(audio_el)
         full_audio += audio_el.tolist()
         print(f" > Step Processing time: {process_time}")
         print(f" > Step Real-time factor (should be < 1): {process_time / audio_time}")
         start = time.time()
-
-    while not queue.empty():
+    if play_audio:
+        while not queue.empty():
+            sd.sleep(int(10240 / 22.05))
         sd.sleep(int(10240 / 22.05))
-    sd.sleep(int(10240 / 22.05))
     audio_time = len(full_audio) / 22050
+
