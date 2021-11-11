@@ -5,17 +5,23 @@ import time
 import pytest
 
 
-model_fp = os.path.join(
-    os.path.dirname(__file__), "..\\..\\..\\npc_engine\\resources\\models\\bart",
-)
-
-
 @pytest.mark.skipif(
-    not os.path.exists(model_fp), reason="Model missing",
+    not os.path.exists(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..\\..\\..\\npc_engine\\resources\\models\\bart\\config.yml",
+        )
+    ),
+    reason="Model missing",
 )
 def test_reply_default():
     """Check if chatbot works"""
-    chatbot_model = Model.load(model_fp)
+    chatbot_model = Model.load(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..\\..\\..\\npc_engine\\resources\\models\\bart",
+        )
+    )
 
     start = time.time()
     answer = chatbot_model.generate_reply(

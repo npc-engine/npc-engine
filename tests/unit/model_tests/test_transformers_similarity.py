@@ -4,19 +4,25 @@ from npc_engine import models
 import time
 import pytest
 
-model_fp = os.path.join(
-    os.path.dirname(__file__),
-    "..\\..\\..\\npc_engine\\resources\\models\\roberta_semb",
-)
-
 
 @pytest.mark.skipif(
-    not os.path.exists(model_fp), reason="Model missing",
+    not os.path.exists(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..\\..\\..\\npc_engine\\resources\\models\\all-mini-lm-6-v2\\config.yml",
+        )
+    ),
+    reason="Model missing",
 )
 def test_transformers_similarity():
     """Check custom testing"""
     try:
-        semantic_tests = models.Model.load(model_fp)
+        semantic_tests = models.Model.load(
+            os.path.join(
+                os.path.dirname(__file__),
+                "..\\..\\..\\npc_engine\\resources\\models\\all-mini-lm-6-v2",
+            )
+        )
     except FileNotFoundError:
         return
     start = time.time()

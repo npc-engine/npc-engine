@@ -3,6 +3,7 @@
 NPC-Engine is a deep learning inference engine for designing NPC AI with natural language.
 
 [![Build Status](https://github.com/npc-engine/npc-engine/actions/workflows/Documentation.yml/badge.svg)](https://npc-engine.github.io/npc-engine/)
+[![Build Status](https://github.com/npc-engine/npc-engine/actions/workflows/ci.yml/badge.svg)](https://npc-engine.github.io/npc-engine/)
 
 ## Features
 
@@ -95,7 +96,7 @@ print(f"Response message {message}")
 - Install dependencies
 
     ```
-    > pip install -e .[dev]
+    > pip install -e .[dev,dml]
     ```
 
 - (Optional) Compile, build and install your custom ONNX python runtime

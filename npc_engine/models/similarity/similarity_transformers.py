@@ -9,7 +9,7 @@ import os
 from scipy.spatial.distance import cdist
 
 
-class TransformerSemanticSimilarity(SimilarityAPI):  # pragma: no cover
+class TransformerSemanticSimilarity(SimilarityAPI):
     """Huggingface transformers semantic similarity.
 
     Uses ONNX export of Huggingface transformers
@@ -21,6 +21,7 @@ class TransformerSemanticSimilarity(SimilarityAPI):  # pragma: no cover
         - inputs:  
             `input_ids` of shape `(batch_size, sequence)`  
             `attention_mask` of shape `(batch_size, sequence)`  
+            (Optional) `input_type_ids` of shape `(batch_size, sequence)`  
         - outputs:  
             `token_embeddings` of shape `(batch_size, sequence, hidden_size)`  
     """
@@ -47,7 +48,8 @@ class TransformerSemanticSimilarity(SimilarityAPI):  # pragma: no cover
             providers=[rt.get_available_providers()[0]],
             sess_options=sess_options,
         )
-
+        input_names = [inp.name for inp in self.model.get_inputs()]
+        self.token_type_support = "token_type_ids" in input_names
         self.pad_token_id = pad_token_id
         self.tokenizer = Tokenizer.from_file(os.path.join(model_path, "tokenizer.json"))
         self.tokenizer.enable_padding(
@@ -78,9 +80,15 @@ class TransformerSemanticSimilarity(SimilarityAPI):  # pragma: no cover
             .astype(np.int64)
         )
         attention_mask = np.ones_like(ids)
-        outp = self.model.run(
-            None, {"input_ids": ids, "attention_mask": attention_mask}
-        )
+        if not self.token_type_support:
+            input_dict = {"input_ids": ids, "attention_mask": attention_mask}
+        else:
+            input_dict = {
+                "input_ids": ids,
+                "attention_mask": attention_mask,
+                "token_type_ids": np.zeros_like(ids),
+            }
+        outp = self.model.run(None, input_dict)
         return self._mean_pooling(outp, attention_mask)
 
     def compute_embedding_batch(self, lines: List[str]) -> np.ndarray:
@@ -99,9 +107,17 @@ class TransformerSemanticSimilarity(SimilarityAPI):  # pragma: no cover
         attention_mask = np.stack(
             [np.asarray(encoding.attention_mask) for encoding in tokenized]
         ).astype(np.int64)
-        outp = self.model.run(
-            None, {"input_ids": ids, "attention_mask": attention_mask}
-        )
+        if not self.token_type_support:
+            input_dict = {"input_ids": ids, "attention_mask": attention_mask}
+        else:
+            input_dict = {
+                "input_ids": ids,
+                "attention_mask": attention_mask,
+                "token_type_ids": np.stack(
+                    [np.asarray(encoding.type_ids) for encoding in tokenized]
+                ).astype(np.int64),
+            }
+        outp = self.model.run(None, input_dict)
         return self._mean_pooling(outp, attention_mask)
 
     def _mean_pooling(self, model_output, attention_mask):

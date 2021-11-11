@@ -109,7 +109,5 @@ ENV/
 # vscode
 .vscode
 
-# ONNX
-*.ONNX
+npc_engine/resources/*
 
-npc_engine/resources/models/*

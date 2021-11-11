@@ -22,6 +22,7 @@ nav:
       - API Classes: inference_engine/api_classes.md
       - Models: inference_engine/models.md
       - Reference: inference_engine/reference.md
+  - Benchmarks: benchmarks.md
 extra:
   social:
     # - icon: fontawesome/brands/unity

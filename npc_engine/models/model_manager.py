@@ -5,7 +5,7 @@ from npc_engine import models
 from loguru import logger
 
 
-class ModelManager:  # pragma: no cover
+class ModelManager:
     """Loads the models and creates global API dictionary."""
 
     def __init__(self, path):
