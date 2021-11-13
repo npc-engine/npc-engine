@@ -11,4 +11,3 @@ setuptools>=38.4.0
 tox>=3.0.0,<4
 twine==3.2.0
 pyinstaller==4.0
-gdown
