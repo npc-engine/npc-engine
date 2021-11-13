@@ -1,11 +1,7 @@
 name: Release
 
-on:
-  push:
-    branches:
-      - master
-    tags:
-      - "v*.*.*"
+on: push
+
 jobs:
   Release:
     runs-on: windows-latest
@@ -27,9 +23,15 @@ jobs:
           pip install tox tox-gh-actions
           pip install .[dev,dml]
 
+      - name: List files .\
+        run: dir
+
+      - name: List files .\npc_engine\
+        run: dir .\npc_engine\
+
       - name: Build release
         run: |
-          pyinstaller --additional-hooks-dir hooks --exclude-module tkinter --exclude-module matplotlib .\npc-engine\cli.py --onedir
+          pyinstaller --additional-hooks-dir hooks --exclude-module tkinter --exclude-module matplotlib .\npc_engine\cli.py --onedir
           pip-licenses --format=plain-vertical --with-license-file --no-license-path --output-file dist\cli\DEPENDENCY_LICENSES.txt
           tar.exe -a -c -f npc-engine-${{ steps.get_version.output.VERSION }}.zip -C dist\cli .\*
 
