@@ -19,17 +19,7 @@ jobs:
           pip install tox tox-gh-actions
           pip install .[dev,cpu]
 
-      - name: Cache test models
-        id: cache-test-models
-        uses: actions/cache@v1
-        with:
-          path: .\npc_engine\resources\models
-          key: ${{ runner.OS }}-test-models
-          restore-keys: |
-            ${{ runner.OS }}-test-models
-
       - name: Download test models
-        if: steps.cache-test-models.outputs.cache-hit != 'true'
         run: python npc_engine\cli.py download-default-models --models-path .\npc_engine\resources\models
 
       - run: tox
