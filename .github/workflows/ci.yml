@@ -34,7 +34,7 @@ jobs:
             ${{ runner.OS }}-test-models
 
       - name: Download test models 
-        if: steps.cache-primes.outputs.cache-hit != 'true'
+        if: steps.cache-test-models.outputs.cache-hit != 'true'
         run: python npc_engine\cli.py download-default-models --models-path .\npc_engine\resources\models
       
       - run: tox
