@@ -1,12 +1,7 @@
 name: Tests
 
-on:
-  push:
-    branches:
-      - master
-  pull_request:
-    branches:
-      - master
+on: push
+
 jobs:
   Tests:
     runs-on: windows-latest
