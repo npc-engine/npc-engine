@@ -19,6 +19,7 @@ jobs:
           pip install tox tox-gh-actions
           pip install .[dev,cpu]
 
+      # Caching this task decrease CI performance.
       - name: Download test models
         run: python npc_engine\cli.py download-default-models --models-path .\npc_engine\resources\models
 
