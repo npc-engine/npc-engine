@@ -49,7 +49,7 @@ def download_default_models(models_path: str):
     model_names = ["all-mini-lm-6-v2", "flowtron", "bart"]
     bucket = s3.Bucket("default-models")
     for model in model_names:
-        logger.info('Downloading model %s', model)
+        logger.info('Downloading model {}', model)
         for file in bucket.objects.filter(Prefix=model):
             is_dir = file.key.split('/')[-1] == ''
             if is_dir:
@@ -57,7 +57,7 @@ def download_default_models(models_path: str):
             local_path = os.path.join(models_path, file.key)
             if not os.path.exists(os.path.dirname(local_path)):
                 os.makedirs(os.path.dirname(local_path))
-            logger.info('Downloading %s', file.key)
+            logger.info('Downloading {}', file.key)
             bucket.download_file(file.key, local_path)
 
 
