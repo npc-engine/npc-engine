@@ -1,38 +1,37 @@
 name: Release
 
 on:
-  pull_request:
-    branches:
-      - master
-    tags:
-      - "v*"
   push:
-    branches:
-      - master
     tags:
       - "v*.*.*"
+
 jobs:
   Release:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Get the version
         id: get_version
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install tox tox-gh-actions
           pip install .[dev,dml]
+
       - name: Build release
         run: |
-          pyinstaller --additional-hooks-dir hooks --exclude-module tkinter --exclude-module matplotlib .\npc-engine\cli.py --onedir
+          pyinstaller --additional-hooks-dir hooks --exclude-module tkinter --exclude-module matplotlib .\npc_engine\cli.py --onedir
           pip-licenses --format=plain-vertical --with-license-file --no-license-path --output-file dist\cli\DEPENDENCY_LICENSES.txt
           tar.exe -a -c -f npc-engine-${{ steps.get_version.output.VERSION }}.zip -C dist\cli .\*
+
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
