@@ -1,0 +1,3 @@
+- Added BART based Chatbot API
+- Added FlowtronTTS API with incremental text to speech generation
+- Added Huggingface transformers semantic similarity from sbert.net 
