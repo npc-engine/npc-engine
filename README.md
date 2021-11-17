@@ -120,6 +120,7 @@ print(f"Response message {message}")
 
 ## Authors
 
-- **eublefar** - _Initial work_ - [github](https://github.com/eublefar)
+- **eublefar** - _Python, Neural Nets_ - [github](https://github.com/eublefar)
+- **igorzmitrovich** - _Python, CI/CD_ - [github](https://github.com/igorzmitrovich)
 
 See also the list of [contributors](https://github.com/npc-engine/npc-engine/contributors) who participated in this project.
