@@ -9,7 +9,14 @@ import pytest
     not os.path.exists(
         os.path.join(
             os.path.dirname(__file__),
-            "..\\..\\..\\npc_engine\\resources\\models\\all-mini-lm-6-v2\\config.yml",
+            "..",
+            "..",
+            "..",
+            "npc_engine",
+            "resources",
+            "models",
+            "all-mini-lm-6-v2",
+            "config.yml",
         )
     ),
     reason="Model missing",
@@ -20,7 +27,13 @@ def test_transformers_similarity():
         semantic_tests = models.Model.load(
             os.path.join(
                 os.path.dirname(__file__),
-                "..\\..\\..\\npc_engine\\resources\\models\\all-mini-lm-6-v2",
+                "..",
+                "..",
+                "..",
+                "npc_engine",
+                "resources",
+                "models",
+                "all-mini-lm-6-v2",
             )
         )
     except FileNotFoundError:

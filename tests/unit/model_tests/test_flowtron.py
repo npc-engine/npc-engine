@@ -12,7 +12,14 @@ import pytest
     not os.path.exists(
         os.path.join(
             os.path.dirname(__file__),
-            "..\\..\\..\\npc_engine\\resources\\models\\flowtron\\config.yml",
+            "..",
+            "..",
+            "..",
+            "npc_engine",
+            "resources",
+            "models",
+            "flowtron",
+            "config.yml",
         )
     ),
     reason="Model missing",
@@ -23,7 +30,13 @@ def test_flowtron():
         tts_module = Model.load(
             os.path.join(
                 os.path.dirname(__file__),
-                "..\\..\\..\\npc_engine\\resources\\models\\flowtron",
+                "..",
+                "..",
+                "..",
+                "npc_engine",
+                "resources",
+                "models",
+                "flowtron",
             )
         )
     except FileNotFoundError:
