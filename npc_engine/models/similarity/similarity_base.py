@@ -8,7 +8,7 @@ import numpy as np
 
 
 class SimilarityAPI(Model):
-    """Abstract base class for text classification models."""
+    """Abstract base class for text similarity models."""
 
     API_METHODS: List[str] = ["compare", "cache"]
 

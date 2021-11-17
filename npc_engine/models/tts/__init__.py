@@ -6,8 +6,8 @@ the common interface for loading and inference.
 
 Example:
     ```
-        from npc_engine.models.tts import TextToSpeech
-        model = TextToSpeech.load("path/to/model_dir")
+        from npc_engine.models.tts import TextToSpeechAPI
+        model = TextToSpeechAPI.load("path/to/model_dir")
         model.run(speaker_id=0, text="Hello, world!")
     ```
 """

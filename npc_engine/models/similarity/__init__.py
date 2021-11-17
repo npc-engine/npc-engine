@@ -6,8 +6,8 @@ the common interface for loading and inference.
 
 Example:
     ```
-        from npc_engine.models.tts import Similarity
-        model = Similarity.load("path/to/model_dir")
+        from npc_engine.models.similarity import SimilarityAPI
+        model = SimilarityAPI.load("path/to/model_dir")
         model.compare("hello", ["Hello, world!"])
     ```
 """
