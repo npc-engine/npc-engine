@@ -45,7 +45,7 @@ class SpeechToTextAPI(Model):
         self.transcribe_realtime = transcribe_realtime
         self.vad_frame_size = int((vad_frame_ms * sample_rate) / 1000)
 
-    def listen(self, context: str) -> str:
+    def listen(self, context: str) -> str:  # pragma: no cover
         """Listen for speech input and return text from speech when done.
 
         Listens for speech, if speech is active for longer than self.frame_size in milliseconds
@@ -115,11 +115,11 @@ class SpeechToTextAPI(Model):
         text = self.postprocess(text)
         return text
 
-    def get_devices(self) -> Dict[int, str]:
+    def get_devices(self) -> Dict[int, str]:  # pragma: no cover
         """Get available audio devices."""
         return [device["name"] for device in sd.query_devices()]
 
-    def select_device(self, device_id: int):
+    def select_device(self, device_id: int):  # pragma: no cover
         """Get available audio devices."""
         device_id = int(device_id)
         if device_id >= len(sd.query_devices()) or device_id < 0:
@@ -128,7 +128,7 @@ class SpeechToTextAPI(Model):
             )
         sd.default.device = device_id
 
-    def _vad_frame(self, frame):
+    def _vad_frame(self, frame):  # pragma: no cover
         vad_frames = frame[
             : frame.shape[0] // self.vad_frame_size * self.vad_frame_size
         ].reshape([-1, self.vad_frame_size])

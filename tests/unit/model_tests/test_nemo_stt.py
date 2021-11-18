@@ -147,3 +147,40 @@ def test_transcribe_frame():
     result = stt.postprocess(total_result)
     print(f"End Result: {result}")
     assert result == "Hello, how is it going?"
+
+
+@pytest.mark.skipif(
+    not os.path.exists(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "..",
+            "npc_engine",
+            "resources",
+            "models",
+            "stt",
+            "config.yml",
+        )
+    ),
+    reason="Model missing",
+)
+def test_decide_finished():
+    try:
+        stt = models.Model.load(
+            os.path.join(
+                os.path.dirname(__file__),
+                "..",
+                "..",
+                "..",
+                "npc_engine",
+                "resources",
+                "models",
+                "stt",
+            )
+        )
+    except FileNotFoundError:
+        return
+
+    assert stt.decide_finished("how do you feel", "i feel fine", 600)
+    assert not stt.decide_finished("how do you feel", "i feel", 600)
