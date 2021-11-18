@@ -1,17 +1,13 @@
 """Module that implements speech to text model API."""
 from typing import Dict, List
 
-import os
+
 from abc import abstractmethod
 from npc_engine.models.base_model import Model
 import numpy as np
 import sounddevice as sd
 from queue import Queue
 import webrtcvad
-from loguru import logger
-from tokenizers import Tokenizer
-import onnxruntime as rt
-from onnxruntime import GraphOptimizationLevel as opt_level
 import re
 
 
@@ -22,9 +18,8 @@ class SpeechToTextAPI(Model):
 
     def __init__(
         self,
-        model_path,
-        min_speech_duration,
-        max_silence_duration,
+        min_speech_duration=100,
+        max_silence_duration=1000,
         vad_mode=None,
         sample_rate=16000,
         vad_frame_ms=10,
@@ -49,21 +44,6 @@ class SpeechToTextAPI(Model):
         self.frame_size_sampling = frame_size
         self.transcribe_realtime = transcribe_realtime
         self.vad_frame_size = int((vad_frame_ms * sample_rate) / 1000)
-
-        if transcribe_realtime:
-            sess_options = rt.SessionOptions()
-            sess_options.graph_optimization_level = opt_level.ORT_ENABLE_ALL
-            self.sentence_model = rt.InferenceSession(
-                os.path.join(model_path, "sentence_prediction.onnx"),
-                providers=[rt.get_available_providers()[0]],
-                sess_options=sess_options,
-            )
-            self.sentence_tokenizer = Tokenizer.from_file(
-                os.path.join(model_path, "sentence_tokenizer.json")
-            )
-            logger.info(
-                f"Sentence classifier uses {rt.get_available_providers()[0]} provider"
-            )
 
     def listen(self, context: str) -> str:
         """Listen for speech input and return text from speech when done.
@@ -115,11 +95,7 @@ class SpeechToTextAPI(Model):
 
                 if transcribing:
                     text += self.transcribe_frame(frame)
-                    if total_pause_ms > self.max_silence_duration:
-                        done = True
-                    if total_pause_ms > self.min_speech_duration and not done:
-                        decision = self._decide_sentence_finished(context, text)
-                        done = bool(decision)
+                    done = self.decide_finished(context, text, total_pause_ms)
         processed = self.postprocess(text)
 
         self.listen_queue.queue.clear()
@@ -151,19 +127,6 @@ class SpeechToTextAPI(Model):
                 f"Bad device id, valid device ids in range [0;{len(sd.query_devices())})"
             )
         sd.default.device = device_id
-
-    def _decide_sentence_finished(self, context, text):
-        tokenized = self.sentence_tokenizer.encode(context, text)
-        ids = np.asarray(tokenized.ids).reshape([1, -1]).astype(np.int64)
-        type_ids = np.asarray(tokenized.type_ids).reshape([1, -1]).astype(np.int64)
-        attention_mask = np.ones_like(ids)
-        input_dict = {
-            "input_ids": ids,
-            "attention_mask": attention_mask,
-            "token_type_ids": type_ids,
-        }
-        logits = self.sentence_model.run(None, input_dict)[0]
-        return logits.argmax(-1)[0]
 
     def _vad_frame(self, frame):
         vad_frames = frame[
@@ -215,6 +178,25 @@ class SpeechToTextAPI(Model):
 
         Returns:
             Transcribed text from the audio.
+        """
+        return None
+
+    @abstractmethod
+    def decide_finished(self, context: str, text: str, pause_time: int) -> bool:
+        """Abstract method for deciding if audio transcription should be finished.
+
+        Should be implemented by the specific model. 
+        Called every transcribed frame so it's best 
+        to use pause_time for the most checks below the threshold.
+
+        Args:
+            context: Text context of the speech recognized 
+                (e.g. a question to which speech recognized is a reply to).
+            text: Recognized speech so far
+            pause_time: Pause after last speech in milliseconds
+
+        Returns:
+            Decision to stop recognition and finalize results.
         """
         return None
 
