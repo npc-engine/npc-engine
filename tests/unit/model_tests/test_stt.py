@@ -81,6 +81,7 @@ def test_transcribe():
 
     start_trs = time.time()
     result = stt.transcribe(signal)
+    assert result == "hello how is it going"
     end_trs = time.time()
     result = stt.postprocess(result)
     print(
