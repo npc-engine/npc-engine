@@ -11,4 +11,3 @@ scipy==1.7.2
 sounddevice==0.4.3
 Jinja2==3.0.2
 webrtcvad==2.0.10
-git+https://github.com/githubharald/CTCDecoder.git@master#egg=ctc_decoder
