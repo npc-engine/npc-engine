@@ -1,9 +1,9 @@
 """Module that implements Huggingface transformers semantic similarity."""
 from typing import List
+import re
 import numpy as np
 from os import path
 from tokenizers import Tokenizer
-from ctc_decoder import best_path
 import onnxruntime as rt
 from onnxruntime import GraphOptimizationLevel as opt_level
 from loguru import logger
@@ -117,6 +117,20 @@ class NemoSTT(SpeechToTextAPI):
         self.punct_labels = "O,.?"
         self.capit_labels = "OU"
 
+        sess_options = rt.SessionOptions()
+        sess_options.graph_optimization_level = opt_level.ORT_ENABLE_ALL
+        self.sentence_model = rt.InferenceSession(
+            path.join(model_path, "sentence_prediction.onnx"),
+            providers=[rt.get_available_providers()[0]],
+            sess_options=sess_options,
+        )
+        self.sentence_tokenizer = Tokenizer.from_file(
+            path.join(model_path, "sentence_tokenizer.json")
+        )
+        logger.info(
+            f"Sentence classifier uses {rt.get_available_providers()[0]} provider"
+        )
+
     def transcribe(self, audio: List[float]) -> str:
         """Transcribe audio usign this pipeline.
 
@@ -127,16 +141,9 @@ class NemoSTT(SpeechToTextAPI):
             Transcribed text from the audio.
         """
         logits = self._predict(np.asarray(audio, dtype=np.float32))
-        utterance = best_path(logits, self.asr_vocab)
+        labels = logits.argmax(-1)
+        utterance = re.sub(r" +", " ", "".join([self.asr_vocab[i] for i in labels]))
         return utterance
-
-    def _predict(self, audio: np.ndarray) -> np.ndarray:
-        length = np.asarray([audio.squeeze().shape[0]], np.float32)
-        signal = audio.reshape([1, -1]).astype(np.float32)
-        audio_signal = self.preprocessor.run(
-            None, {"signal": signal, "length": length}
-        )[0]
-        return self.asr_model.run(None, {"audio_signal": audio_signal})[0][0]
 
     def transcribe_frame(self, frame: np.ndarray) -> str:
         """Transcribe audio usign this pipeline.
@@ -164,22 +171,25 @@ class NemoSTT(SpeechToTextAPI):
         self.buffer = np.zeros(shape=self.buffer.shape, dtype=np.float32)
         self.prev_char = ""
 
-    @staticmethod
-    def _greedy_decoder(logits, vocab):
-        s = ""
-        for i in range(logits.shape[0]):
-            s += vocab[np.argmax(logits[i], axis=-1)]
-        return s
+    def decide_finished(self, context: str, text: str, pause_time: int) -> bool:
+        """Decide if audio transcription should be finished.
 
-    def _greedy_merge(self, s):
-        s_merged = ""
+        Args:
+            context: Text context of the speech recognized 
+                (e.g. a question to which speech recognized is a reply to).
+            text: Recognized speech so far
+            pause_time: Pause after last speech in milliseconds
 
-        for i in range(len(s)):
-            if s[i] != self.prev_char:
-                self.prev_char = s[i]
-                if self.prev_char != "_":
-                    s_merged += self.prev_char
-        return s_merged
+        Returns:
+            Decision to stop recognition and finalize results.
+        """
+        done = False
+        if pause_time > self.max_silence_duration:
+            done = True
+        if pause_time > self.min_speech_duration and not done:
+            decision = self._decide_sentence_finished(context, text)
+            done = bool(decision)
+        return done
 
     def postprocess(self, text: str) -> str:
         """Add punctuation and capitalization.
@@ -207,6 +217,44 @@ class NemoSTT(SpeechToTextAPI):
             text, punct[0][1:-1].tolist(), capit[0][1:-1].tolist()
         )
         return punctuated_capitalized
+
+    def _decide_sentence_finished(self, context, text):
+        tokenized = self.sentence_tokenizer.encode(context, text)
+        ids = np.asarray(tokenized.ids).reshape([1, -1]).astype(np.int64)
+        type_ids = np.asarray(tokenized.type_ids).reshape([1, -1]).astype(np.int64)
+        attention_mask = np.ones_like(ids)
+        input_dict = {
+            "input_ids": ids,
+            "attention_mask": attention_mask,
+            "token_type_ids": type_ids,
+        }
+        logits = self.sentence_model.run(None, input_dict)[0]
+        return logits.argmax(-1)[0]
+
+    def _predict(self, audio: np.ndarray) -> np.ndarray:
+        length = np.asarray([audio.squeeze().shape[0]], np.float32)
+        signal = audio.reshape([1, -1]).astype(np.float32)
+        audio_signal = self.preprocessor.run(
+            None, {"signal": signal, "length": length}
+        )[0]
+        return self.asr_model.run(None, {"audio_signal": audio_signal})[0][0]
+
+    @staticmethod
+    def _greedy_decoder(logits, vocab):
+        s = ""
+        for i in range(logits.shape[0]):
+            s += vocab[np.argmax(logits[i], axis=-1)]
+        return s
+
+    def _greedy_merge(self, s):
+        s_merged = ""
+
+        for i in range(len(s)):
+            if s[i] != self.prev_char or s[i] != " ":
+                self.prev_char = s[i]
+                if self.prev_char != "_":
+                    s_merged += self.prev_char
+        return s_merged
 
     def _apply_punct_capit_predictions(
         self, query: str, punct_preds, capit_preds
