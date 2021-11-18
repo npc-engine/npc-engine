@@ -23,6 +23,12 @@ class MockSTTModel(SpeechToTextAPI):
     def postprocess(self, text):
         return "Hello"
 
+    def decide_finished(self, text):
+        return True
+
+    def reset(self):
+        pass
+
 
 def test_tts_api():
     """Check custom testing"""
