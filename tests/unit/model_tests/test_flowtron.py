@@ -82,4 +82,3 @@ def test_flowtron():
             sd.sleep(int(10240 / 22.05))
         sd.sleep(int(10240 / 22.05))
     audio_time = len(full_audio) / 22050
-
