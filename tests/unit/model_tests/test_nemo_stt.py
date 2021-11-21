@@ -7,7 +7,6 @@ import numpy
 import scipy.signal
 from pydub import AudioSegment
 import numpy as np
-import sounddevice as sd
 
 
 @pytest.mark.skip()
@@ -143,7 +142,6 @@ def test_transcribe_frame():
         end_trs = time.time()
         total_result += result
         print(f"Result: {result} with transcription in {end_trs - start_trs}")
-    sd.play(stt.buffer, samplerate=16000)
     result = stt.postprocess(total_result)
     print(f"End Result: {result}")
     assert result == "Hello, how is it going?"
