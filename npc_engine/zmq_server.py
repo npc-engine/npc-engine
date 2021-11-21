@@ -22,6 +22,7 @@ class ZMQServer:
             api_dict: A Mapping from method names to callables that implement this method.
         """
         dispatcher.update(api_dict)
+        dispatcher.update({"status": lambda: "OK"})
         while True:
             message = self.socket.recv_string()
             logger.trace("Received request: %s" % message)
