@@ -69,7 +69,7 @@ def test_transcribe():
 
     audio = AudioSegment.from_file(
         os.path.join(
-            os.path.dirname(__file__), "..", "..", "resources", "Recording (2).m4a",
+            os.path.dirname(__file__), "..", "..", "resources", "stt_test.m4a",
         )
     )
     audio = numpy.frombuffer(audio.raw_data, numpy.int16)
@@ -125,7 +125,7 @@ def test_transcribe_frame():
 
     audio = AudioSegment.from_file(
         os.path.join(
-            os.path.dirname(__file__), "..", "..", "resources", "Recording (2).m4a",
+            os.path.dirname(__file__), "..", "..", "resources", "stt_test.m4a",
         )
     )
     audio = numpy.frombuffer(audio.raw_data, numpy.int16)
