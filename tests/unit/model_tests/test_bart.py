@@ -9,7 +9,14 @@ import pytest
     not os.path.exists(
         os.path.join(
             os.path.dirname(__file__),
-            "..\\..\\..\\npc_engine\\resources\\models\\bart\\config.yml",
+            "..",
+            "..",
+            "..",
+            "npc_engine",
+            "resources",
+            "models",
+            "bart",
+            "config.yml",
         )
     ),
     reason="Model missing",
@@ -19,7 +26,13 @@ def test_reply_default():
     chatbot_model = Model.load(
         os.path.join(
             os.path.dirname(__file__),
-            "..\\..\\..\\npc_engine\\resources\\models\\bart",
+            "..",
+            "..",
+            "..",
+            "npc_engine",
+            "resources",
+            "models",
+            "bart",
         )
     )
 

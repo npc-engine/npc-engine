@@ -24,7 +24,12 @@ cli.exe run --models-path models --port 5555
 ```
 This will start a server but if no models were added to the folder it won't expose any API.
 
-You can grab default models from [here](https://drive.google.com/drive/folders/1_3iOrhgvDyrKnC-tWEdysxpJyUcun0X3?usp=sharing).
+You can download default models via
+```
+cli.exe download-default-models --models-path models
+```
+
+See descriptions of the default models in [Default Models](../models/#default-models) section.
 
 !!! note "NOTE"
     Model API examples can be found in `npc-engine\tests\integration`.   

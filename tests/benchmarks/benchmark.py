@@ -14,9 +14,11 @@ class TestClass:
     def setup_class(cls):
         logger.info("GPU VRAM Before starting inference engine:")
         os.system('nvidia-smi --query-gpu="memory.used" --format=csv')
-        cli_path = os.path.join(os.path.dirname(__file__), "..\\..\\npc_engine\\cli.py")
+        cli_path = os.path.join(
+            os.path.dirname(__file__), "..", "..", "npc_engine", "cli.py"
+        )
         models_path = os.path.join(
-            os.path.dirname(__file__), "..\\..\\npc_engine\\resources\\models"
+            os.path.dirname(__file__), "..", "..", "npc_engine", "resources", "models"
         )
         server_process = subprocess.Popen(
             ["python", cli_path, "run", "--models-path", models_path, "--port", "5555",]

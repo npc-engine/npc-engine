@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
-"""Chatbot model implementations.
+"""Speech to text API.
 
 This module implements specific models and wraps them under
 the common interface for loading and inference.
 
 Example:
     ```
-        from npc_engine.models.chatbot import ChatbotAPI
-        model = ChatbotAPI.load("path/to/model_dir")
-        model.generate_reply(context, temperature=0.8, topk=None,)
+        from npc_engine.models.stt import SpeechToTextAPI
+        model = SpeechToTextAPI.load("path/to/model_dir")
+        text = model.listen()  # Say something
     ```
 """
-from .chatbot_base import ChatbotAPI  # noqa: F401
+
+from .stt_base import SpeechToTextAPI  # noqa: F401
 
 from os.path import dirname, basename, isfile, join
 import glob

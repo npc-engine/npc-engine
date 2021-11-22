@@ -15,6 +15,8 @@ When the server starts it scans the folder for any valid models, loads them and 
 Each model's API is defined in [API classes](api_classes.md).  
 Server exposes methods that are listed in `API_METHODS` class variable.
 
+You can find a description of default models available in [Default Models](../models/#default-models) section.
+
 The specifics of how model is loaded and how inference is done is defined in [specific model classes](models.md)
 
 !!! danger "Warning"

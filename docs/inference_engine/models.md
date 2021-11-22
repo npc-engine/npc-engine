@@ -28,6 +28,37 @@ builds a mapping from model's API_METHODS class variable to anonymous functions 
       show_root_heading: true
       show_source: false
 
+## Default Models
+
+- ### Fantasy Chatbot
+
+    [BartChatbot](../reference/#npc_engine.models.chatbot.chatbot_base.ChatbotAPI)
+    trained on [LIGHT Dataset](https://parl.ai/projects/light/). 
+    Model consumes both self, other personas and location dialogue is happening in.
+
+<!-- TODO: Change context to better reflect the required arguments, describe context and custom tokens -->
+
+- ### Semantic Similarity sentence-transformers/all-MiniLM-L6-v2
+
+    Onnx export of [sentence-transformers/all-MiniLM-L6-v2](https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2).
+
+- ### FlowtronTTS with Waveglow vocoder
+
+    Nvidia's [FlowtronTTS](https://github.com/NVIDIA/flowtron) architecture using Waveglow vocoder. 
+    Weights were published by the authors, this model uses 
+    [Flowtron LibriTTS2K](https://drive.google.com/file/d/1sKTImKkU0Cmlhjc_OeUDLrOLIXvUPwnO/view) version.
+
+- ### Speech to text NeMo models
+
+    This model is still heavy WIP it is best to use your platform's of choice existing solutions
+    e.g. [UnityEngine.Windows.Speech.DictationRecognizer](https://docs.unity3d.com/ScriptReference/Windows.Speech.DictationRecognizer.html) in Unity.  
+
+    This implementation uses several models exported from [NeMo](https://github.com/NVIDIA/NeMo) toolkit:
+
+    - [QuartzNet15x5](https://catalog.ngc.nvidia.com/orgs/nvidia/models/quartznet15x5) for transcription.
+    - [Punctuation BERT](https://catalog.ngc.nvidia.com/orgs/nvidia/teams/nemo/models/punctuation_en_bert) for applying punctuation.
+    - Custom transformer for recognizing end of response to the context initialized from [all-MiniLM-L6-v2](nreimers/MiniLM-L6-H384-uncased)
+
 
 ## Creating new models
 

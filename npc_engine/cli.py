@@ -45,19 +45,21 @@ def run(models_path: str, port: str):
 def download_default_models(models_path: str):
     """Download default models into the folder."""
     s3 = boto3.resource("s3")
-    s3.meta.client.meta.events.register('choose-signer.s3.*', disable_signing)  # Do not require credentials
-    model_names = ["all-mini-lm-6-v2", "flowtron", "bart"]
+    s3.meta.client.meta.events.register(
+        "choose-signer.s3.*", disable_signing
+    )  # Do not require credentials
+    model_names = ["all-mini-lm-6-v2", "flowtron", "bart", "stt"]
     bucket = s3.Bucket("default-models")
     for model in model_names:
-        logger.info('Downloading model {}', model)
+        logger.info("Downloading model {}", model)
         for file in bucket.objects.filter(Prefix=model):
-            is_dir = file.key.split('/')[-1] == ''
+            is_dir = file.key.split("/")[-1] == ""
             if is_dir:
                 continue
             local_path = os.path.join(models_path, file.key)
             if not os.path.exists(os.path.dirname(local_path)):
                 os.makedirs(os.path.dirname(local_path))
-            logger.info('Downloading {}', file.key)
+            logger.info("Downloading {}", file.key)
             bucket.download_file(file.key, local_path)
 
 
