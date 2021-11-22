@@ -15,4 +15,4 @@ jobs:
         with:
           python-version: 3.7.x
 
-      - run: pip install .[doc] && mkdocs gh-deploy --force
+      - run: pip install -e .[doc] && mkdocs gh-deploy --force
