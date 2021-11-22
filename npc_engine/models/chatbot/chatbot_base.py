@@ -14,6 +14,7 @@ class ChatbotAPI(Model):
         "generate_reply",
         "get_context_fields",
         "get_prompt_template",
+        "get_special_tokens",
     ]
 
     def __init__(self, template_string: str, default_context: str, *args, **kwargs):
@@ -29,7 +30,7 @@ class ChatbotAPI(Model):
         self.initialized = True
 
     def generate_reply(self, context: Dict[str, Any], *args, **kwargs) -> str:
-        """Format the model prompt and generates response.
+        """Format the model prompt and generate response.
 
         Args:
             context: Prompt context.
