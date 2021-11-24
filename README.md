@@ -72,11 +72,11 @@ print(f"Response message {message}")
 
 - Real-time end-to-end chatbot dialogue system
 - Semantic similarity
-- Real-time speech to text
+- Unity integration
 
 ### In progress:
 
-- Unity integration
+- Real-time speech to text
 - Unreal integration
 - CLI tool for importing models from [Huggingface](https://huggingface.co/transformers/index.html) and [Coqui TTS](https://tts.readthedocs.io/en/latest/)
 - Asynchronous API features

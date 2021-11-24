@@ -11,7 +11,7 @@ from loguru import logger
 from npc_engine.models.stt.stt_base import SpeechToTextAPI
 
 
-class NemoSTT(SpeechToTextAPI):
+class NemoSTT(SpeechToTextAPI):  # pragma: no cover
     """Text to speech pipeline based on Nemo toolkit.
 
     Uses:

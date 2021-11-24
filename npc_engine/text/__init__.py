@@ -3,7 +3,6 @@ import re
 
 from . import cleaners
 from .symbols import symbols
-from .data import heteronyms
 
 # Mappings from symbol to numeric ID and vice versa:
 _symbol_to_id = {s: i for i, s in enumerate(symbols)}
@@ -36,6 +35,3 @@ def _symbols_to_sequence(symbols):
 
 def _should_keep_symbol(s):
     return s in _symbol_to_id and s != "_" and s != "~"
-
-
-HETERONYMS = heteronyms

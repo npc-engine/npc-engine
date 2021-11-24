@@ -11,7 +11,7 @@ import webrtcvad
 import re
 
 
-class SpeechToTextAPI(Model):
+class SpeechToTextAPI(Model):  # pragma: no cover
     """Abstract base class for speech to text models."""
 
     API_METHODS: List[str] = ["listen", "stt", "get_devices", "select_device"]

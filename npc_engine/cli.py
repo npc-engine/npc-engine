@@ -48,7 +48,7 @@ def download_default_models(models_path: str):
     s3.meta.client.meta.events.register(
         "choose-signer.s3.*", disable_signing
     )  # Do not require credentials
-    model_names = ["all-mini-lm-6-v2", "flowtron", "bart", "stt"]
+    model_names = ["all-mini-lm-6-v2", "flowtron", "bart"]
     bucket = s3.Bucket("default-models")
     for model in model_names:
         logger.info("Downloading model {}", model)

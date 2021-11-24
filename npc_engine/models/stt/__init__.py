@@ -13,11 +13,4 @@ Example:
 """
 
 from .stt_base import SpeechToTextAPI  # noqa: F401
-
-from os.path import dirname, basename, isfile, join
-import glob
-
-modules = glob.glob(join(dirname(__file__), "*.py"))
-__all__ = [
-    basename(f)[:-3] for f in modules if isfile(f) and not f.endswith("__init__.py")
-]
+from .nemo_stt import NemoSTT  # noqa: F401
