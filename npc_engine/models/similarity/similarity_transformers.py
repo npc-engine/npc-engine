@@ -139,6 +139,6 @@ class TransformerSemanticSimilarity(SimilarityAPI):
             Vector of distances (batch_size or 1,)
         """
         if self.metric_type == "dot":
-            return -np.dot(embedding_a, embedding_b.T).squeeze()
+            return -np.dot(embedding_a, embedding_b.T).squeeze(0)
         elif self.metric_type == "cosine":
-            return 1 - cdist(embedding_a, embedding_b, metric="cosine").squeeze()
+            return 1 - cdist(embedding_a, embedding_b, metric="cosine").squeeze(0)

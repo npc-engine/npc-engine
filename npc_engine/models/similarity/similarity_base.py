@@ -18,7 +18,7 @@ class SimilarityAPI(Model):
         self.initialized = True
         self.lru_cache = NumpyLRUCache(cache_size)
 
-    def compare(self, query: str, context: List[str]) -> Dict[str, float]:
+    def compare(self, query: str, context: List[str]) -> List[float]:
         """Compare a query to the context.
 
         Args:
