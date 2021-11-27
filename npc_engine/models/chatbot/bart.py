@@ -44,7 +44,7 @@ class BartChatbot(ChatbotAPI):
         pad_token_id=1,
         sep_token_id=None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         """Create the chatbot from config args and kwargs.
 
@@ -100,6 +100,10 @@ class BartChatbot(ChatbotAPI):
             "pad_token": self.tokenizer.decode(
                 [pad_token_id], skip_special_tokens=False
             ),
+            **{
+                f"added_token{self.tokenizer.token_to_id(token)}": token
+                for token in added_tokens
+            },
         }
 
         self.max_steps = max_steps

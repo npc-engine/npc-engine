@@ -1,5 +1,5 @@
 """Module that implements semantic similarity model API."""
-from typing import Dict, List
+from typing import List
 
 from abc import abstractmethod
 from npc_engine.models.base_model import Model
