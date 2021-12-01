@@ -21,6 +21,7 @@ class NemoSTT(SpeechToTextAPI):  # pragma: no cover
         - Punctuation distillbert model from Nemo toolkit. (requires tokenizer.json as well)
         - Huggingface transformers model for predicting that sentence is finished 
             (Cropped sentence -> 0 label, finished sentence -> 1 label).
+        - OpenSLR Librispeech 3-gram model converted to lowercase https://www.openslr.org/11/
 
     References:  
         https://github.com/NVIDIA/NeMo
