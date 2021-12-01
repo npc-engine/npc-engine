@@ -16,3 +16,6 @@ botocore~=1.23.5
 numpy~=1.21.4
 pyinstaller~=4.7
 setuptools~=57.0.0
+kenlm-cygwin>=0.0.0
+pyctcdecode==0.1.1
+librosa==0.8.0
