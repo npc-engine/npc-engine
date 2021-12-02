@@ -10,7 +10,7 @@ import numpy as np
 from pyctcdecode import build_ctcdecoder
 
 
-# @pytest.mark.skip()
+@pytest.mark.skip()
 def test_sanity_check():
     try:
         stt = models.Model.load(
