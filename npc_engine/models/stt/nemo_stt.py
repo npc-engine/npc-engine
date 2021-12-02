@@ -152,11 +152,6 @@ class NemoSTT(SpeechToTextAPI):
         """
         return self.decoder.decode(logits)
 
-    def reset(self) -> str:
-        """Reset frame_history and decoder's state."""
-        self.buffer = np.zeros(shape=self.buffer.shape, dtype=np.float32)
-        self.prev_char = ""
-
     def decide_finished(self, context: str, text: str) -> bool:
         """Decide if audio transcription should be finished.
 

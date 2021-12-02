@@ -63,6 +63,7 @@ class SpeechToTextAPI(Model):
         if self.microphone_initialized:
             return
         self.running = False
+        self.microphone_initialized = True
 
         def callback(in_data, frame_count, time_info, status):
             if self.running:
@@ -101,13 +102,11 @@ class SpeechToTextAPI(Model):
         if not self.microphone_initialized:
             raise RuntimeError("Microphone not initialized.")
         self.listen_queue.queue.clear()
-        self.reset()
         context = re.sub(r"[^A-Za-z0-9 ]+", "", context).lower() if context else None
         text = self._transcribe_vad_pause(context)
         processed = self.postprocess(text)
 
         self.listen_queue.queue.clear()
-        self.reset()
         return processed
 
     def _transcribe_vad_pause(self, context) -> str:
@@ -254,14 +253,6 @@ class SpeechToTextAPI(Model):
 
         Returns:
             Decision to stop recognition and finalize results.
-        """
-        return None
-
-    @abstractmethod
-    def reset(self):
-        """Abstract method for resetting iterative audio transcription state.
-
-        Should be implemented by the specific model.
         """
         return None
 
