@@ -29,6 +29,7 @@ def test_sanity_check():
         return
     device = input(f"Select device: \n {stt.get_devices()} \n")
     stt.select_device(device)
+    stt.initialize_microphone_input()
     while True:
         print("Listening...")
         result = stt.listen("hello how is it going")
