@@ -48,11 +48,8 @@ class NemoSTT(SpeechToTextAPI):
 
     def __init__(
         self,
-        timestep_duration: int,
         model_path: str,
         frame_size: int = 1000,
-        frame_overlap: float = 2.5,
-        offset: int = 10,
         sample_rate: int = 16000,
         predict_punctuation: bool = False,
         alpha: float = 0.5,

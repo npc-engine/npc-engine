@@ -31,7 +31,7 @@ class SpeechToTextAPI(Model):
         vad_mode=None,
         sample_rate=16000,
         vad_frame_ms=10,
-        frame_size=1000,
+        pad_size=1000,
         *args,
         **kwargs,
     ):
@@ -48,10 +48,11 @@ class SpeechToTextAPI(Model):
         self.sample_rate = sample_rate
         self.listen_queue = Queue(10)
         self.vad_frame_ms = vad_frame_ms
-        self.frame_size_sampling = frame_size
         self.vad_frame_size = int((vad_frame_ms * sample_rate) / 1000)
         self.running = False
         self.microphone_initialized = False
+        self.silence_buffer = np.empty([0])
+        self.pad_size = pad_size
 
     def __del__(self):
         """Stop listening on destruction."""
@@ -71,6 +72,14 @@ class SpeechToTextAPI(Model):
                     self.listen_queue.put(in_data.reshape(-1), block=False)
                 except Exception:
                     return
+            else:
+                if not self._vad_frame(
+                    in_data.reshape(-1)
+                ):  # Register only silence for buffer
+                    self.silence_buffer = np.append(
+                        self.silence_buffer, in_data.reshape(-1)
+                    )
+                    self.silence_buffer = self.silence_buffer[-self.pad_size :]
 
         self.stream = sd.InputStream(
             samplerate=self.sample_rate,
@@ -79,6 +88,8 @@ class SpeechToTextAPI(Model):
             callback=callback,
         )
         self.stream.start()
+        while self.silence_buffer.shape[0] < self.pad_size:
+            pass
 
     def listen(self, context: str = None) -> str:  # pragma: no cover
         """Listen for speech input and return text from speech when done.
@@ -119,7 +130,7 @@ class SpeechToTextAPI(Model):
         tested_pause = False
 
         logits = None
-        signal = np.empty([0], np.float32)
+        signal = self.silence_buffer
         self.running = True
         while not done:
             try:
