@@ -72,7 +72,7 @@ print(f"Response message {message}")
 
 - Real-time end-to-end chatbot dialogue system
 - Semantic similarity
-- Real-time speech to text (not very good, requires decoder tuning and better language model)
+- Real-time speech to text (experimental)
 - Unity integration
 
 ### In progress:

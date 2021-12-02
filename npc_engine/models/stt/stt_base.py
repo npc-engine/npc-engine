@@ -11,7 +11,7 @@ import webrtcvad
 import re
 
 
-class SpeechToTextAPI(Model):  # pragma: no cover
+class SpeechToTextAPI(Model):
     """Abstract base class for speech to text models."""
 
     API_METHODS: List[str] = ["listen", "stt", "get_devices", "select_device"]
@@ -24,7 +24,6 @@ class SpeechToTextAPI(Model):  # pragma: no cover
         sample_rate=16000,
         vad_frame_ms=10,
         frame_size=1000,
-        transcribe_realtime=True,
         *args,
         **kwargs,
     ):
@@ -42,8 +41,27 @@ class SpeechToTextAPI(Model):  # pragma: no cover
         self.listen_queue = Queue(10)
         self.vad_frame_ms = vad_frame_ms
         self.frame_size_sampling = frame_size
-        self.transcribe_realtime = transcribe_realtime
         self.vad_frame_size = int((vad_frame_ms * sample_rate) / 1000)
+        self.running = False
+
+        def callback(in_data, frame_count, time_info, status):
+            if self.running:
+                try:
+                    self.listen_queue.put(in_data.reshape(-1), block=False)
+                except Exception:
+                    return
+
+        self.stream = sd.InputStream(
+            samplerate=self.sample_rate,
+            channels=1,
+            blocksize=self.vad_frame_size,
+            callback=callback,
+        )
+        self.stream.start()
+
+    def __del__(self):
+        """Stop listening on destruction."""
+        self.stream.stop()
 
     def listen(self, context: str = None) -> str:  # pragma: no cover
         """Listen for speech input and return text from speech when done.
@@ -65,126 +83,65 @@ class SpeechToTextAPI(Model):  # pragma: no cover
         self.listen_queue.queue.clear()
         self.reset()
         context = re.sub(r"[^A-Za-z0-9 ]+", "", context).lower() if context else None
-        if self.transcribe_realtime:
-            text = self._transcribe_realtime(context)
-        else:
-            text = self._transcribe_vad_pause()
+        text = self._transcribe_vad_pause(context)
         processed = self.postprocess(text)
 
         self.listen_queue.queue.clear()
         self.reset()
         return processed
 
-    def _transcribe_realtime(self, context: str) -> str:
-        def callback(in_data, frame_count, time_info, status):
-            # signal = sps.resample(signal, int((self.frame_size / 1000) * self.sample_rate)
-            self.listen_queue.put(in_data.reshape(-1))
+    def _transcribe_vad_pause(self, context) -> str:
+        done = False
 
-        with sd.InputStream(
-            samplerate=self.sample_rate,
-            channels=1,
-            blocksize=self.vad_frame_size,
-            callback=callback,
-        ):
-            done = False
+        total_pause_ms = 0
+        total_speech_ms = 0
 
-            total_pause_ms = 0
-            total_speech_ms = 0
+        speech_appeared = False
+        tested_pause = False
 
-            speech_appeared = False
+        logits = None
+        signal = np.empty([0], np.float32)
+        self.running = True
+        while not done:
+            try:
+                vad_frame = self.listen_queue.get(block=False)
+            except Exception:
+                continue
+            is_speech = self._vad_frame(vad_frame)
 
-            asr_frame = np.empty([0], np.float32)
-            logits = None
-            while not done:
-                vad_frame = self.listen_queue.get(
-                    block=True, timeout=self._samples_to_ms(self.frame_size * 2)
-                )
-                is_speech = self._vad_frame(vad_frame)
+            total_speech_ms, total_pause_ms = self._update_vad_stats(
+                is_speech, total_speech_ms, total_pause_ms
+            )
 
-                total_speech_ms, total_pause_ms = self._update_vad_stats(
-                    is_speech, total_speech_ms, total_pause_ms
-                )
-                asr_frame = np.append(asr_frame, vad_frame)
-                if not speech_appeared and total_speech_ms < self.min_speech_duration:
-                    #  Keep only last minimum detectable speech duration
-                    asr_frame = asr_frame[
-                        -self._ms_to_samplenum(self.min_speech_duration) :
-                    ]
-                else:
-                    speech_appeared = True
+            if total_speech_ms > self.min_speech_duration:
+                speech_appeared = True
 
+            if total_pause_ms == 0:
+                tested_pause = False
+
+            signal = np.append(signal, vad_frame)
+            if not speech_appeared and total_speech_ms < self.min_speech_duration:
+                #  Keep only last minimum detectable speech duration + buffer
+                signal = signal[-self._ms_to_samplenum(1300) :]
+            if signal.shape[0] >= self._ms_to_samplenum(1000):
                 if speech_appeared and total_pause_ms > self.max_silence_duration:
+                    logits = self.transcribe(np.pad(signal, (0, 1000), "wrap"))
+                    text = self.decode(logits)
                     done = True
-                    asr_frame = np.pad(
-                        asr_frame,
-                        (
-                            0,
-                            self._ms_to_samplenum(self.frame_size_sampling)
-                            - asr_frame.shape[0],
-                        ),
-                        "constant",
-                    )
-
-                if speech_appeared and asr_frame.shape[0] >= self._ms_to_samplenum(
-                    self.frame_size_sampling
+                    self.running = False
+                    return text
+                elif (
+                    speech_appeared
+                    and total_pause_ms > self.min_speech_duration
+                    and not tested_pause
                 ):
-                    print(f"\r speech_appeared {speech_appeared}")
-                    if logits is None:
-                        logits = self.transcribe(asr_frame)
-                    else:
-                        logits = np.concatenate((logits, self.transcribe(asr_frame)))
+                    tested_pause = True
+                    logits = self.transcribe(np.pad(signal, (0, 800), "wrap"))
                     text = self.decode(logits)
-                    if not done and total_pause_ms > 0:
-                        done = self.decide_finished(context, text)
-                    asr_frame = np.empty([0], np.float32)
-        return text
+                    done = self.decide_finished(context, text)
+                    self.running = not done
 
-    def _transcribe_vad_pause(self) -> str:
-        def callback(in_data, frame_count, time_info, status):
-            # signal = sps.resample(signal, int((self.frame_size / 1000) * self.sample_rate)
-            self.listen_queue.put(in_data.reshape(-1))
-
-        with sd.InputStream(
-            samplerate=self.sample_rate,
-            channels=1,
-            blocksize=self.vad_frame_size,
-            callback=callback,
-        ):
-            done = False
-
-            total_pause_ms = 0
-            total_speech_ms = 0
-
-            speech_appeared = False
-
-            logits = None
-            signal = np.empty([0], np.float32)
-            while not done:
-                vad_frame = self.listen_queue.get(
-                    block=True, timeout=self._samples_to_ms(self.frame_size * 2)
-                )
-                is_speech = self._vad_frame(vad_frame)
-
-                total_speech_ms, total_pause_ms = self._update_vad_stats(
-                    is_speech, total_speech_ms, total_pause_ms
-                )
-
-                if total_speech_ms > self.min_speech_duration:
-                    speech_appeared = True
-
-                print(f"\r speech_appeared {speech_appeared}")
-
-                signal = np.append(signal, vad_frame)
-                if not speech_appeared and total_speech_ms < self.min_speech_duration:
-                    #  Keep only last minimum detectable speech duration
-                    signal = signal[-self._ms_to_samplenum(self.min_speech_duration) :]
-                else:
-                    speech_appeared = True
-
-                if speech_appeared and total_pause_ms > self.max_silence_duration:
-                    done = True
-                    logits = self.transcribe(signal)
-                    text = self.decode(logits)
+        self.running = False
         return text
 
     def stt(self, audio: List[int]) -> str:
@@ -246,20 +203,6 @@ class SpeechToTextAPI(Model):  # pragma: no cover
 
         Args:
             audio: ndarray of int16 of shape (samples,).
-
-        Returns:
-            Transcribed logits from the audio.
-        """
-        return None
-
-    @abstractmethod
-    def transcribe_frame(self, frame: np.ndarray) -> np.ndarray:
-        """Abstract method for audio transcription iteratively.
-
-        Should be implemented by the specific model.
-
-        Args:
-            frame: ndarray of int16 of shape (frame_size,).
 
         Returns:
             Transcribed logits from the audio.

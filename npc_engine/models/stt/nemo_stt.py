@@ -12,7 +12,7 @@ import librosa
 from npc_engine.models.stt.stt_base import SpeechToTextAPI
 
 
-class NemoSTT(SpeechToTextAPI):  # pragma: no cover
+class NemoSTT(SpeechToTextAPI):
     """Text to speech pipeline based on Nemo toolkit.
 
     Uses:
@@ -55,7 +55,6 @@ class NemoSTT(SpeechToTextAPI):  # pragma: no cover
         offset: int = 10,
         sample_rate: int = 16000,
         predict_punctuation: bool = False,
-        transcribe_realtime: bool = False,
         alpha: float = 0.5,
         beta: float = 1,
         *args,
@@ -71,7 +70,6 @@ class NemoSTT(SpeechToTextAPI):  # pragma: no cover
             sample_rate=sample_rate,
             model_path=model_path,
             frame_size=frame_size,
-            transcribe_realtime=transcribe_realtime,
             *args,
             **kwargs,
         )
@@ -105,15 +103,6 @@ class NemoSTT(SpeechToTextAPI):  # pragma: no cover
         self.asr_vocab = " abcdefghijklmnopqrstuvwxyz'"
         self.asr_vocab = list(self.asr_vocab)
         self.asr_vocab.append("")
-        self.frame_size = int((frame_size / 1000) * self.sample_rate)
-        self.n_frame_overlap = int(frame_overlap * self.sample_rate)
-        self.offset = offset
-        self.timestep_duration = timestep_duration
-        self.n_timesteps_overlap = int(frame_overlap / timestep_duration) - 2
-        self.buffer = np.zeros(
-            shape=int(2 * self.n_frame_overlap + self.frame_size), dtype=np.float32
-        )
-        self.prev_char = ""
 
         self.punct_labels = "O,.?"
         self.capit_labels = "OU"
@@ -125,23 +114,20 @@ class NemoSTT(SpeechToTextAPI):  # pragma: no cover
             beta=beta,  # tuned on a val set
         )
 
-        self.transcribe_realtime = transcribe_realtime
+        sess_options = rt.SessionOptions()
+        sess_options.graph_optimization_level = opt_level.ORT_ENABLE_ALL
+        self.sentence_model = rt.InferenceSession(
+            path.join(model_path, "sentence_prediction.onnx"),
+            providers=[rt.get_available_providers()[0]],
+            sess_options=sess_options,
+        )
+        self.sentence_tokenizer = Tokenizer.from_file(
+            path.join(model_path, "sentence_tokenizer.json")
+        )
 
-        if transcribe_realtime:
-            sess_options = rt.SessionOptions()
-            sess_options.graph_optimization_level = opt_level.ORT_ENABLE_ALL
-            self.sentence_model = rt.InferenceSession(
-                path.join(model_path, "sentence_prediction.onnx"),
-                providers=[rt.get_available_providers()[0]],
-                sess_options=sess_options,
-            )
-            self.sentence_tokenizer = Tokenizer.from_file(
-                path.join(model_path, "sentence_tokenizer.json")
-            )
-
-            logger.info(
-                f"Sentence classifier uses {rt.get_available_providers()[0]} provider"
-            )
+        logger.info(
+            f"Sentence classifier uses {rt.get_available_providers()[0]} provider"
+        )
 
     def transcribe(self, audio: List[float]) -> np.ndarray:
         """Transcribe audio usign this pipeline.
@@ -154,25 +140,6 @@ class NemoSTT(SpeechToTextAPI):  # pragma: no cover
         """
         logits = self._predict(np.asarray(audio, dtype=np.float32))
         return logits
-
-    def transcribe_frame(self, frame: np.ndarray) -> np.ndarray:
-        """Transcribe audio usign this pipeline.
-
-        Args:
-            frame: ndarray of int16 of shape (frame_size,).
-
-        Returns:
-            Transcribed text from the audio.
-        """
-        if len(frame) != self.frame_size:
-            raise ValueError(
-                f"Frame size incorrect: expected {self.frame_size}, got {len(frame)}"
-            )
-        self.buffer[: -self.frame_size] = self.buffer[self.frame_size :]
-        self.buffer[-self.frame_size :] = frame
-        logits = self._predict(self.buffer)
-
-        return logits[self.n_timesteps_overlap : -self.n_timesteps_overlap]
 
     def decode(self, logits: np.ndarray) -> str:
         """Decode logits into text.
@@ -258,6 +225,7 @@ class NemoSTT(SpeechToTextAPI):  # pragma: no cover
 
     def _preprocess_signal(self, signal):
         audio_signal = signal.reshape([1, -1])
+        # audio_signal += np.random.rand(*audio_signal.shape) * 1e-5
         audio_signal = np.concatenate(
             (
                 audio_signal[:, 0].reshape([-1, 1]),
