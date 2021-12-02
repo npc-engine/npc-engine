@@ -16,7 +16,6 @@ class MockTTSModel(TextToSpeechAPI):
 
 
 def test_tts_api():
-    """Check custom testing"""
 
     tts = MockTTSModel()
     with pytest.raises(ValueError):

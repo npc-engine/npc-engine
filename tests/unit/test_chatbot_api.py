@@ -27,7 +27,6 @@ test"""
 
 
 def test_chatbot_api():
-    """Check custom testing"""
 
     chatbot = MockChatbotModel()
 
