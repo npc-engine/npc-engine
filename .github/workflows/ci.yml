@@ -4,18 +4,13 @@ on: push
 
 jobs:
   Tests:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Set output
-        id: vars
-        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - uses: olegtarasov/get-tag@v2.1
+        id: tagName
       - name: Check output
-        env:
-          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
-        run: |
-          echo $RELEASE_VERSION
-          echo ${{ steps.vars.outputs.tag }}
+        run: echo $GIT_TAG_NAME
 
 #      - name: Set up Python ${{ matrix.python-version }}
 #        uses: actions/setup-python@v2
