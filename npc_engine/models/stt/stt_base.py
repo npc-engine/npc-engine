@@ -152,10 +152,11 @@ class SpeechToTextAPI(Model):
             signal = np.append(signal, vad_frame)
             if not speech_appeared and total_speech_ms < self.min_speech_duration:
                 #  Keep only last minimum detectable speech duration + buffer
-                signal = signal[-self._ms_to_samplenum(1000) :]
-            if signal.shape[0] >= self._ms_to_samplenum(1000):
+                signal = signal[-self._ms_to_samplenum(self.min_speech_duration * 2) :]
+            if signal.shape[0] >= self._ms_to_samplenum(self.min_speech_duration):
                 if speech_appeared and total_pause_ms > self.max_silence_duration:
-                    logits = self.transcribe(np.pad(signal, (0, 1000), "wrap"))
+                    wrapped_signal = self._wrap_signal(signal)
+                    logits = self.transcribe(wrapped_signal)
                     text = self.decode(logits)
                     done = True
                     self.running = False
@@ -200,6 +201,13 @@ class SpeechToTextAPI(Model):
                 f"Bad device id, valid device ids in range [0;{len(sd.query_devices())})"
             )
         sd.default.device = device_id
+
+    def _wrap_signal(self, signal: np.ndarray) -> np.ndarray:
+        """Append silence buffer at both ends of the signal."""
+        signal_with_silence = np.append(
+            np.append(self.silence_buffer, signal), self.silence_buffer
+        )
+        return signal_with_silence
 
     def _vad_frame(self, frame):  # pragma: no cover
         """Detect voice activity in a frame."""
