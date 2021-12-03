@@ -1,4 +1,4 @@
-"""TTS test."""
+"""STT test."""
 import numpy as np
 from npc_engine.models.stt import SpeechToTextAPI
 import pytest

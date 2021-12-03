@@ -1,4 +1,4 @@
-"""Similarity test."""
+"""Speech to text tests and tuning."""
 import os
 from npc_engine import models
 import time
