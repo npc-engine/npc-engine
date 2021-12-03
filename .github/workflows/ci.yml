@@ -7,22 +7,31 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
-        with:
-          python-version: ${{ matrix.python-version }}
-
-      - name: Install dependencies
+      - name: Set output
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Check output
+        env:
+          RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
         run: |
-          python -m pip install --upgrade pip
-          pip install tox tox-gh-actions
-          pip install .[dev,cpu]
-      # Required for tests
-      - uses: FedericoCarboni/setup-ffmpeg@v1
-        name: Setup FFMPEG for STT tests
-      # Caching this task decrease CI performance.
-      - name: Download test models
-        run: python npc_engine\cli.py download-default-models --models-path .\npc_engine\resources\models
+          echo $RELEASE_VERSION
+          echo ${{ steps.vars.outputs.tag }}
 
-      - run: tox
+#      - name: Set up Python ${{ matrix.python-version }}
+#        uses: actions/setup-python@v2
+#        with:
+#          python-version: ${{ matrix.python-version }}
+#
+#      - name: Install dependencies
+#        run: |
+#          python -m pip install --upgrade pip
+#          pip install tox tox-gh-actions
+#          pip install .[dev,cpu]
+#      # Required for tests
+#      - uses: FedericoCarboni/setup-ffmpeg@v1
+#        name: Setup FFMPEG for STT tests
+#      # Caching this task decrease CI performance.
+#      - name: Download test models
+#        run: python npc_engine\cli.py download-default-models --models-path .\npc_engine\resources\models
+#
+#      - run: tox
