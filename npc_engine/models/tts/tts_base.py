@@ -4,6 +4,7 @@ from typing import Iterable, List
 from abc import abstractmethod
 from npc_engine.models.base_model import Model
 import numpy as np
+import re
 
 
 class TextToSpeechAPI(Model):
@@ -26,10 +27,16 @@ class TextToSpeechAPI(Model):
             text: Text to generate speech from.
             n_chunks: Number of chunks to split generation into.
 
-        Returns:
-            Generator that yields next chunk of speech in the form of f32 ndarray.
         """
-        self.generator = self.run(speaker_id, text, n_chunks)
+        sentences = re.split(r"(?<!\w\.\w.)(?<![A-Z][a-z]\.)(?<=\.|\?)\s", text)
+        self.generator = self._chain_run(speaker_id, sentences, n_chunks)
+
+    def _chain_run(self, speaker_id, sentences, n_chunks) -> Iterable[np.ndarray]:
+        """Chain the run method to be used in the generator."""
+        for sentence in sentences:
+            sentence = sentence.strip()
+            if sentence != "":
+                yield from self.run(speaker_id, sentence, n_chunks)
 
     def tts_get_results(self) -> Iterable[np.ndarray]:
         """Retrieve the next chunk of generated speech.

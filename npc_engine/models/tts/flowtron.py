@@ -93,6 +93,7 @@ class FlowtronTTS(TextToSpeechAPI):
         Returns:
             Generator that yields next chunk of speech in the form of f32 ndarray.
         """
+        print(text)
         text = self._get_text(text)
         speaker_id = np.asarray([[self.speaker_ids_map[speaker_id]]], dtype=np.int64)
         enc_outps_ortvalue = onnxruntime.OrtValue.ortvalue_from_shape_and_type(
