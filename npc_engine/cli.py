@@ -5,7 +5,7 @@ import os
 import sys
 
 import click
-from huggingface_hub import hf_hub_download
+from huggingface_hub import snapshot_download
 from loguru import logger
 
 from npc_engine.models.model_manager import ModelManager
@@ -55,7 +55,7 @@ def download_default_models(models_path: str):
         if not os.path.exists(os.path.dirname(local_path)):
             os.makedirs(os.path.dirname(local_path))
         logger.info("Downloading {}", model)
-        hf_hub_download(repo_id=model, revision="main")
+        snapshot_download(repo_id=model, revision="main")
 
 
 @cli.command()
