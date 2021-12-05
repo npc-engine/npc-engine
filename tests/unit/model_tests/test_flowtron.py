@@ -6,39 +6,36 @@ from queue import Queue
 import numpy as np
 import sounddevice as sd
 import pytest
+import yaml
+
+path = os.path.join(
+    os.path.dirname(__file__), "..", "..", "..", "npc_engine", "resources", "models"
+)
+
+subdirs = [
+    f.path
+    for f in os.scandir(path)
+    if f.is_dir() and os.path.exists(os.path.join(f, "config.yml"))
+]
+
+configs = [
+    yaml.load(open(os.path.join(subdir, "config.yml"), "r")) for subdir in subdirs
+]
+
+flowtron_paths = [
+    subdir
+    for config, subdir in zip(configs, subdirs)
+    if "FlowtronTTS" in config["model_type"]
+]
 
 
 @pytest.mark.skipif(
-    not os.path.exists(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "..",
-            "npc_engine",
-            "resources",
-            "models",
-            "flowtron",
-            "config.yml",
-        )
-    ),
-    reason="Model missing",
+    len(flowtron_paths) == 0, reason="Model missing",
 )
 def test_flowtron():
     """Run flowtron inference, skip if no models in resources."""
     try:
-        tts_module = Model.load(
-            os.path.join(
-                os.path.dirname(__file__),
-                "..",
-                "..",
-                "..",
-                "npc_engine",
-                "resources",
-                "models",
-                "flowtron",
-            )
-        )
+        tts_module = Model.load(flowtron_paths[0])
     except FileNotFoundError:
         return
     start = time.time()

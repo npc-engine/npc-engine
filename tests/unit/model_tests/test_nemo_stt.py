@@ -7,23 +7,34 @@ import numpy
 import scipy.signal
 from pydub import AudioSegment
 import numpy as np
+import yaml
+
+
+path = os.path.join(
+    os.path.dirname(__file__), "..", "..", "..", "npc_engine", "resources", "models"
+)
+
+subdirs = [
+    f.path
+    for f in os.scandir(path)
+    if f.is_dir() and os.path.exists(os.path.join(f, "config.yml"))
+]
+
+configs = [
+    yaml.load(open(os.path.join(subdir, "config.yml"), "r")) for subdir in subdirs
+]
+
+nemo_stt_paths = [
+    subdir
+    for config, subdir in zip(configs, subdirs)
+    if "NemoSTT" in config["model_type"]
+]
 
 
 @pytest.mark.skip()
 def test_sanity_check():
     try:
-        stt = models.Model.load(
-            os.path.join(
-                os.path.dirname(__file__),
-                "..",
-                "..",
-                "..",
-                "npc_engine",
-                "resources",
-                "models",
-                "stt",
-            )
-        )
+        stt = models.Model.load(nemo_stt_paths[0])
     except FileNotFoundError:
         return
     device = input(f"Select device: \n {stt.get_devices()} \n")
@@ -34,35 +45,11 @@ def test_sanity_check():
 
 
 @pytest.mark.skipif(
-    not os.path.exists(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "..",
-            "npc_engine",
-            "resources",
-            "models",
-            "stt",
-            "config.yml",
-        )
-    ),
-    reason="Model missing",
+    len(nemo_stt_paths) == 0, reason="Model missing",
 )
 def test_transcribe():
     try:
-        stt = models.Model.load(
-            os.path.join(
-                os.path.dirname(__file__),
-                "..",
-                "..",
-                "..",
-                "npc_engine",
-                "resources",
-                "models",
-                "stt",
-            )
-        )
+        stt = models.Model.load(nemo_stt_paths[0])
     except FileNotFoundError:
         return
 
@@ -90,35 +77,11 @@ def test_transcribe():
 
 
 @pytest.mark.skipif(
-    not os.path.exists(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "..",
-            "npc_engine",
-            "resources",
-            "models",
-            "stt",
-            "config.yml",
-        )
-    ),
-    reason="Model missing",
+    len(nemo_stt_paths) == 0, reason="Model missing",
 )
 def test_transcribe_frame():
     try:
-        stt = models.Model.load(
-            os.path.join(
-                os.path.dirname(__file__),
-                "..",
-                "..",
-                "..",
-                "npc_engine",
-                "resources",
-                "models",
-                "stt",
-            )
-        )
+        stt = models.Model.load(nemo_stt_paths[0])
     except FileNotFoundError:
         return
 
@@ -148,35 +111,11 @@ def test_transcribe_frame():
 
 
 @pytest.mark.skipif(
-    not os.path.exists(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "..",
-            "npc_engine",
-            "resources",
-            "models",
-            "stt",
-            "config.yml",
-        )
-    ),
-    reason="Model missing",
+    len(nemo_stt_paths) == 0, reason="Model missing",
 )
 def test_decide_finished():
     try:
-        stt = models.Model.load(
-            os.path.join(
-                os.path.dirname(__file__),
-                "..",
-                "..",
-                "..",
-                "npc_engine",
-                "resources",
-                "models",
-                "stt",
-            )
-        )
+        stt = models.Model.load([0])
     except FileNotFoundError:
         return
 
