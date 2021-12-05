@@ -43,17 +43,20 @@ def test_flowtron():
         return
     start = time.time()
 
-    test_line = "It's better sound realistic"
+    test_line = "It should sound realistic. If it doesn't sound realistic, it's not real. But what is real? "
     start = time.time()
-    audio = tts_module.run("6", test_line, 10)
+    tts_module.tts_start("6", test_line, 7)
 
     queue = Queue()
 
     def callback(indata, outdata, frames, time, status):
         if not queue.empty():
             arr = np.zeros((10240, 1))
-            inp = queue.get(False)
-            arr[: inp.shape[0], 0] = inp
+            for i in range(10240):
+                try:
+                    arr[i, 0] = queue.get(False)
+                except:
+                    continue
             outdata[:] = arr
 
     play_audio = True
@@ -65,14 +68,21 @@ def test_flowtron():
         play_audio = False
 
     full_audio = []
-    for i, audio_el in enumerate(audio):
+    i = -1
+    while True:
+        try:
+            audio_el = np.asarray(tts_module.tts_get_results())
+            i += 1
+        except StopIteration:
+            break
         end = time.time()
         process_time = end - start
         audio_time = len(audio_el) / 22050
         if i == 0:
             audio_el[:1000] = 0
         if play_audio:
-            queue.put(audio_el)
+            for j in range(audio_el.shape[0]):
+                queue.put(audio_el[j])
         full_audio += audio_el.tolist()
         print(f" > Step Processing time: {process_time}")
         print(f" > Step Real-time factor (should be < 1): {process_time / audio_time}")
@@ -81,4 +91,4 @@ def test_flowtron():
         while not queue.empty():
             sd.sleep(int(10240 / 22.05))
         sd.sleep(int(10240 / 22.05))
-    audio_time = len(full_audio) / 22050
+        stream.close()

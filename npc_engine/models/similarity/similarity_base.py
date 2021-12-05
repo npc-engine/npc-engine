@@ -1,5 +1,5 @@
 """Module that implements semantic similarity model API."""
-from typing import Dict, List
+from typing import List
 
 from abc import abstractmethod
 from npc_engine.models.base_model import Model
@@ -18,7 +18,7 @@ class SimilarityAPI(Model):
         self.initialized = True
         self.lru_cache = NumpyLRUCache(cache_size)
 
-    def compare(self, query: str, context: List[str]) -> Dict[str, float]:
+    def compare(self, query: str, context: List[str]) -> List[float]:
         """Compare a query to the context.
 
         Args:

@@ -24,7 +24,7 @@ class MockSimilarityModel(SimilarityAPI):
 
 
 def test_similarity_api():
-    """Check custom testing"""
+    """Check similarity api"""
 
     semantic_tests = MockSimilarityModel()
 
