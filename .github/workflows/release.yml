@@ -1,7 +1,7 @@
 name: Release
 
 on:
-  push:
+  create:
     tags:
       - "v*.*.*"
 
@@ -18,7 +18,7 @@ jobs:
 
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
+        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/*/}
 
       - name: Install dependencies
         run: |

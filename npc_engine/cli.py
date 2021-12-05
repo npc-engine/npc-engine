@@ -1,12 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """This is the entry point for the command-line interface that starts npc-engine server."""
-import os
 import sys
 
-import boto3
 import click
-from botocore.handlers import disable_signing
+from huggingface_hub import snapshot_download
 from loguru import logger
 
 from npc_engine.models.model_manager import ModelManager
@@ -44,23 +42,16 @@ def run(models_path: str, port: str):
 @click.option("--models-path", default="./npc_engine/resources/models")
 def download_default_models(models_path: str):
     """Download default models into the folder."""
-    s3 = boto3.resource("s3")
-    s3.meta.client.meta.events.register(
-        "choose-signer.s3.*", disable_signing
-    )  # Do not require credentials
-    model_names = ["all-mini-lm-6-v2", "flowtron", "bart", "stt"]
-    bucket = s3.Bucket("default-models")
+    model_names = [
+        "npc-engine/exported-paraphrase-MiniLM-L6-v2",
+        "npc-engine/exported-bart-light-gail-chatbot",
+        "npc-engine/exported-nemo-quartznet-ctc-stt",
+        "npc-engine/exported-flowtron-waveglow-librispeech-tts",
+    ]
     for model in model_names:
         logger.info("Downloading model {}", model)
-        for file in bucket.objects.filter(Prefix=model):
-            is_dir = file.key.split("/")[-1] == ""
-            if is_dir:
-                continue
-            local_path = os.path.join(models_path, file.key)
-            if not os.path.exists(os.path.dirname(local_path)):
-                os.makedirs(os.path.dirname(local_path))
-            logger.info("Downloading {}", file.key)
-            bucket.download_file(file.key, local_path)
+        logger.info("Downloading {}", model)
+        snapshot_download(repo_id=model, revision="main", cache_dir=models_path)
 
 
 @cli.command()

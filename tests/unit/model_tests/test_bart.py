@@ -3,38 +3,35 @@ import os
 from npc_engine.models import Model
 import time
 import pytest
+import yaml
+
+path = os.path.join(
+    os.path.dirname(__file__), "..", "..", "..", "npc_engine", "resources", "models"
+)
+
+subdirs = [
+    f.path
+    for f in os.scandir(path)
+    if f.is_dir() and os.path.exists(os.path.join(f, "config.yml"))
+]
+
+configs = [
+    yaml.safe_load(open(os.path.join(subdir, "config.yml"), "r")) for subdir in subdirs
+]
+
+bart_paths = [
+    subdir
+    for config, subdir in zip(configs, subdirs)
+    if "BartChatbot" in config["model_type"]
+]
 
 
 @pytest.mark.skipif(
-    not os.path.exists(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "..",
-            "npc_engine",
-            "resources",
-            "models",
-            "bart",
-            "config.yml",
-        )
-    ),
-    reason="Model missing",
+    len(bart_paths) == 0, reason="Model missing",
 )
 def test_reply_default():
     """Check if chatbot works"""
-    chatbot_model = Model.load(
-        os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "..",
-            "npc_engine",
-            "resources",
-            "models",
-            "bart",
-        )
-    )
+    chatbot_model = Model.load(bart_paths[0])
 
     print(f"Special tokens {chatbot_model.get_special_tokens()}")
 
