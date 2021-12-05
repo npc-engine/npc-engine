@@ -185,7 +185,7 @@ def test_transcribe():
 )
 def test_decide_finished():
     try:
-        stt = models.Model.load([0])
+        stt = models.Model.load(nemo_stt_paths[0])
     except FileNotFoundError:
         return
 
