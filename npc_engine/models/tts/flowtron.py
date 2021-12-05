@@ -30,7 +30,17 @@ class FlowtronTTS(TextToSpeechAPI):
     For detailed specs refer to https://github.com/npc-engine/flowtron.
     """
 
-    def __init__(self, model_path, max_frames=400, gate_threshold=0.5, *args, **kwargs):
+    def __init__(
+        self,
+        model_path,
+        max_frames=400,
+        gate_threshold=0.5,
+        sigma=0.8,
+        smoothing_window=3,
+        smoothing_weight=0.5,
+        *args,
+        **kwargs
+    ):
         """Create and load Flowtron and vocoder models."""
         super().__init__(*args, **kwargs)
         sess_options = onnxruntime.SessionOptions()
@@ -41,6 +51,9 @@ class FlowtronTTS(TextToSpeechAPI):
         logging.info("FlowtronTTS using provider {}".format(provider))
         self.max_frames = max_frames
         self.gate_threshold = gate_threshold
+        self.sigma = sigma
+        self.smoothing_window = smoothing_window
+        self.smoothing_weight = smoothing_weight
 
         self.encoder = onnxruntime.InferenceSession(
             path.join(model_path, "encoder.onnx"),
@@ -80,6 +93,7 @@ class FlowtronTTS(TextToSpeechAPI):
         Returns:
             Generator that yields next chunk of speech in the form of f32 ndarray.
         """
+        print(text)
         text = self._get_text(text)
         speaker_id = np.asarray([[self.speaker_ids_map[speaker_id]]], dtype=np.int64)
         enc_outps_ortvalue = onnxruntime.OrtValue.ortvalue_from_shape_and_type(
@@ -92,9 +106,9 @@ class FlowtronTTS(TextToSpeechAPI):
         io_binding.bind_cpu_input("text", text.reshape([1, -1]))
         self.encoder.run_with_iobinding(io_binding)
 
-        residual = np.random.normal(0, 0.8, size=[self.max_frames, 1, 80]).astype(
-            np.float32
-        )
+        residual = np.random.normal(
+            0, self.sigma, size=[self.max_frames, 1, 80]
+        ).astype(np.float32)
 
         residual = self._run_backward_flow(residual, enc_outps_ortvalue)
         residual = self._run_forward_flow(
@@ -104,19 +118,26 @@ class FlowtronTTS(TextToSpeechAPI):
         for residual in residual:
             residual = np.transpose(residual, axes=(1, 2, 0))
             audio = self.vocoder.run(None, {"mels": residual})[0]
-            audio = np.where(
-                (audio > (audio.mean() - audio.std()))
-                | (audio < (audio.mean() + audio.std())),
-                audio,
-                audio.mean(),
-            )
+            # audio = np.where(
+            #     (audio > (audio.mean() - audio.std()))
+            #     | (audio < (audio.mean() + audio.std())),
+            #     audio,
+            #     audio.mean(),
+            # )
             tmp = audio
+            if last_audio is None:
+                audio = audio[:, 1000:]
             if last_audio is not None:
                 cumsum_vec = np.cumsum(
                     np.concatenate([last_audio, audio], axis=1), axis=1
                 )
-                ma_vec = (cumsum_vec[:, 5:] - cumsum_vec[:, :-5]) / 5
-                audio = ma_vec[:, last_audio.shape[1] :]
+                ma_vec = (
+                    cumsum_vec[:, self.smoothing_window :]
+                    - cumsum_vec[:, : -self.smoothing_window]
+                ) / self.smoothing_window
+                audio = (1 - self.smoothing_weight) * audio[
+                    :, self.smoothing_window :
+                ] + self.smoothing_weight * ma_vec[:, last_audio.shape[1] :]
             last_audio = tmp
             audio = audio.reshape(-1)
             # audio = audio / np.abs(audio).max()

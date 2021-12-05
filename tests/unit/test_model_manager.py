@@ -6,14 +6,15 @@ from npc_engine.models.model_manager import ModelManager
 import pytest
 
 
-@pytest.mark.skipif(
-    not os.path.exists(
-        os.path.join(
-            os.path.dirname(__file__), "..", "..", "npc_engine", "resources", "models"
-        )
-    ),
-    reason="Models Folder missing",
-)
+# @pytest.mark.skipif(
+#     not os.path.exists(
+#         os.path.join(
+#             os.path.dirname(__file__), "..", "..", "npc_engine", "resources", "models"
+#         )
+#     ),
+#     reason="Models Folder missing",
+# )
+@pytest.mark.skip()
 def test_model_manager_api_dict():
     """Test if all api methods are registered"""
     model_manager = ModelManager(

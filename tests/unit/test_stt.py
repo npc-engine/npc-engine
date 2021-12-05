@@ -1,4 +1,4 @@
-"""TTS test."""
+"""STT test."""
 import numpy as np
 from npc_engine.models.stt import SpeechToTextAPI
 import pytest
@@ -18,7 +18,7 @@ class MockSTTModel(SpeechToTextAPI):
         return o
 
     def transcribe(self, audio):
-        return "hello"
+        return np.empty([0, 29])
 
     def postprocess(self, text):
         return "Hello"
@@ -29,9 +29,11 @@ class MockSTTModel(SpeechToTextAPI):
     def reset(self):
         pass
 
+    def decode(self, logits):
+        return "hello"
 
-def test_tts_api():
-    """Check custom testing"""
+
+def test_stt_api():
 
     stt = MockSTTModel()
 

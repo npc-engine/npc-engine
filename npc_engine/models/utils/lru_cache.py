@@ -49,7 +49,8 @@ class NumpyLRUCache:
             result = np.zeros((len(keys), *self.common_dim))
             items = [self._get(key) for key in keys]
             not_found = [key for item, key in zip(items, keys) if item is None]
-            computed = function(not_found)
+            if len(not_found) > 0:
+                computed = function(not_found)
             computed_idx = 0
             for idx, item in enumerate(items):
                 if item is None:
