@@ -17,23 +17,25 @@ subdirs = [
 ]
 
 configs = [
-    yaml.load(open(os.path.join(subdir, "config.yml"), "r")) for subdir in subdirs
+    yaml.safe_load(open(os.path.join(subdir, "config.yml"), "r")) for subdir in subdirs
 ]
 
-nemo_stt_paths = [
+model_paths = [
     subdir
     for config, subdir in zip(configs, subdirs)
     if "TransformerSemanticSimilarity" in config["model_type"]
 ]
 
+print(model_paths)
+
 
 @pytest.mark.skipif(
-    len(nemo_stt_paths) == 0, reason="Model missing",
+    len(model_paths) == 0, reason="Model missing",
 )
 def test_transformers_similarity():
     """Check custom testing"""
     try:
-        semantic_tests = models.Model.load(nemo_stt_paths[0])
+        semantic_tests = models.Model.load(model_paths[0])
     except FileNotFoundError:
         return
     start = time.time()

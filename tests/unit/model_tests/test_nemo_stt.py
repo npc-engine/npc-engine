@@ -21,7 +21,7 @@ subdirs = [
 ]
 
 configs = [
-    yaml.load(open(os.path.join(subdir, "config.yml"), "r")) for subdir in subdirs
+    yaml.safe_load(open(os.path.join(subdir, "config.yml"), "r")) for subdir in subdirs
 ]
 
 nemo_stt_paths = [

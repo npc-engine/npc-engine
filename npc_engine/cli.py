@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """This is the entry point for the command-line interface that starts npc-engine server."""
-import os
 import sys
 
 import click
@@ -51,11 +50,8 @@ def download_default_models(models_path: str):
     ]
     for model in model_names:
         logger.info("Downloading model {}", model)
-        local_path = os.path.join(models_path, model)
-        if not os.path.exists(os.path.dirname(local_path)):
-            os.makedirs(os.path.dirname(local_path))
         logger.info("Downloading {}", model)
-        snapshot_download(repo_id=model, revision="main")
+        snapshot_download(repo_id=model, revision="main", cache_dir=models_path)
 
 
 @cli.command()
