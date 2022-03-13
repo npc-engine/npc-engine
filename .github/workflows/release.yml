@@ -18,7 +18,7 @@ jobs:
 
       - name: Get the version
         id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF#refs/*/}
+        uses: dawidd6/action-get-tag@v1
 
       - name: Install dependencies
         run: |
@@ -30,7 +30,7 @@ jobs:
         run: |
           pyinstaller --additional-hooks-dir hooks --exclude-module tkinter --exclude-module matplotlib .\npc_engine\cli.py --onedir
           pip-licenses --format=plain-vertical --with-license-file --no-license-path --output-file dist\cli\DEPENDENCY_LICENSES.txt
-          tar.exe -a -c -f npc-engine-${{ steps.get_version.output.VERSION }}.zip -C dist\cli .\*
+          tar.exe -a -c -f npc-engine-${{ steps.get_version.outputs.tag }}.zip -C dist\cli .\*
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -38,4 +38,4 @@ jobs:
           body_path: CHANGELOG.txt
           token: ${{ secrets.CUSTOM_GITHUB_TOKEN }}
           files: |
-            npc-engine-${{ steps.get_version.output.VERSION }}.zip
+            npc-engine-${{ steps.get_version.outputs.tag }}.zip
