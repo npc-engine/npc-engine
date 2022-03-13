@@ -22,10 +22,6 @@ nav:
       - API Classes: inference_engine/api_classes.md
       - Models: inference_engine/models.md
       - Reference: inference_engine/reference.md
-  - Unity:
-      - Overview: unity_integration/overview.md
-      - Basic Demo Tutorial: unity_integration/basic_demo_tutorial.md
-      - Advanced Demo Tutorial: unity_integration/advanced_demo_tutorial.md
 
   - Benchmarks: benchmarks.md
 extra:

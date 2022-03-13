@@ -67,7 +67,7 @@ class BartChatbot(ChatbotAPI):
         self.pad_token_id = pad_token_id
 
         sess_options = rt.SessionOptions()
-        sess_options.graph_optimization_level = rt.GraphOptimizationLevel.ORT_ENABLE_ALL
+        sess_options.graph_optimization_level = rt.GraphOptimizationLevel.ORT_DISABLE_ALL
         self.encoder_model = rt.InferenceSession(
             os.path.join(model_path, "encoder_bart.onnx"),
             providers=[rt.get_available_providers()[0]],
