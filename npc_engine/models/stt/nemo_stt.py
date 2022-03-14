@@ -106,9 +106,9 @@ class NemoSTT(SpeechToTextAPI):
 
         self.decoder = build_ctcdecoder(
             self.asr_vocab,
-            kenlm_model_path=path.join(model_path, "lowercase_3-gram.pruned.1e-7.arpa"),
-            alpha=alpha,  # tuned on a val set
-            beta=beta,  # tuned on a val set
+            # kenlm_model_path=path.join(model_path, "lowercase_3-gram.pruned.1e-7.arpa"),
+            # alpha=alpha,  # tuned on a val set
+            # beta=beta,  # tuned on a val set
         )
 
         sess_options = rt.SessionOptions()
