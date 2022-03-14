@@ -1,2 +1,3 @@
-- Initial release (see README.md and npc-engine.com for available features)
-- Unity Integration
+- Unity integration docs moved to docfx and integration repository
+- Minor fixes
+- Removed KensLM package from dependencies.
