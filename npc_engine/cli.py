@@ -8,8 +8,9 @@ import logging
 logging.basicConfig(level=logging.ERROR)
 
 import click
-from huggingface_hub import snapshot_download
+from huggingface_hub import snapshot_download, hf_hub_download
 from loguru import logger
+import yaml 
 
 from npc_engine.version import __version__
 
@@ -71,6 +72,45 @@ def list_models(models_path: str):
     from npc_engine.models.model_manager import ModelManager
     model_manager = ModelManager(models_path)
     model_manager.list_models()
+
+
+@cli.command()
+@click.option("--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./npc_engine/resources/models"))
+@click.argument("model_id")
+def download_model(models_path: str, model_id: str):
+    """Download the model."""
+    tmp_model_path = models_path + "/" + model_id.replace("/", "_")
+    model_correct = True
+    try:
+        hf_hub_download(repo_id=model_id, filename="config.yml", cache_dir=tmp_model_path, force_filename="config.yml")
+        config_path = os.path.join(models_path, model_id.replace("/", "_"), "config.yml")
+        with open(config_path) as f:
+            config_dict = yaml.load(f, Loader=yaml.Loader)
+        if "model_type" not in config_dict:
+            model_correct = False
+    except ValueError as e:
+        model_correct = False
+    if model_correct:
+        logger.info("Downloading model {}", model_id)
+        os.remove(config_path)
+        os.rmdir(tmp_model_path)
+        snapshot_download(repo_id=model_id, revision="main", cache_dir=models_path)
+    else:
+        if click.confirm(
+            click.style(
+                f"{model_id} is not a valid npc-engine model." + " \nDo you want to export it?",
+                fg="yellow",
+            )
+        ):
+            export_model(models_path, model_id)
+
+
+@cli.command()
+@click.option("--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./npc_engine/resources/models"))
+@click.argument("model_id")
+def export_model(models_path: str, model_id: str):
+    """Export the model."""
+    pass
 
 
 @cli.command()
