@@ -1,7 +1,7 @@
 click>=7.0,<8
 
 json-rpc==1.13.0
-tokenizers==0.10.3
+tokenizers==0.11.6
 loguru==0.5.3
 PyYAML==6.0
 pyzmq==19.0.2
