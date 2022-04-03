@@ -88,17 +88,20 @@ class HfChatbot(ChatbotAPI):
         inputs = self.create_starter_inputs(prompt)
         utterance = []
         for i in range(self.max_steps):
-            o = self.decoder_model.run(None, inputs,)
+            o = self.model.run(None, inputs,)
             logit = o[0][0, -1, :]
             if i < self.min_length:
                 logit[self.eos_token_id] = float("-inf")
-            token = self.decode_logit(logit)
+            token = self.decode_logit(logit, temperature, topk)
             utterance.append(token)
-            inputs = self.update_inputs_with_results(inputs, o, token)
+            result_dict = {
+                outp.name: o[i] for i, outp in enumerate(self.model.get_outputs())
+            }
+            inputs = self.update_inputs_with_results(inputs, result_dict, token)
 
             if token == self.eos_token_id:
                 break
-        return self.tokenizer.decode(utterance[0, :].tolist(), skip_special_tokens=True)
+        return self.tokenizer.decode(utterance, skip_special_tokens=True)
 
     def create_starter_inputs(self, prompt: str = ""):
         """Create starter inputs for the model.
@@ -140,7 +143,7 @@ class HfChatbot(ChatbotAPI):
                     inputs[i.name] = np.empty(shape_tuple, dtype=self.dtypes[i.name])
         return inputs
 
-    def decode_logit(self, logit: np.ndarray) -> int:
+    def decode_logit(self, logit: np.ndarray, temperature: float, topk: int) -> int:
         """Decode logit to token.
 
         Args:
@@ -149,13 +152,13 @@ class HfChatbot(ChatbotAPI):
         Returns: 
             Decoded token of shape
         """
-        if self.topk is not None:
-            ind = np.argpartition(logit, -self.topk)[-self.topk :]
+        if topk is not None:
+            ind = np.argpartition(logit, -topk)[-topk:]
             new_logits = np.zeros(logit.shape)
             new_logits[ind] = logit[ind]
-            logits = new_logits
+            logit = new_logits
 
-        probs = scp.softmax(logits / self.temperature, axis=0)
+        probs = scp.softmax(logit / temperature, axis=0)
         token = np.random.choice(np.arange(probs.shape[0]), p=probs)
         token = token.ravel()[0]
         return token
@@ -191,10 +194,10 @@ class HfChatbot(ChatbotAPI):
             if self.is_encdec:
                 inputs.pop("input_ids", None)
         else:
-            decoder_input_ids = results[ids_name]
-            decoder_attention_mask = results[att_mask_name]
+            decoder_input_ids = inputs[ids_name]
+            decoder_attention_mask = inputs[att_mask_name]
             decoder_input_ids = np.concatenate(
-                [decoder_input_ids, np.asarray([decoded_token], dtype=np.int32)],
+                [decoder_input_ids, np.asarray([[decoded_token]], dtype=np.int32)],
                 axis=1,
             )
             decoder_attention_mask = np.ones_like(
