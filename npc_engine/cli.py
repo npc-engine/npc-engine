@@ -126,7 +126,7 @@ def download_model(models_path: str, model_id: str):
                 fg="yellow",
             )
         ):
-            export_model(models_path, model_id)
+            export_model(models_path, model_id, True)
 
 
 @cli.command()
@@ -135,10 +135,9 @@ def download_model(models_path: str, model_id: str):
     default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./npc_engine/resources/models"),
 )
 @click.argument("model_id")
-def export_model(models_path: str, model_id: str):
+def export_model(models_path: str, model_id: str, remove_source: bool = False):
     """Export the model."""
     logger.info("Downloading source model {}", model_id)
-    remove_source = False 
     if os.path.exists(model_id):
         source_path = model_id
     else:
