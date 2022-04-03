@@ -103,7 +103,7 @@ class TestClass:
 
         request = {
             "jsonrpc": "2.0",
-            "method": "get_context_fields",
+            "method": "get_context_template",
             "id": 0,
             "params": [],
         }
