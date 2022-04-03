@@ -4,7 +4,6 @@ from typing import Dict, Any, List
 from abc import abstractmethod
 from npc_engine.models.base_model import Model
 from jinja2 import Template
-import json
 
 
 class ChatbotAPI(Model):
@@ -17,15 +16,13 @@ class ChatbotAPI(Model):
         "get_special_tokens",
     ]
 
-    def __init__(self, template_string: str, default_context: str, *args, **kwargs):
+    def __init__(self, template_string: str, *args, **kwargs):
         """Initialize prompt formatting variables.
 
         Args:
-            template_string: Template string to be rendered.
-            default_context: Context example with empty fields.
+            template_string: Template string to be rendered as prompt.
         """
         self.template_string = template_string
-        self.default_context = json.loads(default_context)
         self.template = Template(template_string)
         self.initialized = True
 
@@ -72,14 +69,6 @@ class ChatbotAPI(Model):
             Dictionary of special tokens
         """
         return None
-
-    def get_context_fields(self) -> List[str]:
-        """Return context template used for formatting model prompt.
-
-        Returns:
-            A template context dict with empty fields.
-        """
-        return self.default_context
 
     def get_prompt_template(self) -> str:
         """Return prompt template string used to render model prompt.
