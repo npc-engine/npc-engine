@@ -138,12 +138,14 @@ def download_model(models_path: str, model_id: str):
 def export_model(models_path: str, model_id: str):
     """Export the model."""
     logger.info("Downloading source model {}", model_id)
+    remove_source = False 
     if os.path.exists(model_id):
         source_path = model_id
     else:
         source_path = snapshot_download(
             repo_id=model_id, revision="main", cache_dir=models_path
         )
+        remove_source = True
     export_path = (
         models_path + "/exported-" + model_id.replace("\\", "/").split("/")[-1]
     )
@@ -158,7 +160,8 @@ def export_model(models_path: str, model_id: str):
     exporter = exporters[exporter_id - 1]
     exporter.export(source_path, export_path)
     exporter.create_config(export_path)
-    shutil.rmtree(source_path)
+    if remove_source:
+        shutil.rmtree(source_path)
 
 
 @cli.command()
