@@ -5,21 +5,24 @@ import sys
 import os
 import logging
 import shutil
-
 from npc_engine.exporters.base_exporter import Exporter
+from npc_engine.models.utils import (
+    get_model_type_name,
+    validate_hub_model,
+    validate_local_model,
+)
 
 logging.basicConfig(level=logging.ERROR)
 
 import click
-from huggingface_hub import snapshot_download, hf_hub_download
+from huggingface_hub import snapshot_download
 from loguru import logger
-import yaml
 
 from npc_engine.version import __version__
 
 
 @click.group()
-@click.option("--verbose", "-v", default=False, help="Enable verbose output.")
+@click.option("--verbose/--silent", "-v", default=False, help="Enable verbose output.")
 def cli(verbose: bool):
     """NPC engine JSON RPC server CLI."""
     # Use the verbosity count to determine the logging level...
@@ -31,17 +34,19 @@ def cli(verbose: bool):
 
 
 @cli.command()
-@click.option("--models-path", default="./npc_engine/resources/models")
+@click.option(
+    "--models-path", default=os.path.join("npc_engine", "resources", "models")
+)
 @click.option("--port", default="5556")
 def run(models_path: str, port: str):
     """Load the models and start JSONRPC server."""
     from npc_engine.models.model_manager import ModelManager
-    from npc_engine.zmq_server import ZMQServer
+    from npc_engine.rpc.server import Server
 
     model_manager = ModelManager(models_path)
     model_manager.load_models()
     api_dict = model_manager.build_api_dict()
-    rpc_server = ZMQServer(port)
+    rpc_server = Server(port)
     try:
         rpc_server.run(api_dict)
     except Exception:
@@ -51,7 +56,9 @@ def run(models_path: str, port: str):
 @cli.command()
 @click.option(
     "--models-path",
-    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./npc_engine/resources/models"),
+    default=os.environ.get(
+        "NPC_ENGINE_MODELS_PATH", os.path.join("npc_engine", "resources", "models")
+    ),
 )
 def download_default_models(models_path: str):
     """Download default models into the folder."""
@@ -77,7 +84,9 @@ def set_models_path(models_path: str):
 @cli.command()
 @click.option(
     "--models-path",
-    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./npc_engine/resources/models"),
+    default=os.environ.get(
+        "NPC_ENGINE_MODELS_PATH", os.path.join("npc_engine", "resources", "models")
+    ),
 )
 def list_models(models_path: str):
     """List the models in the folder."""
@@ -90,33 +99,16 @@ def list_models(models_path: str):
 @cli.command()
 @click.option(
     "--models-path",
-    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./npc_engine/resources/models"),
+    default=os.environ.get(
+        "NPC_ENGINE_MODELS_PATH", os.path.join("npc_engine", "resources", "models")
+    ),
 )
 @click.argument("model_id")
 def download_model(models_path: str, model_id: str):
     """Download the model."""
-    tmp_model_path = models_path + "/" + model_id.replace("/", "_")
-    model_correct = True
-    try:
-        hf_hub_download(
-            repo_id=model_id,
-            filename="config.yml",
-            cache_dir=tmp_model_path,
-            force_filename="config.yml",
-        )
-        config_path = os.path.join(
-            models_path, model_id.replace("/", "_"), "config.yml"
-        )
-        with open(config_path) as f:
-            config_dict = yaml.load(f, Loader=yaml.Loader)
-        if "model_type" not in config_dict:
-            model_correct = False
-    except ValueError:
-        model_correct = False
+    model_correct = validate_hub_model(model_id)
     if model_correct:
         logger.info("Downloading model {}", model_id)
-        os.remove(config_path)
-        os.rmdir(tmp_model_path)
         snapshot_download(repo_id=model_id, revision="main", cache_dir=models_path)
     else:
         if click.confirm(
@@ -132,7 +124,9 @@ def download_model(models_path: str, model_id: str):
 @cli.command()
 @click.option(
     "--models-path",
-    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./npc_engine/resources/models"),
+    default=os.environ.get(
+        "NPC_ENGINE_MODELS_PATH", os.path.join("npc_engine", "resources", "models")
+    ),
 )
 @click.argument("model_id")
 def export_model(models_path: str, model_id: str, remove_source: bool = False):
@@ -161,6 +155,31 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
     exporter.create_config(export_path)
     if remove_source:
         shutil.rmtree(source_path)
+    if click.confirm("Do you want to test the exported model?"):
+        test_model(models_path, model_id)
+
+
+@cli.command()
+@click.option(
+    "--models-path",
+    default=os.environ.get(
+        "NPC_ENGINE_MODELS_PATH", os.path.join("npc_engine", "resources", "models")
+    ),
+)
+@click.argument("model_id")
+def test_model(models_path: str, model_id: str):
+    """Send test request to the model and print reply."""
+    if not validate_local_model(models_path, model_id):
+        click.echo(
+            click.style(f"{(model_id)} is not a valid npc-engine model.", fg="red",)
+        )
+        return 1
+    model_type = get_model_type_name(models_path, model_id)
+    exporters = Exporter.get_exporters()
+    for exporter in exporters:
+        if exporter.get_model_name() == model_type:
+            exporter.test_model(models_path, model_id)
+            return 0
 
 
 @cli.command()
