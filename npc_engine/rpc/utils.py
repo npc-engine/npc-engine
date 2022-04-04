@@ -9,10 +9,12 @@ def schema_to_json(
     """Iterate the schema and return simplified dictionary."""
     if "type" not in s and "anyOf" in s:
         return fill_value(s["title"])
-    elif s["type"] == "object":
+    elif "type" in s and s["type"] == "object":
         return {k: schema_to_json(v) for k, v in s["properties"].items()}
-    elif s["type"] == "array":
+    elif "type" in s and s["type"] == "array":
         return [schema_to_json(s["items"])]
+    else:
+        raise ValueError(f"Unknown schema type: {s}")
 
 
 def start_test_server(port: str, models_path: str):

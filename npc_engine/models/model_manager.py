@@ -12,6 +12,7 @@ class ModelManager:
     def __init__(self, path):
         """Create model manager and load models from the given path."""
         self.subdirs = self._scan_models(path)
+        self.models = []
 
     def _scan_models(self, path):
         """Scan the models for the given path."""

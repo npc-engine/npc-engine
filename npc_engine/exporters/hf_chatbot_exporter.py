@@ -1,3 +1,4 @@
+"""Exporter implementation for the Huggingface text generation models."""
 from npc_engine.exporters.base_hf_exporter import BaseHfExporter
 from jinja2schema import infer, to_json_schema
 import click

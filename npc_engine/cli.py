@@ -6,7 +6,7 @@ import os
 import logging
 import shutil
 from npc_engine.exporters.base_exporter import Exporter
-from npc_engine.models.utils import (
+from npc_engine.models.utils.config import (
     get_model_type_name,
     validate_hub_model,
     validate_local_model,
