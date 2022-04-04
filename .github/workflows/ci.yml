@@ -27,8 +27,4 @@ jobs:
       # Required for tests
       - uses: FedericoCarboni/setup-ffmpeg@v1
         name: Setup FFMPEG for STT tests
-      # Caching this task decrease CI performance.
-      - name: Download test models
-        run: python npc_engine\cli.py download-default-models --models-path .\npc_engine\resources\models
-
       - run: tox
