@@ -10,7 +10,7 @@ class Server:
 
     def __init__(self, port: str):
         """Create a server on the port."""
-        print("starting server")
+        logger.info("Starting server")
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)
         self.socket.bind(f"tcp://*:{port}")

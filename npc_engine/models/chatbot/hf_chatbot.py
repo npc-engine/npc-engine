@@ -88,7 +88,6 @@ class HfChatbot(ChatbotAPI):
         inputs = self.create_starter_inputs(prompt)
         utterance = []
         for i in range(self.max_steps):
-            print(f"Step {i}")
             o = self.model.run(None, inputs,)
             logit = o[0][0, -1, :]
             if i < self.min_length:
@@ -99,7 +98,6 @@ class HfChatbot(ChatbotAPI):
                 outp.name: o[i] for i, outp in enumerate(self.model.get_outputs())
             }
             inputs = self.update_inputs_with_results(inputs, result_dict, token)
-            print({name: inp.shape for name, inp in inputs.items()})
             if token == self.eos_token_id:
                 break
         return self.tokenizer.decode(utterance, skip_special_tokens=True)

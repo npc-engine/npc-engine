@@ -162,7 +162,6 @@ class NemoSTT(SpeechToTextAPI):
             Decision to stop recognition and finalize results.
         """
         decision = self._decide_sentence_finished(context, text)
-        print("Sentence decision:", decision)
         done = bool(decision)
         return done
 
@@ -207,15 +206,11 @@ class NemoSTT(SpeechToTextAPI):
             "token_type_ids": type_ids,
         }
         logits = self.sentence_model.run(None, input_dict)[0]
-        print(logits)
         return logits.argmax(-1)[0]
 
     def _predict(self, audio: np.ndarray) -> np.ndarray:
         signal = audio.reshape([1, -1])
         audio_signal = self._preprocess_signal(signal).astype(np.float32)
-        res = self.asr_model.run(None, {"audio_signal": audio_signal})
-        print(res)
-        print(res[0].shape)
         return self.asr_model.run(None, {"audio_signal": audio_signal})[0][0]
 
     def _preprocess_signal(self, signal):
