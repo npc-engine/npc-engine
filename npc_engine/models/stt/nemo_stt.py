@@ -104,12 +104,7 @@ class NemoSTT(SpeechToTextAPI):
         self.punct_labels = "O,.?"
         self.capit_labels = "OU"
 
-        self.decoder = build_ctcdecoder(
-            self.asr_vocab,
-            # kenlm_model_path=path.join(model_path, "lowercase_3-gram.pruned.1e-7.arpa"),
-            # alpha=alpha,  # tuned on a val set
-            # beta=beta,  # tuned on a val set
-        )
+        self.decoder = build_ctcdecoder(self.asr_vocab)
 
         sess_options = rt.SessionOptions()
         sess_options.graph_optimization_level = opt_level.ORT_ENABLE_ALL
