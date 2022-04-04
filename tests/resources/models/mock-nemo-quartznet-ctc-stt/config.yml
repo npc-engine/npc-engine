@@ -1,0 +1,29 @@
+model_type: "NemoSTT"
+
+# frame size in ms for incremental transcription
+frame_size: 1000
+
+# Parameters from https://github.com/NVIDIA/NeMo/blob/stable/tutorials/asr/Online_ASR_Microphone_Demo.ipynb
+frame_overlap: 2
+offset: 4
+# timestep_duration = model._cfg.preprocessor['window_stride']
+# for block in model._cfg.encoder['jasper']:
+#     timestep_duration *= block['stride'][0] ** block['repeat']
+timestep_duration: 0.02
+
+# Sample rate
+sample_rate: 16000
+
+# Minimum detectable VAD section in ms
+min_speech_duration: 400
+
+# Timeout in ms to flush results if speech wasn't finished semantically
+max_silence_duration: 1000
+
+# VAD frame size in ms
+vad_frame_ms: 20
+
+transcribe_realtime: False
+predict_punctuation: False
+alpha: 0.0253813572180912
+beta: 0.08

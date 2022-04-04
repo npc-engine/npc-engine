@@ -5,9 +5,7 @@ import time
 import pytest
 import yaml
 
-path = os.path.join(
-    os.path.dirname(__file__), "..", "..", "..", "npc_engine", "resources", "models"
-)
+path = os.path.join(os.path.dirname(__file__), "..", "..", "resources", "models")
 
 subdirs = [
     f.path
@@ -26,9 +24,6 @@ bart_paths = [
 ]
 
 
-@pytest.mark.skipif(
-    len(bart_paths) == 0, reason="Model missing",
-)
 def test_reply_default():
     """Check if chatbot works"""
     chatbot_model = Model.load(bart_paths[0])
@@ -58,5 +53,3 @@ They keep shrinking!""",
     )
     end = time.time()
     assert answer is not None
-    print("Answer: {}".format(answer))
-    print("done in {} seconds".format(end - start))

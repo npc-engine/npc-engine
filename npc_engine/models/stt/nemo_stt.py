@@ -17,33 +17,33 @@ class NemoSTT(SpeechToTextAPI):
 
     Uses:
 
-        - ONNX export of EncDecCTCModel from Nemo toolkit. 
+        - ONNX export of EncDecCTCModel from Nemo toolkit.
         - Punctuation distillbert model from Nemo toolkit. (requires tokenizer.json as well)
-        - Huggingface transformers model for predicting that sentence is finished 
+        - Huggingface transformers model for predicting that sentence is finished
             (Cropped sentence -> 0 label, finished sentence -> 1 label).
         - OpenSLR Librispeech 3-gram model converted to lowercase https://www.openslr.org/11/
 
-    References:  
+    References:
         https://github.com/NVIDIA/NeMo
         https://catalog.ngc.nvidia.com/orgs/nvidia/models/quartznet15x5
         https://docs.nvidia.com/deeplearning/nemo/user-guide/docs/en/main/nlp/punctuation_and_capitalization.html
 
 
-    ctc.onnx spec:  
+    ctc.onnx spec:
 
-        - inputs:  
+        - inputs:
             `audio_signal` mel spectogram of shape `(batch_size, 64, mel_sequence)`
-        - outputs:  
-            `tokens` of shape `(batch_size, token_sequence, logits)`  
+        - outputs:
+            `tokens` of shape `(batch_size, token_sequence, logits)`
 
-    punctuation.onnx spec:  
+    punctuation.onnx spec:
 
-        - inputs:  
+        - inputs:
             `input_ids` mel spectogram of shape `(batch_size, sequence)`
             `attention_mask` mel spectogram of shape `(batch_size, sequence)`
-        - outputs: 
-            `punctuation` of shape `(batch_size, sequence, 4)`  
-            `capitalization` of shape `(batch_size, sequence, 2)`  
+        - outputs:
+            `punctuation` of shape `(batch_size, sequence, 4)`
+            `capitalization` of shape `(batch_size, sequence, 2)`
     """
 
     def __init__(
@@ -104,12 +104,7 @@ class NemoSTT(SpeechToTextAPI):
         self.punct_labels = "O,.?"
         self.capit_labels = "OU"
 
-        self.decoder = build_ctcdecoder(
-            self.asr_vocab,
-            # kenlm_model_path=path.join(model_path, "lowercase_3-gram.pruned.1e-7.arpa"),
-            # alpha=alpha,  # tuned on a val set
-            # beta=beta,  # tuned on a val set
-        )
+        self.decoder = build_ctcdecoder(self.asr_vocab)
 
         sess_options = rt.SessionOptions()
         sess_options.graph_optimization_level = opt_level.ORT_ENABLE_ALL
@@ -153,7 +148,7 @@ class NemoSTT(SpeechToTextAPI):
         """Decide if audio transcription should be finished.
 
         Args:
-            context: Text context of the speech recognized 
+            context: Text context of the speech recognized
                 (e.g. a question to which speech recognized is a reply to).
             text: Recognized speech so far
             pause_time: Pause after last speech in milliseconds
@@ -162,7 +157,6 @@ class NemoSTT(SpeechToTextAPI):
             Decision to stop recognition and finalize results.
         """
         decision = self._decide_sentence_finished(context, text)
-        print("Sentence decision:", decision)
         done = bool(decision)
         return done
 
@@ -207,7 +201,6 @@ class NemoSTT(SpeechToTextAPI):
             "token_type_ids": type_ids,
         }
         logits = self.sentence_model.run(None, input_dict)[0]
-        print(logits)
         return logits.argmax(-1)[0]
 
     def _predict(self, audio: np.ndarray) -> np.ndarray:

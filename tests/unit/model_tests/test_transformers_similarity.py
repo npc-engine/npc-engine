@@ -6,9 +6,7 @@ import pytest
 import yaml
 
 
-path = os.path.join(
-    os.path.dirname(__file__), "..", "..", "..", "npc_engine", "resources", "models"
-)
+path = os.path.join(os.path.dirname(__file__), "..", "..", "resources", "models")
 
 subdirs = [
     f.path
@@ -29,9 +27,6 @@ model_paths = [
 print(model_paths)
 
 
-@pytest.mark.skipif(
-    len(model_paths) == 0, reason="Model missing",
-)
 def test_transformers_similarity():
     """Check custom testing"""
     try:

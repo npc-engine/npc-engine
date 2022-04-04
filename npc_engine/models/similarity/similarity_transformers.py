@@ -18,12 +18,12 @@ class TransformerSemanticSimilarity(SimilarityAPI):
 
     model.onnx spec:
 
-        - inputs:  
-            `input_ids` of shape `(batch_size, sequence)`  
-            `attention_mask` of shape `(batch_size, sequence)`  
-            (Optional) `input_type_ids` of shape `(batch_size, sequence)`  
-        - outputs:  
-            `token_embeddings` of shape `(batch_size, sequence, hidden_size)`  
+        - inputs:
+            `input_ids` of shape `(batch_size, sequence)`
+            `attention_mask` of shape `(batch_size, sequence)`
+            (Optional) `input_type_ids` of shape `(batch_size, sequence)`
+        - outputs:
+            `token_embeddings` of shape `(batch_size, sequence, hidden_size)`
     """
 
     def __init__(

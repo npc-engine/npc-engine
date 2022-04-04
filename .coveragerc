@@ -9,6 +9,7 @@ omit =
     scratch*.py    
     */.tox/*
     */npc_engine/text/*
+    */npc_engine/models/utils/mock.py
 
 [html]
 directory=./htmlcov

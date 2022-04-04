@@ -5,12 +5,12 @@ import time
 from jsonrpc import JSONRPCResponseManager, dispatcher
 
 
-class ZMQServer:
+class Server:
     """Json rpc server over zmq."""
 
     def __init__(self, port: str):
         """Create a server on the port."""
-        print("starting server")
+        logger.info("Starting server")
         self.context = zmq.Context()
         self.socket = self.context.socket(zmq.REP)
         self.socket.bind(f"tcp://*:{port}")

@@ -12,4 +12,5 @@ Example:
     ```
 """
 from .chatbot_base import ChatbotAPI  # noqa: F401
+from .hf_chatbot import HfChatbot  # noqa: F401
 from .bart import BartChatbot  # noqa: F401

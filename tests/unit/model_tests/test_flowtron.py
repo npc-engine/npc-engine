@@ -8,9 +8,7 @@ import sounddevice as sd
 import pytest
 import yaml
 
-path = os.path.join(
-    os.path.dirname(__file__), "..", "..", "..", "npc_engine", "resources", "models"
-)
+path = os.path.join(os.path.dirname(__file__), "..", "..", "resources", "models")
 
 subdirs = [
     f.path
@@ -29,10 +27,24 @@ flowtron_paths = [
 ]
 
 
-@pytest.mark.skipif(
-    len(flowtron_paths) == 0, reason="Model missing",
-)
 def test_flowtron():
+    """Run flowtron inference, skip if no models in resources."""
+    tts_module = Model.load(flowtron_paths[0])
+
+    test_line = "Test"
+    tts_module.tts_start("6", test_line, 7)
+    i = 0
+    while True:
+        try:
+            _ = np.asarray(tts_module.tts_get_results())
+        except StopIteration:
+            break
+        i += 1
+    assert i > 0
+
+
+@pytest.mark.skip("Skipping manual test")
+def test_flowtron_manual():
     """Run flowtron inference, skip if no models in resources."""
     try:
         tts_module = Model.load(flowtron_paths[0])

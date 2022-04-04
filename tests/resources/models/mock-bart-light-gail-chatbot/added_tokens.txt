@@ -1,0 +1,1 @@
+{"_other_persona": 50270, "<speaker_self>": 50272, "_self_persona": 50269, "_self_name": 50268, "<speaker_other>": 50271, "_partner_name": 50267, "_setting_desc": 50266, "_setting_name": 50265}

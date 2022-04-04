@@ -1,6 +1,6 @@
 """ZMQ server test."""
 import json
-from npc_engine.zmq_server import ZMQServer
+from npc_engine.rpc.server import Server
 
 
 class StubSocket:
@@ -8,7 +8,7 @@ class StubSocket:
 
 
 def test_zmq_json_rpc_server():
-    server = ZMQServer("5555")
+    server = Server("5555")
 
     print("Should reveive dummy")
 
@@ -42,7 +42,7 @@ def test_zmq_json_rpc_server():
 
 
 def test_zmq_json_rpc_server1():
-    server = ZMQServer("5555")
+    server = Server("5555")
 
     print("Should reveive dummy1")
 
@@ -81,7 +81,7 @@ def test_zmq_json_rpc_server1():
 
 
 def test_zmq_json_rpc_server_incorrect_signature():
-    server = ZMQServer("5555")
+    server = Server("5555")
 
     def recv_string(self):
         return json.dumps(

@@ -4,7 +4,9 @@ from typing import Dict, Any, List
 from abc import abstractmethod
 from npc_engine.models.base_model import Model
 from jinja2 import Template
-import json
+from jinja2schema import infer, to_json_schema
+
+from npc_engine.rpc.utils import schema_to_json
 
 
 class ChatbotAPI(Model):
@@ -12,20 +14,18 @@ class ChatbotAPI(Model):
 
     API_METHODS: List[str] = [
         "generate_reply",
-        "get_context_fields",
         "get_prompt_template",
         "get_special_tokens",
+        "get_context_template",
     ]
 
-    def __init__(self, template_string: str, default_context: str, *args, **kwargs):
+    def __init__(self, template_string: str, *args, **kwargs):
         """Initialize prompt formatting variables.
 
         Args:
-            template_string: Template string to be rendered.
-            default_context: Context example with empty fields.
+            template_string: Template string to be rendered as prompt.
         """
         self.template_string = template_string
-        self.default_context = json.loads(default_context)
         self.template = Template(template_string)
         self.initialized = True
 
@@ -73,14 +73,6 @@ class ChatbotAPI(Model):
         """
         return None
 
-    def get_context_fields(self) -> List[str]:
-        """Return context template used for formatting model prompt.
-
-        Returns:
-            A template context dict with empty fields.
-        """
-        return self.default_context
-
     def get_prompt_template(self) -> str:
         """Return prompt template string used to render model prompt.
 
@@ -88,3 +80,11 @@ class ChatbotAPI(Model):
             A template string.
         """
         return self.template_string
+
+    def get_context_template(self) -> Dict[str, Any]:
+        """Return context template.
+
+        Returns:
+            Example context
+        """
+        return schema_to_json(to_json_schema(infer(self.template_string)))

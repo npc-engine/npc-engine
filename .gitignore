@@ -110,5 +110,4 @@ ENV/
 .vscode
 .idea
 
-npc_engine/resources/*
 

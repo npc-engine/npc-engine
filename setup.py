@@ -44,6 +44,7 @@ setup(
         "benchmarks": ["py3nvml"],
         "dml": ["onnxruntime-directml>=1.8.0,<2.0.0"],
         "cpu": ["onnxruntime>=1.8.0,<2.0.0"],
+        "export": ["torch==1.11.0", "transformers==4.17.0"],
     },
     entry_points="""
     [console_scripts]

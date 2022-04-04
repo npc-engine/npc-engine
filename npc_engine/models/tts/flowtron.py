@@ -15,15 +15,15 @@ import logging
 class FlowtronTTS(TextToSpeechAPI):
     """Implements Flowtron architecture inference.
 
-    Paper:  
-    [arXiv:2005.05957](https://arxiv.org/abs/2005.05957)  
-    Code:  
-    https://github.com/NVIDIA/flowtron  
+    Paper:
+    [arXiv:2005.05957](https://arxiv.org/abs/2005.05957)
+    Code:
+    https://github.com/NVIDIA/flowtron
 
-    Onnx export script can be found in this fork https://github.com/npc-engine/flowtron.  
+    Onnx export script can be found in this fork https://github.com/npc-engine/flowtron.
 
     This model class requires four ONNX models `encoder.onnx`, `backward_flow.onnx`,
-    `forward_flow.onnx` and `vocoder.onnx` where first three are layers from Flowtron 
+    `forward_flow.onnx` and `vocoder.onnx` where first three are layers from Flowtron
     architecture (`flow` corresponding to one direction pass of affine coupling layers)
     and `vocoder.onnx` is neural vocoder.
 
@@ -93,7 +93,6 @@ class FlowtronTTS(TextToSpeechAPI):
         Returns:
             Generator that yields next chunk of speech in the form of f32 ndarray.
         """
-        print(text)
         text = self._get_text(text)
         speaker_id = np.asarray([[self.speaker_ids_map[speaker_id]]], dtype=np.int64)
         enc_outps_ortvalue = onnxruntime.OrtValue.ortvalue_from_shape_and_type(
