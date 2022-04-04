@@ -36,8 +36,8 @@ class BaseHfExporter(Exporter):
         """Get the transformers.onnx feature argument that describes what interface model should have.
 
         Possible values are:
-            'causal-lm', 'causal-lm-with-past', 'default', 'default-with-past', 'masked-lm', 
-            'question-answering', 'seq2seq-lm', 'seq2seq-lm-with-past', 'sequence-classification', 
+            'causal-lm', 'causal-lm-with-past', 'default', 'default-with-past', 'masked-lm',
+            'question-answering', 'seq2seq-lm', 'seq2seq-lm-with-past', 'sequence-classification',
             'token-classification'
         """
         pass

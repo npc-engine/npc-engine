@@ -150,7 +150,7 @@ class HfChatbot(ChatbotAPI):
         Args:
             logit: Logit to decode of shape (vocab_size,)
 
-        Returns: 
+        Returns:
             Decoded token of shape
         """
         if topk is not None:

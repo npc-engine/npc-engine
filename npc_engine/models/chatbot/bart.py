@@ -13,24 +13,24 @@ class BartChatbot(ChatbotAPI):
     """BART based chatbot implementation class.
 
     This model class requires two ONNX models `encoder_bart.onnx` and `decoder_bart.onnx`
-    that correspond to encoder and decoder from transformers 
+    that correspond to encoder and decoder from transformers
     [EncoderDecoderModel](https://huggingface.co/transformers/model_doc/encoderdecoder.html)
     and a tokenizer.json with huggingface tokenizers definition.
 
-    encoder_bart.onnx spec:  
+    encoder_bart.onnx spec:
 
-        - inputs:  
-            `input_ids`  
-        - outputs:  
-            `encoder_hidden_state`  
+        - inputs:
+            `input_ids`
+        - outputs:
+            `encoder_hidden_state`
 
-    decoder_bart.onnx spec:  
+    decoder_bart.onnx spec:
 
-        - inputs:  
-            `encoder_hidden_state`  
-            `decoder_input_ids`  
-        - outputs:  
-            `logits`  
+        - inputs:
+            `encoder_hidden_state`
+            `decoder_input_ids`
+        - outputs:
+            `logits`
     """
 
     def __init__(

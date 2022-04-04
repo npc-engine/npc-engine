@@ -95,8 +95,8 @@ class SpeechToTextAPI(Model):
         """Listen for speech input and return text from speech when done.
 
         Listens for speech, if speech is active for longer than self.frame_size in milliseconds
-        then starts transcribing it. On each voice activity detection (VAD) pause 
-        uses context to decide if transcribed text is a finished response to a context. 
+        then starts transcribing it. On each voice activity detection (VAD) pause
+        uses context to decide if transcribed text is a finished response to a context.
         If it is, applies preprocessing and returns the result.
         If transcribed text is not a response to a context but VAD pause persists through max_silence_duration
         then returns the results anyway.
@@ -263,10 +263,10 @@ class SpeechToTextAPI(Model):
     def decide_finished(self, context: str, text: str) -> bool:
         """Abstract method for deciding if audio transcription should be finished.
 
-        Should be implemented by the specific model. 
+        Should be implemented by the specific model.
 
         Args:
-            context: Text context of the speech recognized 
+            context: Text context of the speech recognized
                 (e.g. a question to which speech recognized is a reply to).
             text: Recognized speech so far.
 
