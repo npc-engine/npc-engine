@@ -53,5 +53,3 @@ They keep shrinking!""",
     )
     end = time.time()
     assert answer is not None
-    print("Answer: {}".format(answer))
-    print("done in {} seconds".format(end - start))
