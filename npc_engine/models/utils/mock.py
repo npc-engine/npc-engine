@@ -1,4 +1,5 @@
 """Utility script to mock models for testing."""
+from typing import List
 import sclblonnx as so
 from onnx import helper as xhelp
 import sclblonnx._globals as glob
@@ -6,11 +7,15 @@ import numpy as np
 import click
 
 
-def create_stub_onnx_model(onnx_model_path: str, output_path: str):
+def create_stub_onnx_model(
+    onnx_model_path: str, output_path: str, dynamic_shape_values: dict
+):
     """Create stub onnx model for tests with correct input and output shapes and names.
 
     Args:
         onnx_model_path: Path to the onnx model.
+        output_path: Path to the output mock model.
+        dynamic_shape_values: Map to specify dynamic dimension values.
     """
     onnx_model = so.graph_from_file(onnx_model_path)
     inputs = onnx_model.input
@@ -48,7 +53,11 @@ def create_stub_onnx_model(onnx_model_path: str, output_path: str):
         input_names = [inp.name for inp in inputs]
         if output.name not in input_names:
             build_output_shape_tensor_(
-                mock_graph, output, dynamic_shape_map, f"dynamic_shape_{output.name}",
+                mock_graph,
+                output,
+                dynamic_shape_map,
+                f"dynamic_shape_{output.name}",
+                override=dynamic_shape_values,
             )
             node = so.node(
                 "ConstantOfShape",
@@ -67,7 +76,7 @@ def create_stub_onnx_model(onnx_model_path: str, output_path: str):
 
 
 def build_output_shape_tensor_(
-    graph, output, dynamic_shape_map, shape_name="dynamic_shape"
+    graph, output, dynamic_shape_map, shape_name="dynamic_shape", override={}
 ):
     """Build output shape tensor for dynamic shape models.
 
@@ -78,68 +87,43 @@ def build_output_shape_tensor_(
         shape_name: Name of the output shape tensor.
     """
     dimensions_retrieved = []
-    print(dynamic_shape_map)
     for i, dim in enumerate(output.type.tensor_type.shape.dim):
-        print(dim)
-        if dim.dim_param != "" and dim.dim_param in dynamic_shape_map:
-            if " + " in dim.dim_param:
-                dim1, dim2 = dim.dim_param.split(" + ")
-                if dim1 in dynamic_shape_map:
-                    node1 = so.node(
-                        "Shape",
-                        inputs=[dynamic_shape_map[dim1][0]],
-                        outputs=[f"{shape_name}_{i}_1"],
-                        start=dynamic_shape_map[dim1][1],
-                        end=dynamic_shape_map[dim1][1] + 1,
-                    )
-                    so.add_node(graph, node1)
-                else:
-                    so.add_constant(
-                        graph,
-                        f"{shape_name}_{i}_1",
-                        np.array([1], dtype=np.int64),
-                        data_type="INT64",
-                    )
-                if dim2 in dynamic_shape_map:
-                    node2 = so.node(
-                        "Shape",
-                        inputs=[dynamic_shape_map[dim2][0]],
-                        outputs=[f"{shape_name}_{i}_2"],
-                        start=dynamic_shape_map[dim2][1],
-                        end=dynamic_shape_map[dim2][1] + 1,
-                    )
-                    so.add_node(graph, node2)
-                else:
-                    so.add_constant(
-                        graph,
-                        f"{shape_name}_{i}_2",
-                        np.array([1], dtype=np.int64),
-                        data_type="INT64",
-                    )
-                so.add_node(
-                    graph,
-                    so.node(
-                        "Add",
-                        inputs=[f"{shape_name}_{i}_1", f"{shape_name}_{i}_2"],
-                        outputs=[f"{shape_name}_{i}"],
-                    ),
-                )
-            else:
-                node = so.node(
-                    "Shape",
-                    inputs=[dynamic_shape_map[dim.dim_param][0]],
-                    outputs=[f"{shape_name}_{i}"],
-                    start=dynamic_shape_map[dim.dim_param][1],
-                    end=dynamic_shape_map[dim.dim_param][1] + 1,
-                )
-                so.add_node(graph, node)
-        else:
-            print(f"DIM {dim}")
-            so.add_constant(
+        if " + " in dim.dim_param:
+            dim1, dim2 = dim.dim_param.split(" + ")
+            create_dim_variable_(
                 graph,
-                f"{shape_name}_{i}",
-                np.array([dim.dim_value if dim.dim_param == "" else 1], dtype=np.int64),
-                data_type="INT64",
+                shape_name,
+                dim1,
+                override.get(dim1, dim.dim_value),
+                i,
+                dynamic_shape_map,
+                postfix="1",
+            )
+            create_dim_variable_(
+                graph,
+                shape_name,
+                dim2,
+                override.get(dim2, dim.dim_value),
+                i,
+                dynamic_shape_map,
+                postfix="2",
+            )
+            so.add_node(
+                graph,
+                so.node(
+                    "Add",
+                    inputs=[f"{shape_name}_{i}_1", f"{shape_name}_{i}_2"],
+                    outputs=[f"{shape_name}_{i}"],
+                ),
+            )
+        else:
+            create_dim_variable_(
+                graph,
+                shape_name,
+                dim.dim_param,
+                override.get(dim.dim_param, dim.dim_value),
+                i,
+                dynamic_shape_map,
             )
         dimensions_retrieved.append(f"{shape_name}_{i}")
     node = so.node(
@@ -148,12 +132,59 @@ def build_output_shape_tensor_(
     so.add_node(graph, node)
 
 
+def create_dim_variable_(
+    graph, shape_name, dim_param, dim_value, dim_id, dynamic_shape_map, postfix=None
+):
+    """Create a dimension variable for a dynamic shape model.
+
+    Args:
+        graph: Graph to add the dimension variable to.
+        shape_name: Name of the output shape tensor.
+        dim_name: Name of the dimension.
+        dim_id: Index of the dimension variable.
+        dynamic_shape_map: Map of dynamic axes names to their inputs indices.
+    """
+    if dim_param != "" and dim_param in dynamic_shape_map:
+        node1 = so.node(
+            "Shape",
+            inputs=[dynamic_shape_map[dim_param][0]],
+            outputs=[
+                f"{shape_name}_{dim_id}"
+                if postfix is None
+                else f"{shape_name}_{dim_id}_{postfix}"
+            ],
+            start=dynamic_shape_map[dim_param][1],
+            end=dynamic_shape_map[dim_param][1] + 1,
+        )
+        so.add_node(graph, node1)
+    else:
+        so.add_constant(
+            graph,
+            f"{shape_name}_{dim_id}"
+            if postfix is None
+            else f"{shape_name}_{dim_id}_{postfix}",
+            np.array([dim_value if dim_value != 0 else 1], dtype=np.int64,),
+            data_type="INT64",
+        )
+
+
 @click.command()
+@click.option(
+    "-d",
+    "--dynamic-dim",
+    type=str,
+    multiple=True,
+    help="Specify dynamic dimension in format `<dim name>:<dim value>`.",
+)
 @click.option("-m", "--onnx-model-path", required=True, type=str)
 @click.option("-o", "--output-path", required=True, type=str)
-def main(onnx_model_path: str, output_path: str):
+def main(onnx_model_path: str, output_path: str, dynamic_dim: List[str]):
     """Create stub onnx model for tests with correct input and output shapes and names."""
-    create_stub_onnx_model(onnx_model_path, output_path)
+    dynamic_dims_map = {}
+    for dim in dynamic_dim:
+        dim_name, dim_value = dim.split(":")
+        dynamic_dims_map[dim_name] = int(dim_value)
+    create_stub_onnx_model(onnx_model_path, output_path, dynamic_dims_map)
 
 
 if __name__ == "__main__":
