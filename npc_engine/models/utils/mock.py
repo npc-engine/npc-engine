@@ -45,22 +45,24 @@ def create_stub_onnx_model(onnx_model_path: str, output_path: str):
             ],
             data_type=inverse_data_dict[output.type.tensor_type.elem_type],
         )
-        build_output_shape_tensor_(
-            mock_graph, output, dynamic_shape_map, f"dynamic_shape_{output.name}",
-        )
-        node = so.node(
-            "ConstantOfShape",
-            inputs=[f"dynamic_shape_{output.name}"],
-            outputs=[output.name],
-            value=xhelp.make_tensor(
-                name=f"dynamic_shape_{output.name}_value",
-                data_type=output.type.tensor_type.elem_type,
-                dims=[1],
-                vals=[0],
-            ),
-            name=f"ConstantOfShape_{output.name}",
-        )
-        so.add_node(mock_graph, node)
+        input_names = [inp.name for inp in inputs]
+        if output.name not in input_names:
+            build_output_shape_tensor_(
+                mock_graph, output, dynamic_shape_map, f"dynamic_shape_{output.name}",
+            )
+            node = so.node(
+                "ConstantOfShape",
+                inputs=[f"dynamic_shape_{output.name}"],
+                outputs=[output.name],
+                value=xhelp.make_tensor(
+                    name=f"dynamic_shape_{output.name}_value",
+                    data_type=output.type.tensor_type.elem_type,
+                    dims=[1],
+                    vals=[0],
+                ),
+                name=f"ConstantOfShape_{output.name}",
+            )
+            so.add_node(mock_graph, node)
     so.graph_to_file(mock_graph, output_path, onnx_opset_version=15)
 
 
@@ -76,7 +78,9 @@ def build_output_shape_tensor_(
         shape_name: Name of the output shape tensor.
     """
     dimensions_retrieved = []
+    print(dynamic_shape_map)
     for i, dim in enumerate(output.type.tensor_type.shape.dim):
+        print(dim)
         if dim.dim_param != "" and dim.dim_param in dynamic_shape_map:
             if " + " in dim.dim_param:
                 dim1, dim2 = dim.dim_param.split(" + ")
@@ -121,20 +125,20 @@ def build_output_shape_tensor_(
                     ),
                 )
             else:
-                if dim.dim_param in dynamic_shape_map:
-                    node = so.node(
-                        "Shape",
-                        inputs=[dynamic_shape_map[dim.dim_param][0]],
-                        outputs=[f"{shape_name}_{i}"],
-                        start=dynamic_shape_map[dim.dim_param][1],
-                        end=dynamic_shape_map[dim.dim_param][1] + 1,
-                    )
-                    so.add_node(graph, node)
+                node = so.node(
+                    "Shape",
+                    inputs=[dynamic_shape_map[dim.dim_param][0]],
+                    outputs=[f"{shape_name}_{i}"],
+                    start=dynamic_shape_map[dim.dim_param][1],
+                    end=dynamic_shape_map[dim.dim_param][1] + 1,
+                )
+                so.add_node(graph, node)
         else:
+            print(f"DIM {dim}")
             so.add_constant(
                 graph,
                 f"{shape_name}_{i}",
-                np.array([dim.dim_value], dtype=np.int64),
+                np.array([dim.dim_value if dim.dim_param == "" else 1], dtype=np.int64),
                 data_type="INT64",
             )
         dimensions_retrieved.append(f"{shape_name}_{i}")
