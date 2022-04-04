@@ -77,7 +77,7 @@ def build_output_shape_tensor_(
     """
     dimensions_retrieved = []
     for i, dim in enumerate(output.type.tensor_type.shape.dim):
-        if dim.dim_param != "":
+        if dim.dim_param != "" and dim.dim_param in dynamic_shape_map:
             if " + " in dim.dim_param:
                 dim1, dim2 = dim.dim_param.split(" + ")
                 if dim1 in dynamic_shape_map:
@@ -121,14 +121,15 @@ def build_output_shape_tensor_(
                     ),
                 )
             else:
-                node = so.node(
-                    "Shape",
-                    inputs=[dynamic_shape_map[dim.dim_param][0]],
-                    outputs=[f"{shape_name}_{i}"],
-                    start=dynamic_shape_map[dim.dim_param][1],
-                    end=dynamic_shape_map[dim.dim_param][1] + 1,
-                )
-                so.add_node(graph, node)
+                if dim.dim_param in dynamic_shape_map:
+                    node = so.node(
+                        "Shape",
+                        inputs=[dynamic_shape_map[dim.dim_param][0]],
+                        outputs=[f"{shape_name}_{i}"],
+                        start=dynamic_shape_map[dim.dim_param][1],
+                        end=dynamic_shape_map[dim.dim_param][1] + 1,
+                    )
+                    so.add_node(graph, node)
         else:
             so.add_constant(
                 graph,
