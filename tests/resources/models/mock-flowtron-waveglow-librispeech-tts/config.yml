@@ -1,0 +1,6 @@
+model_type: "FlowtronTTS"
+max_frames: 400
+gate_threshold: 0.5
+sigma: 0.8
+smoothing_window: 3
+smoothing_weight: 0.5
