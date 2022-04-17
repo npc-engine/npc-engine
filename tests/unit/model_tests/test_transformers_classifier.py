@@ -27,6 +27,9 @@ model_paths = [
 print(model_paths)
 
 
+@pytest.mark.skipif(
+    len(model_paths) == 0, reason="Model missing",
+)
 def test_transformers_similarity():
     """Check custom testing"""
     try:

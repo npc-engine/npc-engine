@@ -1,6 +1,6 @@
 """Text generation test."""
 import os
-from npc_engine.models import Model
+from npc_engine.services import BaseService
 import time
 import pytest
 import yaml
@@ -26,7 +26,7 @@ bart_paths = [
 
 def test_reply_default():
     """Check if chatbot works"""
-    chatbot_model = Model.load(bart_paths[0])
+    chatbot_model = BaseService.create(bart_paths[0], None)
 
     print(f"Special tokens {chatbot_model.get_special_tokens()}")
 

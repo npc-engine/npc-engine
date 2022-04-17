@@ -1,12 +1,12 @@
 """TTS test."""
 import numpy as np
-from npc_engine.models.tts import TextToSpeechAPI
+from npc_engine.services.tts import TextToSpeechAPI
 import pytest
 
 
 class MockTTSModel(TextToSpeechAPI):
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__(pipe=None)
 
     def run(self, speaker_id: str, text: str, n_chunks: int):
         return iter([np.asarray([123]).reshape(1, 1)])

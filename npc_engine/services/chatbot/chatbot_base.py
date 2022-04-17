@@ -2,14 +2,14 @@
 from typing import Dict, Any, List
 
 from abc import abstractmethod
-from npc_engine.models.base_model import Model
+from npc_engine.services.base_service import BaseService
 from jinja2 import Template
 from jinja2schema import infer, to_json_schema
 
-from npc_engine.rpc.utils import schema_to_json
+from npc_engine.service_manager.utils import schema_to_json
 
 
-class ChatbotAPI(Model):
+class ChatbotAPI(BaseService):
     """Abstract base class for Chatbot models."""
 
     API_METHODS: List[str] = [
@@ -25,6 +25,7 @@ class ChatbotAPI(Model):
         Args:
             template_string: Template string to be rendered as prompt.
         """
+        super().__init__(*args, **kwargs)
         self.template_string = template_string
         self.template = Template(template_string)
         self.initialized = True

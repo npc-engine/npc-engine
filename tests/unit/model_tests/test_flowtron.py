@@ -1,6 +1,6 @@
 """Speech synthesis test."""
 import os
-from npc_engine.models import Model
+from npc_engine.services import BaseService
 import time
 from queue import Queue
 import numpy as np
@@ -29,7 +29,7 @@ flowtron_paths = [
 
 def test_flowtron():
     """Run flowtron inference, skip if no models in resources."""
-    tts_module = Model.load(flowtron_paths[0])
+    tts_module = BaseService.create(flowtron_paths[0], None)
 
     test_line = "Test"
     tts_module.tts_start("6", test_line, 7)
@@ -47,7 +47,7 @@ def test_flowtron():
 def test_flowtron_manual():
     """Run flowtron inference, skip if no models in resources."""
     try:
-        tts_module = Model.load(flowtron_paths[0])
+        tts_module = BaseService.create(flowtron_paths[0], None)
     except FileNotFoundError:
         return
     start = time.time()

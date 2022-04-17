@@ -1,12 +1,12 @@
 """STT test."""
 import numpy as np
-from npc_engine.models.stt import SpeechToTextAPI
+from npc_engine.services.stt import SpeechToTextAPI
 import pytest
 
 
 class MockSTTModel(SpeechToTextAPI):
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__(pipe=None)
         self.i = 0
 
     def transcribe_frame(self, frame):

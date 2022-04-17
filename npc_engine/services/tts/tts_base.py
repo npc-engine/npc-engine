@@ -2,12 +2,12 @@
 from typing import Iterable, List
 
 from abc import abstractmethod
-from npc_engine.models.base_model import Model
+from npc_engine.services.base_service import BaseService
 import numpy as np
 import re
 
 
-class TextToSpeechAPI(Model):
+class TextToSpeechAPI(BaseService):
     """Abstract base class for text-to-speech models."""
 
     #: Methods that are going to be exposed as services.
@@ -16,7 +16,7 @@ class TextToSpeechAPI(Model):
     def __init__(self, *args, **kwargs) -> None:
         """Empty initialization method for API to be similar to other model base classes."""
         self.generator = None
-        super().__init__()
+        super().__init__(*args, **kwargs)
         self.initialized = True
 
     def tts_start(self, speaker_id: str, text: str, n_chunks: int) -> None:

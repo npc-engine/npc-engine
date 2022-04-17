@@ -1,5 +1,5 @@
 """Chatbot test."""
-from npc_engine.models.chatbot import ChatbotAPI
+from npc_engine.services.chatbot import ChatbotAPI
 
 ctx = '{"test": ""}'
 

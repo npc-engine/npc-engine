@@ -1,13 +1,13 @@
 """Similarity test."""
 import numpy as np
-from npc_engine.models.similarity import SimilarityAPI
+from npc_engine.services.similarity import SimilarityAPI
 
 num_calls = 0
 
 
 class MockSimilarityModel(SimilarityAPI):
     def __init__(self) -> None:
-        super().__init__(10)
+        super().__init__(10, pipe=None)
 
     def compute_embedding(self, line):
         return np.asarray([123]).reshape(1, 1)

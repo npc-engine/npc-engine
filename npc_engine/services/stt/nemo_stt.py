@@ -9,7 +9,7 @@ from loguru import logger
 from pyctcdecode import build_ctcdecoder
 import librosa
 
-from npc_engine.models.stt.stt_base import SpeechToTextAPI
+from npc_engine.services.stt.stt_base import SpeechToTextAPI
 
 
 class NemoSTT(SpeechToTextAPI):

@@ -1,6 +1,6 @@
 """Speech to text tests and tuning."""
 import os
-from npc_engine import models
+from npc_engine import services
 import time
 import pytest
 import numpy
@@ -33,7 +33,7 @@ nemo_stt_paths = [
 @pytest.mark.skip()
 def test_sanity_check():
     try:
-        stt = models.Model.load(nemo_stt_paths[0])
+        stt = services.BaseService.create(nemo_stt_paths[0], None)
     except FileNotFoundError:
         return
     device = input(f"Select device: \n {stt.get_devices()} \n")
@@ -63,7 +63,7 @@ def test_tune_decoder_parameters():
     from tqdm import tqdm
 
     try:
-        stt = models.Model.load(
+        stt = services.BaseService.create(
             os.path.join(
                 os.path.dirname(__file__),
                 "..",
@@ -148,7 +148,7 @@ def test_tune_decoder_parameters():
 @pytest.mark.skip()
 def test_transcribe():
     try:
-        stt = models.Model.load(nemo_stt_paths[0])
+        stt = services.BaseService.create(nemo_stt_paths[0], None)
     except FileNotFoundError:
         return
 
@@ -177,7 +177,7 @@ def test_transcribe():
 
 
 def test_transcribe():
-    stt = models.Model.load(nemo_stt_paths[0])
+    stt = services.BaseService.create(nemo_stt_paths[0], None)
 
     audio = AudioSegment.from_file(
         os.path.join(
@@ -195,7 +195,7 @@ def test_transcribe():
 
 def test_decide_finished():
     try:
-        stt = models.Model.load(nemo_stt_paths[0])
+        stt = services.BaseService.create(nemo_stt_paths[0], None)
     except FileNotFoundError:
         return
 

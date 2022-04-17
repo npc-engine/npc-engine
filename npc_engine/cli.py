@@ -4,15 +4,16 @@
 import sys
 import os
 import logging
+
+logging.basicConfig(level=logging.ERROR)
 import shutil
 from npc_engine.exporters.base_exporter import Exporter
-from npc_engine.models.utils.config import (
+from npc_engine.services.utils.config import (
     get_model_type_name,
     validate_hub_model,
     validate_local_model,
 )
 
-logging.basicConfig(level=logging.ERROR)
 
 import click
 from huggingface_hub import snapshot_download
@@ -26,39 +27,36 @@ from npc_engine.version import __version__
 def cli(verbose: bool):
     """NPC engine JSON RPC server CLI."""
     # Use the verbosity count to determine the logging level...
+    logger.remove()
     if verbose:
-        logger.add(sys.stdout, format="{time} {level} {message}", level="INFO")
+        logger.add(
+            sys.stdout, format="{time} {level} {message}", level="INFO", enqueue=True
+        )
         click.echo(
             click.style("Verbose logging is enabled. (LEVEL=INFO)", fg="yellow",)
         )
 
 
 @cli.command()
-@click.option(
-    "--models-path", default=os.path.join("npc_engine", "resources", "models")
-)
-@click.option("--port", default="5556")
-def run(models_path: str, port: str):
+@click.option("--models-path", default="./models")
+@click.option("--port", default="5555")
+@click.option("--start-all/--dont-start", default=False)
+def run(models_path: str, port: str, start_all: bool):
     """Load the models and start JSONRPC server."""
-    from npc_engine.models.model_manager import ModelManager
-    from npc_engine.rpc.server import Server
+    from npc_engine.service_manager.service_manager import ServiceManager
+    from npc_engine.service_manager.server import Server
 
-    model_manager = ModelManager(models_path)
-    model_manager.load_models()
-    api_dict = model_manager.build_api_dict()
-    rpc_server = Server(port)
-    try:
-        rpc_server.run(api_dict)
-    except Exception:
-        rpc_server.run(api_dict)
+    model_manager = ServiceManager(models_path)
+    server = Server(port, model_manager)
+    if start_all:
+        for service in model_manager.services:
+            model_manager.start_service(service)
+    server.run()
 
 
 @cli.command()
 @click.option(
-    "--models-path",
-    default=os.environ.get(
-        "NPC_ENGINE_MODELS_PATH", os.path.join("npc_engine", "resources", "models")
-    ),
+    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
 )
 def download_default_models(models_path: str):
     """Download default models into the folder."""
@@ -83,25 +81,27 @@ def set_models_path(models_path: str):
 
 @cli.command()
 @click.option(
-    "--models-path",
-    default=os.environ.get(
-        "NPC_ENGINE_MODELS_PATH", os.path.join("npc_engine", "resources", "models")
-    ),
+    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
 )
 def list_models(models_path: str):
     """List the models in the folder."""
-    from npc_engine.models.model_manager import ModelManager
+    from npc_engine.service_manager.service_manager import ServiceManager
 
-    model_manager = ModelManager(models_path)
-    model_manager.list_models()
+    model_manager = ServiceManager(models_path)
+    metadata_list = model_manager.get_services_metadata()
+    for metadata in metadata_list:
+        click.echo(metadata["id"])
+        click.echo(metadata["type"])
+        click.echo("Service description:")
+        click.echo(metadata["service_short_description"])
+        click.echo("Model description:")
+        click.echo(metadata["readme"])
+        click.echo("--------------------")
 
 
 @cli.command()
 @click.option(
-    "--models-path",
-    default=os.environ.get(
-        "NPC_ENGINE_MODELS_PATH", os.path.join("npc_engine", "resources", "models")
-    ),
+    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
 )
 @click.argument("model_id")
 def download_model(models_path: str, model_id: str):
@@ -123,10 +123,7 @@ def download_model(models_path: str, model_id: str):
 
 @cli.command()
 @click.option(
-    "--models-path",
-    default=os.environ.get(
-        "NPC_ENGINE_MODELS_PATH", os.path.join("npc_engine", "resources", "models")
-    ),
+    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
 )
 @click.argument("model_id")
 def export_model(models_path: str, model_id: str, remove_source: bool = False):
@@ -161,10 +158,7 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
 
 @cli.command()
 @click.option(
-    "--models-path",
-    default=os.environ.get(
-        "NPC_ENGINE_MODELS_PATH", os.path.join("npc_engine", "resources", "models")
-    ),
+    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
 )
 @click.argument("model_id")
 def test_model(models_path: str, model_id: str):
