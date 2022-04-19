@@ -5,7 +5,6 @@ from multiprocessing import Process
 import os
 import shutil
 from typing import Dict
-from requests import request
 import zmq
 import zmq.asyncio
 
@@ -90,9 +89,7 @@ class ServiceManager:
         if service_id == "control":
             return JSONRPCResponseManager.handle(request, self.control_dispatcher).json
         else:
-            if (
-                self.services[service_id].process_data["state"] != ServiceState.RUNNING
-            ):
+            if self.services[service_id].process_data["state"] != ServiceState.RUNNING:
                 raise ValueError(f"Service {service_id} is not running")
             else:
                 socket = self.services[service_id].process_data["socket"]

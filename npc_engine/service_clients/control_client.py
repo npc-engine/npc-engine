@@ -1,4 +1,4 @@
-"""Control interface client implementation"""
+"""Control interface client implementation."""
 import zmq
 from typing import Any, Dict
 from npc_engine.service_clients.service_client import ServiceClient
