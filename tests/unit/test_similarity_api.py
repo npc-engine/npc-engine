@@ -7,7 +7,7 @@ num_calls = 0
 
 class MockSimilarityModel(SimilarityAPI):
     def __init__(self) -> None:
-        super().__init__(10, pipe=None)
+        super().__init__(10, socket=None)
 
     def compute_embedding(self, line):
         return np.asarray([123]).reshape(1, 1)

@@ -3,7 +3,7 @@ from typing import Dict
 from abc import ABC
 import os
 import yaml
-import multiprocessing as mp
+import zmq
 from loguru import logger
 from jsonrpc import JSONRPCResponseManager, Dispatcher
 
@@ -18,19 +18,22 @@ class BaseService(ABC):
         super().__init_subclass__(**kwargs)
         cls.models[cls.__name__] = cls
 
-    def __init__(self, pipe: mp.Pipe, *args, **kwargs):
+    def __init__(self, context: zmq.Context, uri: str, *args, **kwargs):
         """Initialize the service."""
-        self.pipe = pipe
+        self.zmq_context = context
+        self.socket = context.socket(zmq.REP)
+        self.socket.bind(uri)
 
     @classmethod
-    def create(cls, path: str, pipe: mp.Pipe):
+    def create(cls, context: zmq.Context, path: str, uri: str):
         """Create a service from the path."""
         config_path = os.path.join(path, "config.yml")
         with open(config_path) as f:
             config_dict = yaml.load(f, Loader=yaml.Loader)
         config_dict["model_path"] = path
+        config_dict["uri"] = uri
         model_cls = cls.models[config_dict["model_type"]]
-        return model_cls(**config_dict, pipe=pipe)
+        return model_cls(**config_dict, context=context)
 
     def start(self):
         """Run service main loop that accepts json rpc over pipes."""
@@ -38,9 +41,9 @@ class BaseService(ABC):
         dispatcher.update(self.build_api_dict())
         dispatcher.update({"status": self.status})
         while True:
-            request = self.pipe.recv()
+            request = self.socket.recv_string()
             response = JSONRPCResponseManager.handle(request, dispatcher)
-            self.pipe.send(response.json)
+            self.socket.send_string(response.json)
 
     def status(self):
         """Return status of the service."""

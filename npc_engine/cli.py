@@ -7,6 +7,8 @@ import logging
 
 logging.basicConfig(level=logging.ERROR)
 import shutil
+import zmq
+import zmq.asyncio
 from npc_engine.exporters.base_exporter import Exporter
 from npc_engine.services.utils.config import (
     get_model_type_name,
@@ -46,8 +48,9 @@ def run(models_path: str, port: str, start_all: bool):
     from npc_engine.service_manager.service_manager import ServiceManager
     from npc_engine.service_manager.server import Server
 
-    model_manager = ServiceManager(models_path)
-    server = Server(port, model_manager)
+    context = zmq.asyncio.Context(io_threads=5)
+    model_manager = ServiceManager(context, models_path)
+    server = Server(context, model_manager, port)
     if start_all:
         for service in model_manager.services:
             model_manager.start_service(service)

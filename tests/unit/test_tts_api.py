@@ -1,4 +1,5 @@
 """TTS test."""
+from socket import socket
 import numpy as np
 from npc_engine.services.tts import TextToSpeechAPI
 import pytest
@@ -6,7 +7,7 @@ import pytest
 
 class MockTTSModel(TextToSpeechAPI):
     def __init__(self) -> None:
-        super().__init__(pipe=None)
+        super().__init__(socket=None)
 
     def run(self, speaker_id: str, text: str, n_chunks: int):
         return iter([np.asarray([123]).reshape(1, 1)])

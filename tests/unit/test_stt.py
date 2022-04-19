@@ -6,7 +6,7 @@ import pytest
 
 class MockSTTModel(SpeechToTextAPI):
     def __init__(self) -> None:
-        super().__init__(pipe=None)
+        super().__init__(socket=None)
         self.i = 0
 
     def transcribe_frame(self, frame):

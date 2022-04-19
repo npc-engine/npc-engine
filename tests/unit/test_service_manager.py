@@ -2,8 +2,8 @@
 import os
 import time
 import pytest
-from threading import Thread
-import asyncio
+import zmq
+import zmq.asyncio
 from npc_engine.service_manager.service_manager import ServiceManager, ServiceState
 import pprint
 
@@ -15,7 +15,8 @@ def test_model_manager_get_metadata():
         "resources",
         "models",
     )
-    model_manager = ServiceManager(path)
+    context = zmq.asyncio.Context()
+    model_manager = ServiceManager(context, path)
     metadata = model_manager.get_services_metadata()
     paths = [
         f.path
@@ -31,8 +32,9 @@ def test_model_manager_get_metadata():
 
 def test_model_manager_start_stop_service():
     """Test if models are printed without error."""
+    context = zmq.asyncio.Context()
     model_manager = ServiceManager(
-        os.path.join(os.path.dirname(__file__), "..", "resources", "models")
+        context, os.path.join(os.path.dirname(__file__), "..", "resources", "models")
     )
     service = next(iter(model_manager.services.keys()))
     assert model_manager.get_service_status(service) == ServiceState.STOPPED
@@ -44,8 +46,9 @@ def test_model_manager_start_stop_service():
 
 def test_model_manager_start_error_service():
     """Test if models are printed without error."""
+    context = zmq.asyncio.Context()
     model_manager = ServiceManager(
-        os.path.join(os.path.dirname(__file__), "..", "resources", "models")
+        context, os.path.join(os.path.dirname(__file__), "..", "resources", "models")
     )
     service = next(iter(model_manager.services.keys()))
     assert model_manager.get_service_status(service) == ServiceState.STOPPED
@@ -60,8 +63,9 @@ def test_model_manager_start_error_service():
 
 def test_model_manager_restart_service():
     """Test if models are printed without error."""
+    context = zmq.asyncio.Context()
     model_manager = ServiceManager(
-        os.path.join(os.path.dirname(__file__), "..", "resources", "models")
+        context, os.path.join(os.path.dirname(__file__), "..", "resources", "models")
     )
     service = next(iter(model_manager.services.keys()))
     assert model_manager.get_service_status(service) == ServiceState.STOPPED

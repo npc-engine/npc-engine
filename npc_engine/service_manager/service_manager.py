@@ -1,9 +1,13 @@
 """Module that implements lifetime and discoverability of the services."""
 import asyncio
 import json
-from multiprocessing import Pipe, Process
+from multiprocessing import Process
 import os
+import shutil
 from typing import Dict
+from requests import request
+import zmq
+import zmq.asyncio
 
 from npc_engine import services
 from jsonrpc import JSONRPCResponseManager, Dispatcher
@@ -25,11 +29,11 @@ class ServiceState:
 
 
 ServiceDescriptor = namedtuple(
-    "ServiceDescriptor", ["id", "type", "path", "process_data"]
+    "ServiceDescriptor", ["id", "type", "path", "uri", "process_data"]
 )
 
 
-def service_process(service_path: str, pipe: Pipe) -> None:
+def service_process(service_path: str, uri: str) -> None:
     """Service subprocess function.
 
     Starts the service and runs it's loop.
@@ -40,14 +44,15 @@ def service_process(service_path: str, pipe: Pipe) -> None:
         rotation="10 MB",
         enqueue=True,
     )
-    service = services.BaseService.create(service_path, pipe)
+    context = zmq.Context()
+    service = services.BaseService.create(context, service_path, uri)
     service.start()
 
 
 class ServiceManager:
     """Object for managing lifetime and discoverability of the services."""
 
-    def __init__(self, path):
+    def __init__(self, zmq_context: zmq.asyncio.Context, path):
         """Create model manager and load models from the given path."""
         self.services = self._scan_path(path)
         self.control_dispatcher = Dispatcher()
@@ -60,8 +65,17 @@ class ServiceManager:
                 "restart_service": self.restart_service,
             }
         )
+        self.zmq_context = zmq_context
+        os.makedirs(".npc_engine_tmp", exist_ok=True)
 
-    def handle_request(self, address: str, request: str) -> str:  # Add timeouts
+    def __del__(self):
+        """Stop all services."""
+        for service_id, service in self.services.items():
+            if service.process_data["state"] == ServiceState.RUNNING:
+                self.stop_service(service_id)
+        shutil.rmtree(".npc_engine_tmp")
+
+    async def handle_request(self, address: str, request: str) -> str:
         """Parse request string and route request to correct service.
 
         Args:
@@ -78,16 +92,12 @@ class ServiceManager:
         else:
             if (
                 self.services[service_id].process_data["state"] != ServiceState.RUNNING
-                and self.services[service_id].process_data["state"]
-                != ServiceState.STARTING
             ):
                 raise ValueError(f"Service {service_id} is not running")
             else:
-                service_pipe = self.services[service_id].process_data["pipe"]
-                service_pipe.send(request)
-                response = (
-                    service_pipe.recv()
-                )  # TODO: Check if error happens and raise exception
+                socket = self.services[service_id].process_data["socket"]
+                await socket.send_string(request)
+                response = await socket.recv_string()
         return response
 
     def resolve_and_check_service(self, id_or_type):
@@ -138,17 +148,21 @@ class ServiceManager:
             raise ValueError(f"Service {service_id} not found")
         if self.services[service_id].process_data["state"] == ServiceState.RUNNING:
             raise ValueError(f"Service {service_id} is already running")
-        pipe_main, pipe_child = Pipe()
 
         process = Process(
             target=service_process,
-            args=(self.services[service_id].path, pipe_child),
+            args=(self.services[service_id].path, self.services[service_id].uri),
             daemon=True,
         )
         process.start()
         self.services[service_id].process_data["process"] = process
         self.services[service_id].process_data["state"] = ServiceState.STARTING
-        self.services[service_id].process_data["pipe"] = pipe_main
+        self.services[service_id].process_data["socket"] = self.zmq_context.socket(
+            zmq.REQ
+        )
+        self.services[service_id].process_data["socket"].connect(
+            self.services[service_id].uri
+        )
         try:
             asyncio.create_task(self.confirm_state_coroutine(service_id))
         except RuntimeError:
@@ -156,9 +170,10 @@ class ServiceManager:
 
     async def confirm_state_coroutine(self, service_id):
         """Confirm the state of the service."""
-        response = self.handle_request(
-            service_id, json.dumps({"jsonrpc": "2.0", "method": "status", "id": 1})
-        )
+        request = json.dumps({"jsonrpc": "2.0", "method": "status", "id": 1})
+        socket = self.services[service_id].process_data["socket"]
+        await socket.send_string(request)
+        response = await socket.recv_string()
         resp_dict = json.loads(response)
         if resp_dict["result"] == ServiceState.RUNNING:
             self.services[service_id].process_data["state"] = ServiceState.RUNNING
@@ -179,10 +194,11 @@ class ServiceManager:
             raise ValueError(f"Service {service_id} not found")
         if self.services[service_id].process_data["state"] != ServiceState.RUNNING:
             raise ValueError(f"Service {service_id} is not running")
+        self.services[service_id].process_data["socket"].close()
+        self.services[service_id].process_data["socket"] = None
         self.services[service_id].process_data["process"].terminate()
         self.services[service_id].process_data["process"] = None
         self.services[service_id].process_data["state"] = ServiceState.STOPPED
-        self.services[service_id].process_data["pipe"] = None
 
     def restart_service(self, service_id):
         """Restart the service."""
@@ -201,11 +217,13 @@ class ServiceManager:
         for path in paths:
             with open(os.path.join(path, "config.yml")) as f:
                 config_dict = yaml.safe_load(f)
+                uri = f"ipc://.npc_engine_tmp/{os.path.basename(path)}"
                 services[os.path.basename(path)] = ServiceDescriptor(
                     os.path.basename(path),
                     config_dict.get("model_type", config_dict.get("type", None)),
                     path,
-                    {"process": None, "pipe": None, "state": ServiceState.STOPPED},
+                    uri,
+                    {"process": None, "socket": None, "state": ServiceState.STOPPED},
                 )
 
         return services

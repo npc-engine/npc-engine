@@ -15,11 +15,14 @@ from npc_engine.service_manager.service_manager import ServiceManager
 class Server:
     """Json rpc server over zmq."""
 
-    def __init__(self, port: str, service_manager: ServiceManager):
+    def __init__(
+        self,
+        zmq_context: zmq.asyncio.Context,
+        service_manager: ServiceManager,
+        port: str,
+    ):
         """Create a server on the port."""
-        self.context = zmq.asyncio.Context(
-            io_threads=service_manager.services.__len__()
-        )
+        self.context = zmq_context
         self.socket = self.context.socket(zmq.ROUTER)
         self.socket.bind(f"tcp://*:{port}")
         self.service_manager = service_manager
@@ -53,7 +56,7 @@ class Server:
         logging.info("Handling reply")
         start = time.time()
         try:
-            response = self.service_manager.handle_request(address, message)
+            response = await self.service_manager.handle_request(address, message)
         except Exception as e:
             response = {
                 "code": -32000,
