@@ -17,7 +17,7 @@ def schema_to_json(
         raise ValueError(f"Unknown schema type: {s}")
 
 
-def start_test_server(port: str, models_path: str):
+def start_test_server(port: str, models_path: str):  # pragma: no cover
     """Start the test server.
 
     Args:

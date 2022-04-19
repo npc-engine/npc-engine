@@ -2,7 +2,13 @@
 import os
 from npc_engine.services import BaseService
 import time
-import pytest
+import inspect
+import sys
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+import mocks.zmq_mocks as zmq
 import yaml
 
 path = os.path.join(os.path.dirname(__file__), "..", "..", "resources", "models")
@@ -26,11 +32,12 @@ hf_chatbot_paths = [
 
 def test_reply_default():
     """Check if chatbot works"""
-    chatbot_model = BaseService.create(hf_chatbot_paths[0], None)
+    chatbot_model = BaseService.create(
+        zmq.Context(), hf_chatbot_paths[0], "inproc://test"
+    )
 
     print(f"Special tokens {chatbot_model.get_special_tokens()}")
 
-    start = time.time()
     answer = chatbot_model.generate_reply(
         context=dict(
             location_name="Brimswood pub, Tavern",
@@ -51,5 +58,8 @@ They keep shrinking!""",
         temperature=0.8,
         topk=None,
     )
-    end = time.time()
+    template = chatbot_model.get_prompt_template()
+    print(f"Template {template}")
+    context = chatbot_model.get_context_template()
+    assert isinstance(context, dict)
     assert answer is not None

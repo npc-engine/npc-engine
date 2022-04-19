@@ -2,7 +2,13 @@
 import os
 from npc_engine import services
 import time
-import pytest
+import inspect
+import sys
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+import mocks.zmq_mocks as zmq
 import yaml
 
 
@@ -30,7 +36,9 @@ print(model_paths)
 def test_transformers_similarity():
     """Check custom testing"""
     try:
-        semantic_tests = services.BaseService.create(model_paths[0], None)
+        semantic_tests = services.BaseService.create(
+            zmq.Context(), model_paths[0], "inproc://test"
+        )
     except FileNotFoundError:
         return
     start = time.time()

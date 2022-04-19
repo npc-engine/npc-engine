@@ -1,13 +1,20 @@
 """Similarity test."""
 import numpy as np
 from npc_engine.services.similarity import SimilarityAPI
+import inspect
+import os
+import sys
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+sys.path.insert(0, currentdir)
+import mocks.zmq_mocks as zmq
 
 num_calls = 0
 
 
 class MockSimilarityModel(SimilarityAPI):
     def __init__(self) -> None:
-        super().__init__(10, socket=None)
+        super().__init__(10, context=zmq.Context(), uri="inproc://test")
 
     def compute_embedding(self, line):
         return np.asarray([123]).reshape(1, 1)

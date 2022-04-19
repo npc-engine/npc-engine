@@ -1,5 +1,13 @@
 """Chatbot test."""
 from npc_engine.services.chatbot import ChatbotAPI
+import inspect
+import os
+import sys
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+sys.path.insert(0, currentdir)
+import mocks.zmq_mocks as zmq
+
 
 ctx = '{"test": ""}'
 
@@ -11,7 +19,7 @@ template = """
 
 class MockChatbotModel(ChatbotAPI):
     def __init__(self) -> None:
-        super().__init__(template, ctx)
+        super().__init__(template, context=zmq.Context(), uri="inproc://test")
 
     def run(self, prompt: str, temperature: float = 1, topk: int = None):
         assert (
