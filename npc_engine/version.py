@@ -3,5 +3,5 @@
 
 """This module contains project version information."""
 
-__version__ = "0.0.3"  #: the working version
+__version__ = "0.1.0"  #: the working version
 __release__ = "0.0.2"  #: the release version
