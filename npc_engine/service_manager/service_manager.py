@@ -1,10 +1,10 @@
 """Module that implements lifetime and discoverability of the services."""
+from typing import Dict
+from multiprocessing import Process
+from appdirs import user_cache_dir
 import asyncio
 import json
-from multiprocessing import Process
 import os
-import shutil
-from typing import Dict
 import zmq
 import zmq.asyncio
 
@@ -73,8 +73,6 @@ class ServiceManager:
             for service_id, service in self.services.items():
                 if service.process_data["state"] == ServiceState.RUNNING:
                     self.stop_service(service_id)
-        if os.path.exists(".npc_engine_tmp"):
-            shutil.rmtree(".npc_engine_tmp")
 
     async def handle_request(self, address: str, request: str) -> str:
         """Parse request string and route request to correct service.
@@ -171,13 +169,20 @@ class ServiceManager:
         self.services[service_id].process_data["socket"] = self.zmq_context.socket(
             zmq.REQ
         )
+        self.services[service_id].process_data["socket"].setsockopt(zmq.LINGER, 0)
+        self.services[service_id].process_data["socket"].setsockopt(zmq.RCVTIMEO, 10000)
         self.services[service_id].process_data["socket"].connect(
             self.services[service_id].uri
         )
-        # try:
-        asyncio.create_task(self.confirm_state_coroutine(service_id))
-        # except RuntimeError:
-        #     asyncio.run(self.confirm_state_coroutine(service_id))
+        try:
+            asyncio.create_task(self.confirm_state_coroutine(service_id))
+        except RuntimeError:
+            logger.warning(
+                "Create task to confirm service state failed."
+                + " Probably asyncio loop is not running."
+                + " Trying to execute it via asyncio.run()"
+            )
+            asyncio.run(self.confirm_state_coroutine(service_id))
 
     async def confirm_state_coroutine(self, service_id):
         """Confirm the state of the service."""
@@ -228,7 +233,7 @@ class ServiceManager:
         for path in paths:
             with open(os.path.join(path, "config.yml")) as f:
                 config_dict = yaml.safe_load(f)
-                uri = f"ipc://.npc_engine_tmp/{os.path.basename(path)}"
+                uri = f"ipc://{os.path.join(user_cache_dir('npc-engine', 'NpcEngine'), os.path.basename(path))}"
                 svcs[os.path.basename(path)] = ServiceDescriptor(
                     os.path.basename(path),
                     config_dict.get("model_type", config_dict.get("type", None)),

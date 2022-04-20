@@ -25,6 +25,7 @@ class Server:
         """Create a server on the port."""
         self.context = zmq_context
         self.socket = self.context.socket(zmq.ROUTER)
+        self.socket.setsockopt(zmq.LINGER, 0)
         self.socket.bind(f"tcp://*:{port}")
         self.service_manager = service_manager
         self.start_services = start_services
@@ -47,17 +48,26 @@ class Server:
 
     async def msg_loop(self):
         """Asynchoriniously handle a request and reply."""
-        logger.info("Starting services")
-        if self.start_services:
-            for service in self.service_manager.services:
-                self.service_manager.start_service(service)
-        logger.info("Starting message loop")
-        while True:
-            address = await self.socket.recv()
-            _ = await self.socket.recv()
-            message = await self.socket.recv_string()
-            logger.info(f"Received request to {address}: {message}")
-            asyncio.create_task(self.handle_reply(address, message))
+        try:
+            logger.info("Starting services")
+            if self.start_services:
+                for service in self.service_manager.services:
+                    self.service_manager.start_service(service)
+            logger.info("Starting message loop")
+            while True:
+                address = await self.socket.recv()
+                _ = await self.socket.recv()
+                message = await self.socket.recv_string()
+                logger.info(f"Received request to {address}: {message}")
+                asyncio.create_task(self.handle_reply(address, message))
+        except Exception as e:
+            logger.error(f"Error in message loop: {e}")
+            logger.error(tb.format_exc())
+            raise e
+        finally:
+            logger.info("Closing message loop")
+            self.socket.close()
+            self.context.destroy()
 
     async def handle_reply(self, address: str, message: str):
         """Handle message and reply."""

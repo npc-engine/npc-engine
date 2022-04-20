@@ -27,7 +27,8 @@ class TestClass:
                 "--port",
                 "5555",
                 "--start-all",
-            ]
+            ],
+            creationflags=subprocess.CREATE_NEW_CONSOLE,
         )
         cls.server_process = server_process
         cls.context = zmq.Context()
@@ -47,6 +48,7 @@ class TestClass:
         #  Socket to talk to server
         print("Connecting to npc-engine server")
         socket = type(self).context.socket(zmq.REQ)
+        socket.setsockopt(zmq.LINGER, 0)
         socket.RCVTIMEO = 2000
         socket.connect("tcp://localhost:5555")
 
@@ -77,6 +79,7 @@ class TestClass:
         #  Socket to talk to server
         print("Connecting to npc-engine server")
         socket = type(self).context.socket(zmq.REQ)
+        socket.setsockopt(zmq.LINGER, 0)
         socket.RCVTIMEO = 2000
         socket.connect("tcp://localhost:5555")
 
@@ -119,6 +122,7 @@ class TestClass:
         #  Socket to talk to server
         print("Connecting to npc-engine server")
         socket = type(self).context.socket(zmq.REQ)
+        socket.setsockopt(zmq.LINGER, 0)
         socket.RCVTIMEO = 2000
         socket.connect("tcp://localhost:5555")
 
@@ -160,6 +164,7 @@ class TestClass:
         #  Socket to talk to server
         print("Connecting to npc-engine server")
         socket = type(self).context.socket(zmq.REQ)
+        socket.setsockopt(zmq.LINGER, 0)
         socket.RCVTIMEO = 2000
         socket.setsockopt(zmq.IDENTITY, "mock-paraphrase-MiniLM-L6-v2".encode("utf-8"))
         socket.connect("tcp://localhost:5555")
@@ -191,6 +196,7 @@ class TestClass:
         #  Socket to talk to server
         print("Connecting to npc-engine server")
         socket = type(self).context.socket(zmq.REQ)
+        socket.setsockopt(zmq.LINGER, 0)
         socket.RCVTIMEO = 2000
         socket.setsockopt(
             zmq.IDENTITY, "mock-flowtron-waveglow-librispeech-tts".encode("utf-8")
@@ -235,43 +241,16 @@ class TestClass:
 
         #  Socket to talk to server
         print("Connecting to npc-engine server")
-        socket = type(self).context.socket(zmq.REQ)
-        socket.RCVTIMEO = 2000
-        socket.setsockopt(zmq.IDENTITY, "mock-distilgpt2".encode("utf-8"))
-        socket.connect("tcp://localhost:5555")
+        hf_chatbot = HfChatbotClient(type(self).context, "5555", "mock-distilgpt2")
 
-        request = {
-            "jsonrpc": "2.0",
-            "method": "get_context_template",
-            "id": 0,
-            "params": [],
-        }
-        socket.send_json(request)
-        message = socket.recv_json()
-        print(message)
-        assert "result" in message
-        ctx = message["result"]
+        ctx = hf_chatbot.get_context_template_request()
 
-        request = {
-            "jsonrpc": "2.0",
-            "method": "get_prompt_template",
-            "id": 0,
-            "params": [],
-        }
-        socket.send_json(request)
-        message = socket.recv_json()
-        print(message)
-        assert "result" in message
+        template = hf_chatbot.get_prompt_template_request()
+        assert isinstance(template, str)
 
-        request = {
-            "jsonrpc": "2.0",
-            "method": "generate_reply",
-            "id": 0,
-            "params": [ctx],
-        }
-        socket.send_json(request)
-        message = socket.recv_json()
-        assert "result" in message
+        reply = hf_chatbot.generate_reply_request(ctx)
+        assert isinstance(reply, str)
+        assert reply != ""
 
     def teardown_class(cls):
         services = cls.cc.get_services_metadata_request()

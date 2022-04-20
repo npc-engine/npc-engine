@@ -1,3 +1,6 @@
+import zmq
+
+
 class Socket:
     def __init__(self, **kwds):
         super().__init__(**kwds)
@@ -16,6 +19,9 @@ class Socket:
     def close(self):
         assert self._connected
         self._connected = False
+
+    def setsockopt(self, name, value):
+        assert name in [zmq.LINGER, zmq.RCVTIMEO]
 
 
 class Context:

@@ -13,6 +13,7 @@ class ServiceClient:
         """Connect to the server on the port."""
         self.context = zmq_context
         self.socket = self.context.socket(zmq.REQ)
+        self.socket.setsockopt(zmq.LINGER, 0)
         self.socket.setsockopt(zmq.IDENTITY, service_id.encode("utf-8"))
         self.socket.connect(f"tcp://localhost:{port}")
         logger.info("Connected to server")

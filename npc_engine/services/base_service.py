@@ -6,6 +6,7 @@ import yaml
 import zmq
 from loguru import logger
 from jsonrpc import JSONRPCResponseManager, Dispatcher
+from pathlib import Path
 
 
 class BaseService(ABC):
@@ -22,6 +23,11 @@ class BaseService(ABC):
         """Initialize the service."""
         self.zmq_context = context
         self.socket = context.socket(zmq.REP)
+        self.socket.setsockopt(zmq.LINGER, 0)
+        print(uri)
+        if uri.startswith("ipc://"):
+            os.makedirs(Path(uri.replace("ipc://", "")).parent, exist_ok=True)
+            os.chmod(Path(uri.replace("ipc://", "")).parent, 777)
         self.socket.bind(uri)
 
     @classmethod
@@ -37,13 +43,20 @@ class BaseService(ABC):
 
     def start(self):
         """Run service main loop that accepts json rpc over pipes."""
-        dispatcher = Dispatcher()
-        dispatcher.update(self.build_api_dict())
-        dispatcher.update({"status": self.status})
-        while True:
-            request = self.socket.recv_string()
-            response = JSONRPCResponseManager.handle(request, dispatcher)
-            self.socket.send_string(response.json)
+        try:
+            dispatcher = Dispatcher()
+            dispatcher.update(self.build_api_dict())
+            dispatcher.update({"status": self.status})
+            while True:
+                request = self.socket.recv_string()
+                response = JSONRPCResponseManager.handle(request, dispatcher)
+                self.socket.send_string(response.json)
+        except Exception as e:
+            logger.exception(e)
+            raise e
+        finally:
+            self.socket.close()
+            self.zmq_context.destroy()
 
     def status(self):
         """Return status of the service."""
