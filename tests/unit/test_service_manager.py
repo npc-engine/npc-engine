@@ -1,20 +1,24 @@
 """Model manager test."""
 import os
+import sys
+import asyncio
 import time
 import pytest
 import zmq
 import zmq.asyncio
 from npc_engine.service_manager.service_manager import ServiceManager, ServiceState
-import pprint
 
 
-def test_model_manager_get_metadata():
+def test_service_manager_get_metadata():
     """Test if all api methods are registered"""
     path = os.path.join(
         os.path.sep.join(os.path.dirname(__file__).split(os.path.sep)[:-1]),
         "resources",
         "models",
     )
+
+    if sys.platform == "win32":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     context = zmq.asyncio.Context()
     model_manager = ServiceManager(context, path)
     metadata = model_manager.get_services_metadata()
@@ -30,8 +34,11 @@ def test_model_manager_get_metadata():
         assert metadata_item["path"] in paths
 
 
-def test_model_manager_start_stop_service():
+def test_service_manager_start_stop_service():
     """Test if models are printed without error."""
+
+    if sys.platform == "win32":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     context = zmq.asyncio.Context()
     model_manager = ServiceManager(
         context, os.path.join(os.path.dirname(__file__), "..", "resources", "models")
@@ -44,8 +51,11 @@ def test_model_manager_start_stop_service():
     assert model_manager.get_service_status(service) == ServiceState.STOPPED
 
 
-def test_model_manager_start_error_service():
+def test_service_manager_start_error_service():
     """Test if models are printed without error."""
+
+    if sys.platform == "win32":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     context = zmq.asyncio.Context()
     model_manager = ServiceManager(
         context, os.path.join(os.path.dirname(__file__), "..", "resources", "models")
@@ -61,8 +71,11 @@ def test_model_manager_start_error_service():
     assert model_manager.get_service_status(service) == ServiceState.ERROR
 
 
-def test_model_manager_restart_service():
+def test_service_manager_restart_service():
     """Test if models are printed without error."""
+
+    if sys.platform == "win32":
+        asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     context = zmq.asyncio.Context()
     model_manager = ServiceManager(
         context, os.path.join(os.path.dirname(__file__), "..", "resources", "models")

@@ -1,7 +1,6 @@
 """Text generation test."""
 import os
 from npc_engine.services import BaseService
-import time
 import inspect
 import sys
 

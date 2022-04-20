@@ -1,11 +1,11 @@
 """Module that implements ZMQ server communication over JSON-RPC 2.0 (https://www.jsonrpc.org/specification)."""
+import sys
 import json
 import logging
-import zmq
 from loguru import logger
 import time
 import asyncio
-import zmq  # noqa: F811
+import zmq
 import zmq.asyncio
 import traceback as tb
 
@@ -30,6 +30,8 @@ class Server:
     def run(self):
         """Run an npc-engine json rpc server and start listening."""
         logger.info("Starting server")
+        if sys.platform == "win32":
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         asyncio.get_event_loop().run_until_complete(self.loop())
 
     async def loop(self):
