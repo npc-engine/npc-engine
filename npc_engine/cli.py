@@ -9,7 +9,6 @@ logging.basicConfig(level=logging.ERROR)
 import shutil
 import zmq
 import zmq.asyncio
-from npc_engine.exporters.base_exporter import Exporter
 from npc_engine.services.utils.config import (
     get_model_type_name,
     validate_hub_model,
@@ -42,7 +41,7 @@ def cli(verbose: bool):
 @cli.command()
 @click.option("--models-path", default="./models")
 @click.option("--port", default="5555")
-@click.option("--start-all/--dont-start", default=False)
+@click.option("--start-all/--dont-start", default=True)
 def run(models_path: str, port: str, start_all: bool):
     """Load the models and start JSONRPC server."""
     from npc_engine.service_manager.service_manager import ServiceManager
@@ -50,10 +49,7 @@ def run(models_path: str, port: str, start_all: bool):
 
     context = zmq.asyncio.Context(io_threads=5)
     model_manager = ServiceManager(context, models_path)
-    server = Server(context, model_manager, port)
-    if start_all:
-        for service in model_manager.services:
-            model_manager.start_service(service)
+    server = Server(context, model_manager, port, start_all)
     server.run()
 
 
@@ -131,6 +127,8 @@ def download_model(models_path: str, model_id: str):
 @click.argument("model_id")
 def export_model(models_path: str, model_id: str, remove_source: bool = False):
     """Export the model."""
+    from npc_engine.exporters.base_exporter import Exporter
+
     logger.info("Downloading source model {}", model_id)
     if os.path.exists(model_id):
         source_path = model_id
@@ -166,6 +164,8 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
 @click.argument("model_id")
 def test_model(models_path: str, model_id: str):
     """Send test request to the model and print reply."""
+    from npc_engine.exporters.base_exporter import Exporter
+
     if not validate_local_model(models_path, model_id):
         click.echo(
             click.style(f"{(model_id)} is not a valid npc-engine model.", fg="red",)

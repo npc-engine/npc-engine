@@ -20,12 +20,14 @@ class Server:
         zmq_context: zmq.asyncio.Context,
         service_manager: ServiceManager,
         port: str,
+        start_services: bool = True,
     ):
         """Create a server on the port."""
         self.context = zmq_context
         self.socket = self.context.socket(zmq.ROUTER)
         self.socket.bind(f"tcp://*:{port}")
         self.service_manager = service_manager
+        self.start_services = start_services
 
     def run(self):
         """Run an npc-engine json rpc server and start listening."""
@@ -45,9 +47,13 @@ class Server:
 
     async def msg_loop(self):
         """Asynchoriniously handle a request and reply."""
+        logger.info("Starting services")
+        if self.start_services:
+            for service in self.service_manager.services:
+                self.service_manager.start_service(service)
         logger.info("Starting message loop")
         while True:
-            address = await self.socket.recv_string()
+            address = await self.socket.recv()
             _ = await self.socket.recv()
             message = await self.socket.recv_string()
             logger.info(f"Received request to {address}: {message}")
@@ -58,11 +64,15 @@ class Server:
         logging.info("Handling reply")
         start = time.time()
         try:
-            response = await self.service_manager.handle_request(address, message)
+            address_str = address.decode("utf-8")
+        except UnicodeDecodeError:
+            address_str = address.hex()
+        try:
+            response = await self.service_manager.handle_request(address_str, message)
         except Exception as e:
             response = {
                 "code": -32000,
-                "message": f"Internal error: {e}",
+                "message": f"Internal error: {type(e)} {e}",
                 "data": tb.extract_tb(e.__traceback__).format()
                 if hasattr(e, "__traceback__")
                 else None,
@@ -74,6 +84,6 @@ class Server:
         logger.info("Message reply: %s" % (response))
 
         #  Send reply back to client
-        await self.socket.send_string(address, zmq.SNDMORE)
+        await self.socket.send(address, zmq.SNDMORE)
         await self.socket.send_string("", zmq.SNDMORE)
         await self.socket.send_string(response)

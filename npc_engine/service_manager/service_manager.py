@@ -28,7 +28,7 @@ class ServiceState:
 
 
 ServiceDescriptor = namedtuple(
-    "ServiceDescriptor", ["id", "type", "path", "uri", "process_data"]
+    "ServiceDescriptor", ["id", "type", "path", "uri", "api_methods", "process_data"]
 )
 
 
@@ -69,10 +69,12 @@ class ServiceManager:
 
     def __del__(self):
         """Stop all services."""
-        for service_id, service in self.services.items():
-            if service.process_data["state"] == ServiceState.RUNNING:
-                self.stop_service(service_id)
-        shutil.rmtree(".npc_engine_tmp")
+        if hasattr(self, "services"):
+            for service_id, service in self.services.items():
+                if service.process_data["state"] == ServiceState.RUNNING:
+                    self.stop_service(service_id)
+        if os.path.exists(".npc_engine_tmp"):
+            shutil.rmtree(".npc_engine_tmp")
 
     async def handle_request(self, address: str, request: str) -> str:
         """Parse request string and route request to correct service.
@@ -84,7 +86,8 @@ class ServiceManager:
         Returns:
             str: jsonRPC response
         """
-        service_id = self.resolve_and_check_service(address)
+        request_dict = json.loads(request)
+        service_id = self.resolve_and_check_service(address, request_dict["method"])
         logger.info(f"Request from {address}\n Request: {request}")
         if service_id == "control":
             return JSONRPCResponseManager.handle(request, self.control_dispatcher).json
@@ -97,7 +100,7 @@ class ServiceManager:
                 response = await socket.recv_string()
         return response
 
-    def resolve_and_check_service(self, id_or_type):
+    def resolve_and_check_service(self, id_or_type, method=None):
         """Resolve service id or type to service id."""
         service_id = None
         if id_or_type == "control":
@@ -110,7 +113,10 @@ class ServiceManager:
                     if service.type == id_or_type:
                         service_id = service_key
                         break
-            if service_id is None:
+
+            if service_id is None and method is not None:
+                service_id = self.resolve_by_method(method)
+            elif service_id is None:
                 raise ValueError(f"Service {id_or_type} not found")
             if (
                 self.services[service_id].process_data["state"] == ServiceState.RUNNING
@@ -126,6 +132,14 @@ class ServiceManager:
 
         return service_id
 
+    def resolve_by_method(self, method_name):
+        """Resolve service id by method name."""
+        for service_id, service in self.services.items():
+            if service.process_data["state"] == ServiceState.RUNNING:
+                if method_name in service.api_methods:
+                    return service_id
+        raise ValueError(f"Runnning service with method {method_name} not found")
+
     def get_services_metadata(self):
         """List the models in the folder."""
         return [
@@ -135,12 +149,12 @@ class ServiceManager:
 
     def get_service_status(self, service_id):
         """Get the status of the service."""
-        service_id = self.resolve_and_check_service(service_id)
+        service_id = self.resolve_and_check_service(service_id, None)
         return self.services[service_id].process_data["state"]
 
     def start_service(self, service_id):
         """Start the service."""
-        service_id = self.resolve_and_check_service(service_id)
+        service_id = self.resolve_and_check_service(service_id, None)
         if service_id not in self.services:
             raise ValueError(f"Service {service_id} not found")
         if self.services[service_id].process_data["state"] == ServiceState.RUNNING:
@@ -160,10 +174,10 @@ class ServiceManager:
         self.services[service_id].process_data["socket"].connect(
             self.services[service_id].uri
         )
-        try:
-            asyncio.create_task(self.confirm_state_coroutine(service_id))
-        except RuntimeError:
-            asyncio.run(self.confirm_state_coroutine(service_id))
+        # try:
+        asyncio.create_task(self.confirm_state_coroutine(service_id))
+        # except RuntimeError:
+        #     asyncio.run(self.confirm_state_coroutine(service_id))
 
     async def confirm_state_coroutine(self, service_id):
         """Confirm the state of the service."""
@@ -186,7 +200,7 @@ class ServiceManager:
 
     def stop_service(self, service_id):
         """Stop the service."""
-        service_id = self.resolve_and_check_service(service_id)
+        service_id = self.resolve_and_check_service(service_id, None)
         if service_id not in self.services:
             raise ValueError(f"Service {service_id} not found")
         if self.services[service_id].process_data["state"] != ServiceState.RUNNING:
@@ -210,17 +224,21 @@ class ServiceManager:
             for f in os.scandir(norm_path)
             if f.is_dir() and os.path.exists(os.path.join(f, "config.yml"))
         ]
-        services = {}
+        svcs = {}
         for path in paths:
             with open(os.path.join(path, "config.yml")) as f:
                 config_dict = yaml.safe_load(f)
                 uri = f"ipc://.npc_engine_tmp/{os.path.basename(path)}"
-                services[os.path.basename(path)] = ServiceDescriptor(
+                svcs[os.path.basename(path)] = ServiceDescriptor(
                     os.path.basename(path),
                     config_dict.get("model_type", config_dict.get("type", None)),
                     path,
                     uri,
+                    getattr(
+                        services,
+                        config_dict.get("model_type", config_dict.get("type", None)),
+                    ).API_METHODS,
                     {"process": None, "socket": None, "state": ServiceState.STOPPED},
                 )
 
-        return services
+        return svcs
