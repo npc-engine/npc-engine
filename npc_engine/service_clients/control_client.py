@@ -1,6 +1,6 @@
 """Control interface client implementation."""
 import zmq
-from typing import Any, Dict
+from typing import Any, Dict, List
 from npc_engine.service_clients.service_client import ServiceClient
 
 
@@ -21,7 +21,7 @@ class ControlClient(ServiceClient):
         }
         self.send_request(request)
 
-    def stop_service_request(self, service_id) -> Dict[str, Any]:
+    def stop_service_request(self, service_id):
         """Send a stop service request to the server."""
         request = {
             "jsonrpc": "2.0",
@@ -31,7 +31,7 @@ class ControlClient(ServiceClient):
         }
         self.send_request(request)
 
-    def get_service_status_request(self, service_id) -> Dict[str, Any]:
+    def get_service_status_request(self, service_id) -> str:
         """Send a get service status request to the server."""
         request = {
             "jsonrpc": "2.0",
@@ -41,7 +41,7 @@ class ControlClient(ServiceClient):
         }
         return self.send_request(request)
 
-    def restart_service_request(self, service_id) -> Dict[str, Any]:
+    def restart_service_request(self, service_id):
         """Send a restart service request to the server."""
         request = {
             "jsonrpc": "2.0",
@@ -51,7 +51,7 @@ class ControlClient(ServiceClient):
         }
         self.send_request(request)
 
-    def get_services_metadata_request(self) -> Dict[str, Any]:
+    def get_services_metadata_request(self) -> List[Dict[str, Any]]:
         """Send a get services metadata request to the server."""
         request = {
             "jsonrpc": "2.0",
