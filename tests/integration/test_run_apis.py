@@ -27,21 +27,24 @@ class TestClass:
                 "--port",
                 "5555",
                 "--start-all",
-            ],
-            creationflags=subprocess.CREATE_NEW_CONSOLE,
+            ]
         )
         cls.server_process = server_process
         cls.context = zmq.Context()
         print("Starting server")
         cls.cc = ControlClient(cls.context, "5555")
-        status = "stopped"
-        while status != "running":
+        all_running = False
+        services = [svc["id"] for svc in cls.cc.get_services_metadata_request()]
+        while not all_running:
             time.sleep(1)
-            status = cls.cc.get_service_status_request("mock-distilgpt2")
-            if status != "running":
-                print(f"Status == {status}. Waiting for status == running...")
-            if status == "error":
-                raise Exception("Server failed to start")
+            all_running = True
+            for service in services:
+                status = cls.cc.get_service_status_request(service)
+                all_running = all_running and (status == "running")
+                if status == "error":
+                    raise Exception("Server failed to start")
+            if not all_running:
+                print(f"Not all services are running. Waiting...")
 
     def test_no_id_similarity_api(self):
 
