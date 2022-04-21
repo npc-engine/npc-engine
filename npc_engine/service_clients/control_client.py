@@ -11,7 +11,7 @@ class ControlClient(ServiceClient):
         """Connect to the server on the port."""
         super().__init__(zmq_context, port, "control")
 
-    def start_service_request(self, service_id):
+    def start_service(self, service_id):
         """Send a start service request to the server."""
         request = {
             "jsonrpc": "2.0",
@@ -21,7 +21,7 @@ class ControlClient(ServiceClient):
         }
         self.send_request(request)
 
-    def stop_service_request(self, service_id):
+    def stop_service(self, service_id):
         """Send a stop service request to the server."""
         request = {
             "jsonrpc": "2.0",
@@ -31,7 +31,7 @@ class ControlClient(ServiceClient):
         }
         self.send_request(request)
 
-    def get_service_status_request(self, service_id) -> str:
+    def get_service_status(self, service_id) -> str:
         """Send a get service status request to the server."""
         request = {
             "jsonrpc": "2.0",
@@ -41,7 +41,7 @@ class ControlClient(ServiceClient):
         }
         return self.send_request(request)
 
-    def restart_service_request(self, service_id):
+    def restart_service(self, service_id):
         """Send a restart service request to the server."""
         request = {
             "jsonrpc": "2.0",
@@ -51,7 +51,7 @@ class ControlClient(ServiceClient):
         }
         self.send_request(request)
 
-    def get_services_metadata_request(self) -> List[Dict[str, Any]]:
+    def get_services_metadata(self) -> List[Dict[str, Any]]:
         """Send a get services metadata request to the server."""
         request = {
             "jsonrpc": "2.0",

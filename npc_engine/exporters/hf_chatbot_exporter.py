@@ -95,12 +95,12 @@ class HfChatbotExporter(BaseHfExporter):
         zmq_context = zmq.Context()
         control_client = ControlClient(zmq_context, "5555")
         chatbot_client = HfChatbotClient(zmq_context, "5555", model_id)
-        control_client.start_service_request(model_id)
+        control_client.start_service(model_id)
         time.sleep(1)
         response = None
         while response is None:
             try:
-                response = chatbot_client.generate_reply_request(context)
+                response = chatbot_client.generate_reply(context)
             except RuntimeError as e:
                 if "is not running" in str(e):
                     print("Model is not running, waiting for it to start..")
