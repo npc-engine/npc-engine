@@ -3,7 +3,7 @@ from typing import Dict, List
 
 
 from abc import abstractmethod
-from npc_engine.models.base_model import Model
+from npc_engine.services.base_service import BaseService
 import numpy as np
 import sounddevice as sd
 from queue import Queue
@@ -13,7 +13,7 @@ import re
 # TODO: Add support for streaming audio from other processes
 
 
-class SpeechToTextAPI(Model):
+class SpeechToTextAPI(BaseService):
     """Abstract base class for speech to text models."""
 
     API_METHODS: List[str] = [
@@ -36,7 +36,7 @@ class SpeechToTextAPI(Model):
         **kwargs,
     ):
         """Initialize VAD part of the API."""
-        super().__init__()
+        super().__init__(*args, **kwargs)
         self.initialized = True
         sd.default.samplerate = sample_rate
 

@@ -1,12 +1,18 @@
 """Speech to text tests and tuning."""
 import os
-from npc_engine import models
+from npc_engine import services
 import time
 import pytest
 import numpy
 import scipy.signal
 from pydub import AudioSegment
-import numpy as np
+import inspect
+import sys
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+import mocks.zmq_mocks as zmq
 import yaml
 from pyctcdecode import build_ctcdecoder
 
@@ -33,7 +39,9 @@ nemo_stt_paths = [
 @pytest.mark.skip()
 def test_sanity_check():
     try:
-        stt = models.Model.load(nemo_stt_paths[0])
+        stt = services.BaseService.create(
+            zmq.Context(), nemo_stt_paths[0], "inproc://test"
+        )
     except FileNotFoundError:
         return
     device = input(f"Select device: \n {stt.get_devices()} \n")
@@ -63,7 +71,7 @@ def test_tune_decoder_parameters():
     from tqdm import tqdm
 
     try:
-        stt = models.Model.load(
+        stt = services.BaseService.create(
             os.path.join(
                 os.path.dirname(__file__),
                 "..",
@@ -148,7 +156,9 @@ def test_tune_decoder_parameters():
 @pytest.mark.skip()
 def test_transcribe():
     try:
-        stt = models.Model.load(nemo_stt_paths[0])
+        stt = services.BaseService.create(
+            zmq.Context(), nemo_stt_paths[0], "inproc://test"
+        )
     except FileNotFoundError:
         return
 
@@ -177,7 +187,7 @@ def test_transcribe():
 
 
 def test_transcribe():
-    stt = models.Model.load(nemo_stt_paths[0])
+    stt = services.BaseService.create(zmq.Context(), nemo_stt_paths[0], "inproc://test")
 
     audio = AudioSegment.from_file(
         os.path.join(
@@ -195,7 +205,9 @@ def test_transcribe():
 
 def test_decide_finished():
     try:
-        stt = models.Model.load(nemo_stt_paths[0])
+        stt = services.BaseService.create(
+            zmq.Context(), nemo_stt_paths[0], "inproc://test"
+        )
     except FileNotFoundError:
         return
 

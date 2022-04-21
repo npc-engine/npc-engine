@@ -3,7 +3,7 @@ from os import path
 from typing import Iterator, List
 import numpy as np
 import onnxruntime
-from npc_engine.models.tts.tts_base import TextToSpeechAPI
+from npc_engine.services.tts.tts_base import TextToSpeechAPI
 from npc_engine.text import (
     text_to_sequence,
     _clean_text,

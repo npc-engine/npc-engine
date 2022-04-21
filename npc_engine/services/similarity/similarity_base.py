@@ -2,19 +2,19 @@
 from typing import List
 
 from abc import abstractmethod
-from npc_engine.models.base_model import Model
-from npc_engine.models.utils.lru_cache import NumpyLRUCache
+from npc_engine.services.base_service import BaseService
+from npc_engine.services.utils.lru_cache import NumpyLRUCache
 import numpy as np
 
 
-class SimilarityAPI(Model):
+class SimilarityAPI(BaseService):
     """Abstract base class for text similarity models."""
 
     API_METHODS: List[str] = ["compare", "cache"]
 
     def __init__(self, cache_size=0, *args, **kwargs) -> None:
         """Empty initialization method for API to be similar to other model base classes."""
-        super().__init__()
+        super().__init__(*args, **kwargs)
         self.initialized = True
         self.lru_cache = NumpyLRUCache(cache_size)
 

@@ -3,7 +3,7 @@
 
 def test_schema_to_json():
     """Test if schema_to_json works."""
-    from npc_engine.rpc.utils import schema_to_json
+    from npc_engine.service_manager.utils import schema_to_json
 
     s = {
         "type": "object",

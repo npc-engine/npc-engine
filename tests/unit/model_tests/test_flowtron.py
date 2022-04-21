@@ -1,12 +1,19 @@
 """Speech synthesis test."""
 import os
-from npc_engine.models import Model
+from npc_engine.services import BaseService
 import time
 from queue import Queue
 import numpy as np
 import sounddevice as sd
 import pytest
 import yaml
+import inspect
+import sys
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0, parentdir)
+import mocks.zmq_mocks as zmq
 
 path = os.path.join(os.path.dirname(__file__), "..", "..", "resources", "models")
 
@@ -29,7 +36,7 @@ flowtron_paths = [
 
 def test_flowtron():
     """Run flowtron inference, skip if no models in resources."""
-    tts_module = Model.load(flowtron_paths[0])
+    tts_module = BaseService.create(zmq.Context(), flowtron_paths[0], "inproc://test")
 
     test_line = "Test"
     tts_module.tts_start("6", test_line, 7)
@@ -47,7 +54,9 @@ def test_flowtron():
 def test_flowtron_manual():
     """Run flowtron inference, skip if no models in resources."""
     try:
-        tts_module = Model.load(flowtron_paths[0])
+        tts_module = BaseService.create(
+            zmq.Context(), flowtron_paths[0], "inproc://test"
+        )
     except FileNotFoundError:
         return
     start = time.time()

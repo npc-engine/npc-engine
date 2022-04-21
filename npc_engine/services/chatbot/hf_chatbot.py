@@ -3,11 +3,11 @@ from typing import Dict
 import numpy as np
 import scipy.special as scp
 import onnxruntime as rt
-from npc_engine.models.chatbot.chatbot_base import ChatbotAPI
+from npc_engine.services.chatbot.chatbot_base import ChatbotAPI
 from tokenizers import Tokenizer
 import os
 import json
-from npc_engine.models.utils import DTYPE_MAP
+from npc_engine.services.utils import DTYPE_MAP
 
 
 class HfChatbot(ChatbotAPI):

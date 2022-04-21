@@ -1,12 +1,19 @@
 """STT test."""
 import numpy as np
-from npc_engine.models.stt import SpeechToTextAPI
-import pytest
+from npc_engine.services.stt import SpeechToTextAPI
+import inspect
+import os
+import sys
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+
+sys.path.insert(0, currentdir)
+import mocks.zmq_mocks as zmq
 
 
 class MockSTTModel(SpeechToTextAPI):
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__(context=zmq.Context(), uri="inproc://test")
         self.i = 0
 
     def transcribe_frame(self, frame):

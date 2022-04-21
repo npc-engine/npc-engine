@@ -2,6 +2,8 @@
 import os
 from npc_engine import services
 import time
+import pytest
+import yaml
 import inspect
 import sys
 
@@ -9,8 +11,6 @@ currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentfram
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
 import mocks.zmq_mocks as zmq
-import yaml
-
 
 path = os.path.join(os.path.dirname(__file__), "..", "..", "resources", "models")
 
@@ -33,6 +33,9 @@ model_paths = [
 print(model_paths)
 
 
+@pytest.mark.skipif(
+    len(model_paths) == 0, reason="Model missing",
+)
 def test_transformers_similarity():
     """Check custom testing"""
     try:

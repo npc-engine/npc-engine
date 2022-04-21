@@ -1,12 +1,20 @@
 """TTS test."""
 import numpy as np
-from npc_engine.models.tts import TextToSpeechAPI
+from npc_engine.services.tts import TextToSpeechAPI
+
+import inspect
+import os
+import sys
+
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+sys.path.insert(0, currentdir)
+import mocks.zmq_mocks as zmq
 import pytest
 
 
 class MockTTSModel(TextToSpeechAPI):
     def __init__(self) -> None:
-        super().__init__()
+        super().__init__(context=zmq.Context(), uri="inproc://test")
 
     def run(self, speaker_id: str, text: str, n_chunks: int):
         return iter([np.asarray([123]).reshape(1, 1)])

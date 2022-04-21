@@ -4,7 +4,7 @@ json-rpc==1.13.0
 tokenizers==0.11.6
 loguru==0.5.3
 PyYAML==6.0
-pyzmq==19.0.2
+pyzmq==22.3.0
 Unidecode==1.1.1
 inflect==4.1.0
 scipy==1.7.2
@@ -20,3 +20,4 @@ librosa==0.7.0
 numba==0.48
 scikit-learn==1.0.2
 jinja2schema==0.1.4
+appdirs==1.4.4

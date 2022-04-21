@@ -1,13 +1,15 @@
 """Exporter implementation for the Huggingface text generation models."""
+import time
 from npc_engine.exporters.base_hf_exporter import BaseHfExporter
 from jinja2schema import infer, to_json_schema
 import click
 import yaml
 import os
 import json
+import zmq
 
-from npc_engine.rpc.test_client import TestClient
-from npc_engine.rpc.utils import schema_to_json
+from npc_engine.service_clients import ControlClient, HfChatbotClient
+from npc_engine.service_manager.utils import schema_to_json
 
 
 class HfChatbotExporter(BaseHfExporter):
@@ -89,8 +91,22 @@ class HfChatbotExporter(BaseHfExporter):
                 click.prompt(f"Please enter {field_name}:")
 
         context = schema_to_json(schema, get_text)
-        test_client = TestClient("5556")
-        response = test_client.chatbot_request(context)
+        print(f"Context: {context}")
+        zmq_context = zmq.Context()
+        control_client = ControlClient(zmq_context, "5555")
+        chatbot_client = HfChatbotClient(zmq_context, "5555", model_id)
+        control_client.start_service_request(model_id)
+        time.sleep(1)
+        response = None
+        while response is None:
+            try:
+                response = chatbot_client.generate_reply_request(context)
+            except RuntimeError as e:
+                if "is not running" in str(e):
+                    print("Model is not running, waiting for it to start..")
+                    time.sleep(1)
+                else:
+                    raise e
         click.echo(click.style("Request context:", fg="green"))
         click.echo(json.dumps(context, indent=2))
         click.echo(click.style("Reply:", fg="green"))
