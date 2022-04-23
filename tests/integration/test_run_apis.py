@@ -3,7 +3,7 @@ import subprocess
 import os
 import zmq
 import time
-from npc_engine.service_clients import ControlClient, HfChatbotClient
+from npc_engine.service_clients import ControlClient, ChatbotClient
 
 
 class TestClass:
@@ -244,7 +244,7 @@ class TestClass:
 
         #  Socket to talk to server
         print("Connecting to npc-engine server")
-        hf_chatbot = HfChatbotClient(type(self).context, "5555", "mock-distilgpt2")
+        hf_chatbot = ChatbotClient(type(self).context, "5555", "mock-distilgpt2")
 
         ctx = hf_chatbot.get_context_template()
 
