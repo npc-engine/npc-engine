@@ -5,6 +5,18 @@ from huggingface_hub import hf_hub_download
 from requests.exceptions import HTTPError
 
 
+def get_type_from_dict(config_dict: dict) -> str:
+    """Get model type from config dict.
+
+    Args:
+        config_dict: Config dict.
+
+    Returns:
+        Model type.
+    """
+    return config_dict.get("model_type", config_dict.get("type", ""))
+
+
 def get_model_type_name(models_path: str, model_id: str) -> str:
     """Get model type name.
 
@@ -19,7 +31,7 @@ def get_model_type_name(models_path: str, model_id: str) -> str:
     config_path = os.path.join(model_path, "config.yml")
     with open(config_path, "r") as f:
         config = yaml.safe_load(f)
-    return config["model_type"]
+    return get_type_from_dict(config)
 
 
 def validate_model(models_path: str, model_id: str) -> bool:
