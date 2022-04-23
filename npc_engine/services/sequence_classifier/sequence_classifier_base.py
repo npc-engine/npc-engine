@@ -27,6 +27,7 @@ class SequenceClassifierAPI(BaseService):
         Returns:
             List of scores for each text.
         """
+        texts = [row if isinstance(row, str) else tuple(row) for row in texts]
         scores = self.cache.cache_compute(
             texts, lambda values: self.compute_scores_batch(values)
         )
