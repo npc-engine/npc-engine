@@ -1,5 +1,6 @@
 """Module that implements Huggingface transformers semantic similarity."""
 from typing import List
+import json
 import numpy as np
 import onnxruntime as rt
 from onnxruntime import GraphOptimizationLevel as opt_level
@@ -26,14 +27,7 @@ class TransformerSemanticSimilarity(SimilarityAPI):
             `token_embeddings` of shape `(batch_size, sequence, hidden_size)`
     """
 
-    def __init__(
-        self,
-        model_path: str,
-        metric: str = "dot",
-        pad_token_id: int = 0,
-        *args,
-        **kwargs
-    ):
+    def __init__(self, model_path: str, metric: str = "dot", *args, **kwargs):
         """Create and load biencoder model for semantic similarity.
 
         Args:
@@ -50,7 +44,13 @@ class TransformerSemanticSimilarity(SimilarityAPI):
         )
         input_names = [inp.name for inp in self.model.get_inputs()]
         self.token_type_support = "token_type_ids" in input_names
-        self.pad_token_id = pad_token_id
+        special_tokens_map_path = os.path.join(model_path, "special_tokens_map.json")
+        with open(special_tokens_map_path, "r") as f:
+            self.special_tokens = json.load(f)
+
+        self.pad_token_id = self.tokenizer.encode(self.special_tokens["pad_token"]).ids[
+            0
+        ]
         self.tokenizer = Tokenizer.from_file(os.path.join(model_path, "tokenizer.json"))
         self.tokenizer.enable_padding(
             direction="right",
