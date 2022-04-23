@@ -5,6 +5,8 @@ import time
 import inspect
 import sys
 
+from npc_engine.services.utils.config import get_type_from_dict
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
@@ -27,10 +29,8 @@ configs = [
 model_paths = [
     subdir
     for config, subdir in zip(configs, subdirs)
-    if "TransformerSemanticSimilarity" in config["model_type"]
+    if "TransformerSemanticSimilarity" in get_type_from_dict(config)
 ]
-
-print(model_paths)
 
 
 def test_transformers_similarity():

@@ -7,6 +7,8 @@ import yaml
 import inspect
 import sys
 
+from npc_engine.services.utils.config import get_type_from_dict
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
@@ -27,16 +29,14 @@ configs = [
 model_paths = [
     subdir
     for config, subdir in zip(configs, subdirs)
-    if "TransformerSemanticSimilarity" in config["model_type"]
+    if "HfClassifier" in get_type_from_dict(config)
 ]
-
-print(model_paths)
 
 
 @pytest.mark.skipif(
     len(model_paths) == 0, reason="Model missing",
 )
-def test_transformers_similarity():
+def test_transformers_classification():
     """Check custom testing"""
     try:
         semantic_tests = services.BaseService.create(
@@ -45,8 +45,6 @@ def test_transformers_similarity():
     except FileNotFoundError:
         return
     start = time.time()
-    test_result = semantic_tests.compare(
-        "Can I have a beer", ["Can I have a beer", "Give me a beer"]
-    )
+    test_result = semantic_tests.classify(["hello", ("world", "world")])
     print("custom test time elapsed", time.time() - start)
     assert len(test_result) == 2

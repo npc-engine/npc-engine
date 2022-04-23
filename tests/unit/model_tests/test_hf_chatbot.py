@@ -5,6 +5,8 @@ import time
 import inspect
 import sys
 
+from npc_engine.services.utils.config import get_type_from_dict
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
@@ -26,7 +28,7 @@ configs = [
 hf_chatbot_paths = [
     subdir
     for config, subdir in zip(configs, subdirs)
-    if "HfChatbot" in config["model_type"]
+    if "HfChatbot" in get_type_from_dict(config)
 ]
 
 
