@@ -48,10 +48,10 @@ class TransformerSemanticSimilarity(SimilarityAPI):
         with open(special_tokens_map_path, "r") as f:
             self.special_tokens = json.load(f)
 
+        self.tokenizer = Tokenizer.from_file(os.path.join(model_path, "tokenizer.json"))
         self.pad_token_id = self.tokenizer.encode(self.special_tokens["pad_token"]).ids[
             0
         ]
-        self.tokenizer = Tokenizer.from_file(os.path.join(model_path, "tokenizer.json"))
         self.tokenizer.enable_padding(
             direction="right",
             pad_id=self.pad_token_id,
