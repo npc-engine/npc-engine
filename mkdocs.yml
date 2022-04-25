@@ -1,0 +1,52 @@
+site_name: npc-engine
+site_url: https://npc-engine.com/
+repo_url: https://github.com/eublefar/chatbot_server
+theme:
+  name: "material"
+  logo: "resources/settings.svg"
+  favicon: "resources/fav.svg"
+  palette:
+    primary: black
+    accent: yellow
+  features:
+    - header.autohide
+    - navigation.instant
+    - navigation.tabs
+    - navigation.sections
+nav:
+  - Home: index.md
+  - Inference Engine:
+      - Overview: inference_engine/overview.md
+      - Running The Server: inference_engine/running_server.md
+      - Build From Source: inference_engine/building.md
+      - API Classes: inference_engine/api_classes.md
+      - Models: inference_engine/models.md
+      - Reference: inference_engine/reference.md
+extra:
+  social:
+    # - icon: fontawesome/brands/unity
+    #   link: ""
+    # - icon: fontawesome/brands/youtube
+    #   link: ""
+    - icon: fontawesome/regular/envelope
+      link: mailto:support@npc-engine.com
+    - icon: fontawesome/brands/github
+      link: https://github.com/npc-engine
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings:
+      handlers:
+        python:
+          rendering:
+            heading_level: 3
+markdown_extensions:
+  - admonition
+  - footnotes
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - tables
+  - attr_list
+  - abbr
+  - pymdownx.snippets

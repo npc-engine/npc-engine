@@ -1,0 +1,17 @@
+# .coveragerc to control coverage.py
+[run]
+omit =
+    */venv/*
+    */tests/*
+    */docs/*
+    */dist/*
+    setup.py
+    scratch*.py    
+    */.tox/*
+    */npc_engine/text/*
+
+[html]
+directory=./htmlcov
+
+[report]
+fail_under=94
