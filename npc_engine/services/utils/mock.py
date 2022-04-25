@@ -82,7 +82,7 @@ def build_output_shape_tensor_(
 
     Args:
         graph: Graph to add the output shape tensor to.
-        output_name: Name of the output.
+        output: Model output.
         dynamic_shape_map: Map of input names to their dynamic shape indices.
         shape_name: Name of the output shape tensor.
     """
@@ -140,7 +140,8 @@ def create_dim_variable_(
     Args:
         graph: Graph to add the dimension variable to.
         shape_name: Name of the output shape tensor.
-        dim_name: Name of the dimension.
+        dim_param: Dimension parameter name.
+        dim_value: Dimension value.
         dim_id: Index of the dimension variable.
         dynamic_shape_map: Map of dynamic axes names to their inputs indices.
     """
