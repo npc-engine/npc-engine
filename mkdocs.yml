@@ -25,11 +25,13 @@ nav:
 
   - Benchmarks: benchmarks.md
 extra:
+  version:
+    provider: mike
   social:
     # - icon: fontawesome/brands/unity
     #   link: ""
-    # - icon: fontawesome/brands/youtube
-    #   link: ""
+    - icon: fontawesome/brands/youtube
+      link: "https://www.youtube.com/channel/UCOtXe2JwUTHXrA4V9DwANlQ"
     - icon: fontawesome/regular/envelope
       link: mailto:support@npc-engine.com
     - icon: fontawesome/brands/github
