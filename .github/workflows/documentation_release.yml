@@ -1,0 +1,29 @@
+name: "Release Documentation Deployment"
+
+on:
+  create:
+    tags:
+      - "v*.*.*"
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.8.x
+
+      - name: Get the version
+        id: get_version
+        uses: dawidd6/action-get-tag@v1
+
+      - run: |
+          pip install -e .[doc,cpu]
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          mike deploy --update-aliases --push ${{ steps.get_version.outputs.tag }} stable
