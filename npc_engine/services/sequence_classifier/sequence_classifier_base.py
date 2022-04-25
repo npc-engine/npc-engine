@@ -18,6 +18,11 @@ class SequenceClassifierAPI(BaseService):
         self.initialized = True
         self.cache = NumpyLRUCache(cache_size)
 
+    @classmethod
+    def get_api_name(cls) -> str:
+        """Get the API name."""
+        return "SequenceClassifierAPI"
+
     def classify(self, texts: List[str]) -> List[List[float]]:
         """Classify a list of texts.
 

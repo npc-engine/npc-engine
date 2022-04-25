@@ -28,7 +28,8 @@ class ServiceState:
 
 
 ServiceDescriptor = namedtuple(
-    "ServiceDescriptor", ["id", "type", "path", "uri", "api_methods", "process_data"]
+    "ServiceDescriptor",
+    ["id", "type", "path", "uri", "api_name", "api_methods", "process_data"],
 )
 
 
@@ -106,12 +107,11 @@ class ServiceManager:
         else:
             if id_or_type in self.services:
                 service_id = id_or_type
-            else:
+            if service_id is None:
                 for service_key, service in self.services.items():
-                    if service.type == id_or_type:
+                    if service.type == id_or_type or service.api_name == id_or_type:
                         service_id = service_key
                         break
-
             if service_id is None and method is not None:
                 service_id = self.resolve_by_method(method)
             elif service_id is None:
@@ -234,15 +234,17 @@ class ServiceManager:
             with open(os.path.join(path, "config.yml")) as f:
                 config_dict = yaml.safe_load(f)
                 uri = f"ipc://{os.path.join(user_cache_dir('npc-engine', 'NpcEngine'), os.path.basename(path))}"
+                cls = getattr(
+                    services,
+                    config_dict.get("model_type", config_dict.get("type", None)),
+                )
                 svcs[os.path.basename(path)] = ServiceDescriptor(
                     os.path.basename(path),
                     config_dict.get("model_type", config_dict.get("type", None)),
                     path,
                     uri,
-                    getattr(
-                        services,
-                        config_dict.get("model_type", config_dict.get("type", None)),
-                    ).API_METHODS,
+                    cls.get_api_name(),
+                    cls.API_METHODS,
                     {"process": None, "socket": None, "state": ServiceState.STOPPED},
                 )
 

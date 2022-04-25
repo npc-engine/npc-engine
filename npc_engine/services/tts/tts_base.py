@@ -19,6 +19,11 @@ class TextToSpeechAPI(BaseService):
         super().__init__(*args, **kwargs)
         self.initialized = True
 
+    @classmethod
+    def get_api_name(cls) -> str:
+        """Get the API name."""
+        return "TextToSpeechAPI"
+
     def tts_start(self, speaker_id: str, text: str, n_chunks: int) -> None:
         """Initiate iterative generation of speech.
 
