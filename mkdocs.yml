@@ -37,6 +37,7 @@ extra:
     - icon: fontawesome/brands/github
       link: https://github.com/npc-engine
 plugins:
+  - mike
   - search
   - autorefs
   - mkdocstrings:
