@@ -27,6 +27,7 @@ nav:
 extra:
   version:
     provider: mike
+    default: stable
   social:
     # - icon: fontawesome/brands/unity
     #   link: ""
