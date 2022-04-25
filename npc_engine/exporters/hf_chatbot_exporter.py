@@ -8,7 +8,7 @@ import os
 import json
 import zmq
 
-from npc_engine.service_clients import ControlClient, HfChatbotClient
+from npc_engine.service_clients import ControlClient, ChatbotClient
 from npc_engine.service_manager.utils import schema_to_json
 
 
@@ -94,13 +94,13 @@ class HfChatbotExporter(BaseHfExporter):
         print(f"Context: {context}")
         zmq_context = zmq.Context()
         control_client = ControlClient(zmq_context, "5555")
-        chatbot_client = HfChatbotClient(zmq_context, "5555", model_id)
-        control_client.start_service_request(model_id)
+        chatbot_client = ChatbotClient(zmq_context, "5555", model_id)
+        control_client.start_service(model_id)
         time.sleep(1)
         response = None
         while response is None:
             try:
-                response = chatbot_client.generate_reply_request(context)
+                response = chatbot_client.generate_reply(context)
             except RuntimeError as e:
                 if "is not running" in str(e):
                     print("Model is not running, waiting for it to start..")

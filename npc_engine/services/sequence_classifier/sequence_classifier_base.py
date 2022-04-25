@@ -1,4 +1,4 @@
-"""Module that implements semantic similarity model API."""
+"""Module that implements sequence classification API."""
 from typing import List
 
 from abc import abstractmethod
@@ -10,79 +10,37 @@ import numpy as np
 class SequenceClassifierAPI(BaseService):
     """Abstract base class for text classification models."""
 
-    API_METHODS: List[str] = ["compare", "cache"]
+    API_METHODS: List[str] = ["classify"]
 
     def __init__(self, cache_size=0, *args, **kwargs) -> None:
         """Empty initialization method for API to be similar to other model base classes."""
-        super().__init__()
+        super().__init__(*args, **kwargs)
         self.initialized = True
-        self.lru_cache = NumpyLRUCache(cache_size)
+        self.cache = NumpyLRUCache(cache_size)
 
-    def compare(self, query: str, context: List[str]) -> List[float]:
-        """Compare a query to the context.
+    def classify(self, texts: List[str]) -> List[List[float]]:
+        """Classify a list of texts.
 
         Args:
-            query: A sentence to compare.
-            context: A list of sentences to compare to. This will be cached if caching is enabled
+            texts: A list of texts to classify.
 
         Returns:
-            List of similarities
+            List of scores for each text.
         """
-        embedding_a = self.compute_embedding(query)
-        embedding_b = self.lru_cache.cache_compute(
-            context, lambda values: self.compute_embedding_batch(values)
+        texts = [row if isinstance(row, str) else tuple(row) for row in texts]
+        scores = self.cache.cache_compute(
+            texts, lambda values: self.compute_scores_batch(values)
         )
-        similarities = self.metric(embedding_a, embedding_b)
-        return similarities.tolist()
-
-    def cache(self, context: List[str]):
-        """Compare a query to the context.
-
-        Args:
-            query: A sentence to compare.
-            context: A list of sentences to compare to. This will be cached if caching is enabled
-
-        Returns:
-            List of similarities
-        """
-        self.lru_cache.cache_compute(
-            context, lambda values: self.compute_embedding_batch(values)
-        )
+        return scores.tolist()
 
     @abstractmethod
-    def compute_embedding_batch(self, lines: List[str]) -> np.ndarray:
-        """Compute line embeddings in batch.
+    def compute_scores_batch(self, texts: List[str]) -> np.ndarray:
+        """Compute scores for a list of texts.
 
         Args:
-            lines: List of sentences to embed
+            texts: A list of texts to compute scores for.
 
         Returns:
-            Embedding batch of shape (batch_size, embedding_size)
+            List of scores for each text.
         """
-        return None
-
-    @abstractmethod
-    def compute_embedding(self, line: str) -> np.ndarray:
-        """Compute sentence embedding.
-
-        Args:
-            line: Sentence to embed
-
-        Returns:
-            Embedding of shape (1, embedding_size)
-        """
-        return None
-
-    @abstractmethod
-    def metric(self, embedding_a: np.ndarray, embedding_b: np.ndarray) -> np.ndarray:
-        """Compute distance between two embeddings.
-
-        Embeddings are of broadcastable shapes. (1 or batch_size)
-        Args:
-            embedding_a: Embedding of shape (1 or batch_size, embedding_size)
-            embedding_b: Embedding of shape (1 or batch_size, embedding_size)
-
-        Returns:
-            Vector of distances (batch_size or 1,)
-        """
-        return None
+        pass

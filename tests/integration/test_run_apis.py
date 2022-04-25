@@ -3,7 +3,7 @@ import subprocess
 import os
 import zmq
 import time
-from npc_engine.service_clients import ControlClient, HfChatbotClient
+from npc_engine.service_clients import ControlClient, ChatbotClient
 
 
 class TestClass:
@@ -34,12 +34,12 @@ class TestClass:
         print("Starting server")
         cls.cc = ControlClient(cls.context, "5555")
         all_running = False
-        services = [svc["id"] for svc in cls.cc.get_services_metadata_request()]
+        services = [svc["id"] for svc in cls.cc.get_services_metadata()]
         while not all_running:
             time.sleep(1)
             all_running = True
             for service in services:
-                status = cls.cc.get_service_status_request(service)
+                status = cls.cc.get_service_status(service)
                 all_running = all_running and (status == "running")
                 if status == "error":
                     raise Exception("Server failed to start")
@@ -244,20 +244,20 @@ class TestClass:
 
         #  Socket to talk to server
         print("Connecting to npc-engine server")
-        hf_chatbot = HfChatbotClient(type(self).context, "5555", "mock-distilgpt2")
+        hf_chatbot = ChatbotClient(type(self).context, "5555", "mock-distilgpt2")
 
-        ctx = hf_chatbot.get_context_template_request()
+        ctx = hf_chatbot.get_context_template()
 
-        template = hf_chatbot.get_prompt_template_request()
+        template = hf_chatbot.get_prompt_template()
         assert isinstance(template, str)
 
-        reply = hf_chatbot.generate_reply_request(ctx)
+        reply = hf_chatbot.generate_reply(ctx)
         assert isinstance(reply, str)
         assert reply != ""
 
     def teardown_class(cls):
-        services = cls.cc.get_services_metadata_request()
+        services = cls.cc.get_services_metadata()
         for service in services:
-            cls.cc.stop_service_request(service["id"])
+            cls.cc.stop_service(service["id"])
         cls.context.destroy()
         cls.server_process.kill()

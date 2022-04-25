@@ -61,7 +61,7 @@ class Exporter(ABC):
             "Start testing server? (It should be already running otherwise)"
         )
         if start_server:
-            start_test_server("5556", models_path)
+            start_test_server("5555", models_path)
         self.test_model_impl(models_path, model_id)
 
     @abstractmethod

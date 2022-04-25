@@ -8,6 +8,8 @@ from loguru import logger
 from jsonrpc import JSONRPCResponseManager, Dispatcher
 from pathlib import Path
 
+from npc_engine.services.utils.config import get_type_from_dict
+
 
 class BaseService(ABC):
     """Abstract base class for managed services."""
@@ -38,7 +40,7 @@ class BaseService(ABC):
             config_dict = yaml.load(f, Loader=yaml.Loader)
         config_dict["model_path"] = path
         config_dict["uri"] = uri
-        model_cls = cls.models[config_dict["model_type"]]
+        model_cls = cls.models[get_type_from_dict(config_dict)]
         return model_cls(**config_dict, context=context)
 
     def start(self):
@@ -95,11 +97,11 @@ class BaseService(ABC):
             readme = ""
         return {
             "id": model_id,
-            "service": config_dict["model_type"],
+            "service": get_type_from_dict(config_dict),
             "path": path,
             "service_short_description": cls.models[
-                config_dict["model_type"]
+                get_type_from_dict(config_dict)
             ].__doc__.split("\n\n")[0],
-            "service_description": cls.models[config_dict["model_type"]].__doc__,
+            "service_description": cls.models[get_type_from_dict(config_dict)].__doc__,
             "readme": readme,
         }

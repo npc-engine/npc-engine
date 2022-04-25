@@ -1,0 +1,2 @@
+cache_size: 100
+type: HfClassifier

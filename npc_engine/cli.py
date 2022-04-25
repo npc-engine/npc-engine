@@ -137,10 +137,10 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
             repo_id=model_id, revision="main", cache_dir=models_path
         )
         remove_source = True
-    export_path = (
-        models_path + "/exported-" + model_id.replace("\\", "/").split("/")[-1]
+    export_path = os.path.join(
+        models_path, "exported-" + model_id.replace("\\", "/").split("/")[-1]
     )
-    os.mkdir(export_path)
+    os.makedirs(export_path, exist_ok=True)
 
     logger.info("Exporting model {} to {}", model_id, export_path)
     exporters = Exporter.get_exporters()
@@ -153,8 +153,6 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
     exporter.create_config(export_path)
     if remove_source:
         shutil.rmtree(source_path)
-    if click.confirm("Do you want to test the exported model?"):
-        test_model(models_path, model_id)
 
 
 @cli.command()

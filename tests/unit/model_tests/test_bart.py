@@ -4,6 +4,8 @@ from npc_engine.services import BaseService
 import inspect
 import sys
 
+from npc_engine.services.utils.config import get_type_from_dict
+
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
 sys.path.insert(0, parentdir)
@@ -25,7 +27,7 @@ configs = [
 bart_paths = [
     subdir
     for config, subdir in zip(configs, subdirs)
-    if "BartChatbot" in config["model_type"]
+    if "BartChatbot" in get_type_from_dict(config)
 ]
 
 
