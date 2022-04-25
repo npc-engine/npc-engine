@@ -14,7 +14,16 @@ All API classes are children of the Model class that handles registering model i
 
 These are the existing API classes and corresponding API_METHODS:
 
-:::npc_engine.models.chatbot.chatbot_base.ChatbotAPI
+:::npc_engine.services.sequence_classifier.sequence_classifier_base.SequenceClassifierAPI
+    selection:
+        members:
+            - compare
+            - cache
+    rendering:
+      show_root_heading: true
+      show_source: false
+
+:::npc_engine.services.chatbot.chatbot_base.ChatbotAPI
     selection:
         members:
             - generate_reply
@@ -24,7 +33,7 @@ These are the existing API classes and corresponding API_METHODS:
       show_root_heading: true
       show_source: false
 
-:::npc_engine.models.similarity.similarity_base.SimilarityAPI
+:::npc_engine.services.similarity.similarity_base.SimilarityAPI
     selection:
         members:
             - compare
@@ -33,7 +42,7 @@ These are the existing API classes and corresponding API_METHODS:
       show_root_heading: true
       show_source: false
 
-:::npc_engine.models.tts.tts_base.TextToSpeechAPI
+:::npc_engine.services.tts.tts_base.TextToSpeechAPI
     selection:
         members:
             - tts_start
@@ -48,9 +57,9 @@ These are the existing API classes and corresponding API_METHODS:
 You can use this dummy API example to create your own:
 
 ```python
-from npc_engine.models.base_model import Model
+from npc_engine.services.base_service import BaseService
 
-class EchoAPI(Model):
+class EchoAPI(BaseService):
     API_METHODS: List[str] = ["echo"]
     def __init__(self, *args, **kwargs):
         pass

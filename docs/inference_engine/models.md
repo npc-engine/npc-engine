@@ -11,19 +11,29 @@ all the abstract methods required by the API class to function.
 [ModelManager](../reference/#npc_engine.models.model_manager.ModelManager) 
 builds a mapping from model's API_METHODS class variable to anonymous functions that call these methods on the model. This dictionary is then served through `json-rpc` protocol implementation. 
 
-## Existing model classes
+## Existing service classes
 
-:::npc_engine.models.chatbot.bart.BartChatbot
+:::npc_engine.services.sequence_classifier.hf_classifier.HfClassifier
     rendering:
       show_root_heading: true
       show_source: false
 
-:::npc_engine.models.similarity.similarity_transformers.TransformerSemanticSimilarity
+:::npc_engine.services.chatbot.hf_chatbot.HfChatbot
     rendering:
       show_root_heading: true
       show_source: false
 
-:::npc_engine.models.tts.flowtron.FlowtronTTS
+:::npc_engine.services.chatbot.bart.BartChatbot
+    rendering:
+      show_root_heading: true
+      show_source: false
+
+:::npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity
+    rendering:
+      show_root_heading: true
+      show_source: false
+
+:::npc_engine.services.tts.flowtron.FlowtronTTS
     rendering:
       show_root_heading: true
       show_source: false
@@ -32,7 +42,7 @@ builds a mapping from model's API_METHODS class variable to anonymous functions 
 
 - ### Fantasy Chatbot
 
-    [BartChatbot](../reference/#npc_engine.models.chatbot.chatbot_base.ChatbotAPI)
+    [BartChatbot](../reference/#npc_engine.services.chatbot.chatbot_base.ChatbotAPI)
     trained on [LIGHT Dataset](https://parl.ai/projects/light/). 
     Model consumes both self, other personas and location dialogue is happening in.
 
