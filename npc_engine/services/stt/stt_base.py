@@ -54,6 +54,11 @@ class SpeechToTextAPI(BaseService):
         self.silence_buffer = np.empty([0])
         self.pad_size = pad_size
 
+    @classmethod
+    def get_api_name(cls) -> str:
+        """Get the API name."""
+        return "SpeechToTextAPI"
+
     def __del__(self):
         """Stop listening on destruction."""
         if self.microphone_initialized:

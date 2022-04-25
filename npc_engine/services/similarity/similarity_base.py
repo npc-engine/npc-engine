@@ -18,6 +18,11 @@ class SimilarityAPI(BaseService):
         self.initialized = True
         self.lru_cache = NumpyLRUCache(cache_size)
 
+    @classmethod
+    def get_api_name(cls) -> str:
+        """Get the API name."""
+        return "SimilarityAPI"
+
     def compare(self, query: str, context: List[str]) -> List[float]:
         """Compare a query to the context.
 

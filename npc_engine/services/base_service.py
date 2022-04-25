@@ -1,6 +1,6 @@
 """Module with Model base class."""
 from typing import Dict
-from abc import ABC
+from abc import ABC, abstractmethod
 import os
 import yaml
 import zmq
@@ -31,6 +31,12 @@ class BaseService(ABC):
             os.makedirs(Path(uri.replace("ipc://", "")).parent, exist_ok=True)
             os.chmod(Path(uri.replace("ipc://", "")).parent, 777)
         self.socket.bind(uri)
+
+    @classmethod
+    @abstractmethod
+    def get_api_name(cls):
+        """Return the name of the API."""
+        pass
 
     @classmethod
     def create(cls, context: zmq.Context, path: str, uri: str):

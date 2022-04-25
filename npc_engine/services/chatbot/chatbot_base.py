@@ -30,6 +30,11 @@ class ChatbotAPI(BaseService):
         self.template = Template(template_string)
         self.initialized = True
 
+    @classmethod
+    def get_api_name(cls) -> str:
+        """Get the API name."""
+        return "ChatbotAPI"
+
     def generate_reply(self, context: Dict[str, Any], *args, **kwargs) -> str:
         """Format the model prompt and generate response.
 
