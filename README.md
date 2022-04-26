@@ -17,7 +17,7 @@ NPC-Engine is a deep learning inference engine for designing NPC AI with natural
 
 The easiest way to get started is to use NPC Engine through the [Unity integration](https://assetstore.unity.com/packages/tools/ai/npc-engine-208498)
 
-You can also use it via ZMQ library. See [Documentation](https://npc-engine.com/stable/inference_engine/running_server/) for more details.
+You can also use it directly through ZMQ. See [Documentation](https://npc-engine.com/stable/inference_engine/running_server/) for more details.
 
 ## Roadmap
 
