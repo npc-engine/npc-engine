@@ -8,14 +8,14 @@
       
       
       
-        <link rel="canonical" href="https://npc-engine.com/master/inference_engine/overview/">
+        <link rel="canonical" href="https://npc-engine.com/master/inference_engine/exporting_models/">
       
       <link rel="icon" href="../../resources/fav.svg">
       <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.11">
     
     
       
-        <title>Overview - npc-engine</title>
+        <title>Exporting models - npc-engine</title>
       
     
     
@@ -69,7 +69,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#how-does-it-work" class="md-skip">
+        <a href="#create-youre-own-exporter" class="md-skip">
           Skip to content
         </a>
       
@@ -107,7 +107,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Overview
+              Exporting models
             
           </span>
         </div>
@@ -199,7 +199,7 @@
   
   
     <li class="md-tabs__item">
-      <a href="./" class="md-tabs__link md-tabs__link--active">
+      <a href="../overview/" class="md-tabs__link md-tabs__link--active">
         Inference Engine
       </a>
     </li>
@@ -310,55 +310,11 @@
               
   
   
-    
   
-  
-    <li class="md-nav__item md-nav__item--active">
-      
-      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
-      
-      
-      
-        <label class="md-nav__link md-nav__link--active" for="__toc">
-          Overview
-          <span class="md-nav__icon md-icon"></span>
-        </label>
-      
-      <a href="./" class="md-nav__link md-nav__link--active">
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
         Overview
       </a>
-      
-        
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#how-does-it-work" class="md-nav__link">
-    How does it work
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#creating-an-integration" class="md-nav__link">
-    Creating an integration
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-      
     </li>
   
 
@@ -396,11 +352,48 @@
               
   
   
+    
   
-    <li class="md-nav__item">
-      <a href="../exporting_models/" class="md-nav__link">
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Exporting models
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
         Exporting models
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#create-youre-own-exporter" class="md-nav__link">
+    Create youre own exporter
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -494,15 +487,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-does-it-work" class="md-nav__link">
-    How does it work
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#creating-an-integration" class="md-nav__link">
-    Creating an integration
+  <a href="#create-youre-own-exporter" class="md-nav__link">
+    Create youre own exporter
   </a>
   
 </li>
@@ -519,47 +505,33 @@
             <article class="md-content__inner md-typeset">
               
                 
-  <a href="https://github.com/eublefar/chatbot_server/edit/master/docs/inference_engine/overview.md" title="Edit this page" class="md-content__button md-icon">
+  <a href="https://github.com/eublefar/chatbot_server/edit/master/docs/inference_engine/exporting_models.md" title="Edit this page" class="md-content__button md-icon">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
   </a>
 
 
 
-  <h1>Overview</h1>
+  <h1>Exporting models</h1>
 
-<p>NPC Engine is a local python <a href="https://www.jsonrpc.org/specification">JSON-RPC</a> server. It is using 0MQ TCP sockets and it can used with any programming language that has 0MQ bindings.</p>
-<p>The main goal of this server is to provide access to inference services that handle various functionalities required for storytelling and in-game AI.</p>
-<h2 id="how-does-it-work">How does it work</h2>
-<p>Each service is defined in it's own folder in provided <code>--models-path</code>. Service's folder name becomes it's unique Id. On start NPC Engine will expose a special service called <code>control</code> that allows you to get services metadata and to control their lifetime. </p>
-<p>Services are running in separate processes but handle requests sequentially (including situations when services call each-other).</p>
-<p>To route requests NPC Engine uses <a href="https://zguide.zeromq.org/docs/chapter3/#Identities-and-Addresses">0MQ identity</a>. It can be defined only before connecting, therefore each connected socket will be refering to it's own service. </p>
-<p>Service resolution rules are simple:
-- If no identity provided, request is routed to the first service that implements the method called.
-- If identity is API name, request is routed to the first service that implements the API.
-- Same logic in case identity is a service class name.
-- Identity could be a service ID (folder name), then request is routed to the service with that ID. </p>
-<p>Service APIs are defined in <a href="../api_classes/">API classes</a>.<br />
-Service exposes methods that are listed in <code>API_METHODS</code> class variable.
-You can find a description of default services available in <a href="../models/#default-models">Default Models</a> section.</p>
-<p>The specifics of how model is loaded and how inference is done is defined in <a href="../models/">specific service classes</a></p>
-<p>Here is an example of JSON RPC request:</p>
-<div class="admonition example">
-<p>request with identity "some_model"
-<code>{  
-    "method": "do_smth",  
-    "params": ["hello"],  
-    "jsonrpc": "2.0",  
-    "id": 0  
-}</code><br />
-will result in call to <code>some_model.do_smth('hello')</code> on the server, or will fail if the service wasn't started.  </p>
-</div>
-<h2 id="creating-an-integration">Creating an integration</h2>
-<p>A checklist for a new integration would be to:</p>
+<p>It's possible to export models from popular libraries to npc-engine.</p>
+<p>Currently, npc-engine supports export from the following libraries/architectures:</p>
 <ul>
-<li>Create a class that manages npc-engine subprocess (starts, terminates, checks if it's alive).</li>
-<li>Create a connection class that talks to npc-engine.</li>
-<li>Review <a href="../api_classes/">API classes</a> and wrap JSON-RPC requests into the native functions.</li>
+<li>HuggingFace transformers</li>
+<li>Sequence classification</li>
+<li>Cosine similarity models</li>
+<li>Text generation</li>
 </ul>
+<p>To use this functionality you need to install a special extra called <code>export</code></p>
+<pre><code class="language-bash">pip install npc-engine[export]
+</code></pre>
+<p>To export model you need to use export-model command.
+With Huggingface models you can use Huggingface Hub model id as well as path to the model.</p>
+<pre><code class="language-bash">npc-engine export-model --models-path &lt;path-to-models-folder&gt; &lt;model_id or folder&gt;
+</code></pre>
+<p>This will prompt you to select correct Exporter class and take you through filling in the required parameters.</p>
+<h2 id="create-youre-own-exporter">Create youre own exporter</h2>
+<p>To define your own exporter you need to create child class of <a href="../reference/#npc_engine.exporters.base_exporter.Exporter">Exporter</a> and import it into <code>npc_engine.exporters</code> module so that it's discovered by the CLI.</p>
+<p>This base class has five abstract methods to implement that cover all the functionality of the exporter.</p>
 
               
             </article>
@@ -573,7 +545,7 @@ will result in call to <code>some_model.do_smth('hello')</code> on the server, o
     <nav class="md-footer__inner md-grid" aria-label="Footer">
       
         
-        <a href="../.." class="md-footer__link md-footer__link--prev" aria-label="Previous: Home" rel="prev">
+        <a href="../building/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Build From Source" rel="prev">
           <div class="md-footer__button md-icon">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
           </div>
@@ -582,20 +554,20 @@ will result in call to <code>some_model.do_smth('hello')</code> on the server, o
               <span class="md-footer__direction">
                 Previous
               </span>
-              Home
+              Build From Source
             </div>
           </div>
         </a>
       
       
         
-        <a href="../running_server/" class="md-footer__link md-footer__link--next" aria-label="Next: Running The Server" rel="next">
+        <a href="../api_classes/" class="md-footer__link md-footer__link--next" aria-label="Next: API Classes" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Running The Server
+              API Classes
             </div>
           </div>
           <div class="md-footer__button md-icon">
