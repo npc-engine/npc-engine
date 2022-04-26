@@ -1,7 +1,7 @@
 name: "Pypi Deployment"
 
 on:
-  create:
+  push:
     tags:
       - "v*.*.*"
 
