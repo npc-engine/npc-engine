@@ -1,5 +1,5 @@
 """BART based chatbot implementation."""
-from typing import Dict
+from typing import Any, Dict
 import numpy as np
 import scipy.special as scp
 import onnxruntime as rt
@@ -73,7 +73,7 @@ class HfChatbot(ChatbotAPI):
         }
         self.dtypes = {i.name: DTYPE_MAP[i.type] for i in self.model_inputs}
 
-    def run(self, prompt: str, temperature: float = 1.0, topk: int = None):
+    def run(self, prompt: str, temperature: float = 1.0, topk: int = None) -> str:
         """Run text generation from given prompt and parameters.
 
         Args:
@@ -102,7 +102,7 @@ class HfChatbot(ChatbotAPI):
                 break
         return self.tokenizer.decode(utterance, skip_special_tokens=True)
 
-    def create_starter_inputs(self, prompt: str = ""):
+    def create_starter_inputs(self, prompt: str = "") -> Dict[str, Any]:
         """Create starter inputs for the model.
 
         Args:

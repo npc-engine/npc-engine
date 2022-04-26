@@ -66,13 +66,13 @@ class TransformerSemanticSimilarity(SimilarityAPI):
         self.metric_type = metric
 
     def compute_embedding(self, line: str) -> np.ndarray:
-        """Compute line embeddings in batch.
+        """Compute sentence embedding.
 
         Args:
-            lines: List of sentences to embed
+            line: Sentence to embed
 
         Returns:
-            Embedding batch of shape (batch_size, embedding_size)
+            Embedding of shape (1, embedding_size)
         """
         ids = (
             np.asarray(self.tokenizer.encode(line).ids)
@@ -92,13 +92,13 @@ class TransformerSemanticSimilarity(SimilarityAPI):
         return self._mean_pooling(outp, attention_mask)
 
     def compute_embedding_batch(self, lines: List[str]) -> np.ndarray:
-        """Compute sentence embedding.
+        """Compute line embeddings in batch.
 
         Args:
-            line: Sentence to embed
+            lines: List of sentences to embed
 
         Returns:
-            Embedding of shape (1, embedding_size)
+            Embedding batch of shape (batch_size, embedding_size)
         """
         tokenized = self.tokenizer.encode_batch(lines)
         ids = np.stack([np.asarray(encoding.ids) for encoding in tokenized]).astype(

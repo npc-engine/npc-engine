@@ -19,22 +19,27 @@ nav:
       - Overview: inference_engine/overview.md
       - Running The Server: inference_engine/running_server.md
       - Build From Source: inference_engine/building.md
+      - Exporting models: inference_engine/exporting_models.md
       - API Classes: inference_engine/api_classes.md
       - Models: inference_engine/models.md
       - Reference: inference_engine/reference.md
 
   - Benchmarks: benchmarks.md
 extra:
+  version:
+    provider: mike
+    default: stable
   social:
     # - icon: fontawesome/brands/unity
     #   link: ""
-    # - icon: fontawesome/brands/youtube
-    #   link: ""
+    - icon: fontawesome/brands/youtube
+      link: "https://www.youtube.com/channel/UCOtXe2JwUTHXrA4V9DwANlQ"
     - icon: fontawesome/regular/envelope
       link: mailto:support@npc-engine.com
     - icon: fontawesome/brands/github
       link: https://github.com/npc-engine
 plugins:
+  - mike
   - search
   - autorefs
   - mkdocstrings:
