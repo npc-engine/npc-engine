@@ -22,7 +22,7 @@ and execute cli.exe with run command
 ```
 cli.exe run --models-path models --port 5555
 ```
-This will start a server but if no models were added to the folder it won't expose any API.
+This will start a server but if no models were added to the folder it will expose only conrol API.
 
 You can download default models via
 ```
@@ -33,7 +33,6 @@ See descriptions of the default models in [Default Models](../models/#default-mo
 
 !!! note "NOTE"
     Model API examples can be found in `npc-engine\tests\integration`.   
-    If you don't need any specific model functionality just don't add this model to your *models* folder.
 
 Now lets test npc-engine with this example request from python:
 
@@ -48,6 +47,14 @@ socket.RCVTIMEO = 2000
 socket.connect("tcp://localhost:5555")
 request = {
     "jsonrpc": "2.0",
+    "method": "start_service",
+    "id": 0,
+    "params": ["SimilarityAPI"],
+}
+socket.send_json(request)
+message = socket.recv_json()
+request = {
+    "jsonrpc": "2.0",
     "method": "compare",
     "id": 0,
     "params": ["I will help you", ["I shall provide you my assistance"]],
@@ -55,4 +62,20 @@ request = {
 socket.send_json(request)
 message = socket.recv_json()
 print(f"Response message {message}")
+
+# You can also provide socket identity to select a specific service
+
+socket = context.socket(zmq.REQ)
+socket.setsockopt(zmq.IDENTITY, b"control")
+socket.RCVTIMEO = 2000
+socket.connect("tcp://localhost:5555")
+
+request = {
+    "jsonrpc": "2.0",
+    "method": "get_services_metadata",
+    "id": 0,
+    "params": [],
+}
+socket.send_json(request)
+message = socket.recv_json()
 ```

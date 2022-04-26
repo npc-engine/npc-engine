@@ -1,14 +1,14 @@
-API class is an abstract class that corresponds to a certain task a model should perform 
+API class is an abstract class that corresponds to a certain task a service should perform 
 (e.g. text-to-speech or chatbot) and defines interface methods for such a task 
-as well as abstract methods for specific models to implement.
+as well as abstract methods for specific servicess to implement.
 
-All API classes are children of the Model class that handles registering model implementations and loading them.
+All API classes are children of the BaseService class that handles registering service implementations and running them.
 
 !!! note "Important"
     It also should list the methods that are to be exposed as API via API_METHODS class variable.
 
 !!! note "Important"
-    To be discovered correctly api classes must be imported into npc_engine.models module
+    To be discovered correctly api classes must be imported into npc_engine.services module
 
 ## Existing APIs
 
@@ -69,4 +69,12 @@ class EchoAPI(BaseService):
 ```
 
 !!! note "Dont forget"
-    Import new API to npc-engine.models so that it is discovered. Models that are implemented for the API should appear there too. 
+    Import new API to npc-engine.services so that it is discovered. Models that are implemented for the API should appear there too. 
+
+## Calling other APIs
+
+There are a set of service clients that can be used to call other APIs that are running on the server. They will block other services so they should be used carefully.
+
+:::npc_engine.service_clients
+    rendering:
+            heading_level: 3

@@ -50,7 +50,7 @@ class BaseService(ABC):
         return model_cls(**config_dict, context=context)
 
     def start(self):
-        """Run service main loop that accepts json rpc over pipes."""
+        """Run service main loop that accepts json rpc."""
         try:
             dispatcher = Dispatcher()
             dispatcher.update(self.build_api_dict())

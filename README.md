@@ -2,7 +2,7 @@
 
 NPC-Engine is a deep learning inference engine for designing NPC AI with natural language.
 
-[![Build Status](https://github.com/npc-engine/npc-engine/actions/workflows/Documentation.yml/badge.svg)](https://npc-engine.github.io/npc-engine/)
+[![Build Status](https://github.com/npc-engine/npc-engine/actions/workflows/documentation_master.yml/badge.svg)](https://npc-engine.github.io/npc-engine/)
 [![Build Status](https://github.com/npc-engine/npc-engine/actions/workflows/ci.yml/badge.svg)](https://npc-engine.github.io/npc-engine/)
 
 ## Features
@@ -15,59 +15,9 @@ NPC-Engine is a deep learning inference engine for designing NPC AI with natural
 
 ## Getting started
 
-First lets get the `npc-engine`.
+The easiest way to get started is to use NPC Engine through the [Unity integration](https://assetstore.unity.com/packages/tools/ai/npc-engine-208498)
 
-It can be found in:
-- [releases page](https://github.com/eublefar/chatbot_server/releases) and extract it to `npc-engine` folder
--  resulting folder after following [build instructions](#-build-on-windows)
--  one of the game engine integrations (coming soon).
-
-Inside the *npc-engine* folder *cli.exe* can be found. This is the CLI interface
-to `npc-engine` server. 
-
-You can check all the possible commands via:
-```
-> cli.exe --help
-```
-
-To start the server create models directory:
-```
-> mkdir models
-```
-and execute cli.exe with run command
-```
-cli.exe run --models-path models --port 5555
-```
-This will start a server but if no models were added to the folder it won't expose any API.
-
-You can grab default models via
-```
-cli.exe download-default-models --models-path models
-```
-
-NOTE: Model API examples can be found in `npc-engine\tests\integration`. If you don't need any specific model functionality just don't add this models to your *models* folder.
-
-Now lets test npc-engine with this example request from python:
-
-```python
-import zmq
-context = zmq.Context()
-
-#  Socket to talk to server
-print("Connecting to npc-engine server")
-socket = context.socket(zmq.REQ)
-socket.RCVTIMEO = 2000
-socket.connect("tcp://localhost:5555")
-request = {
-    "jsonrpc": "2.0",
-    "method": "compare",
-    "id": 0,
-    "params": ["I will help you", ["I shall provide you my assistance"]],
-}
-socket.send_json(request)
-message = socket.recv_json()
-print(f"Response message {message}")
-```
+You can also use it via ZMQ library. See [Documentation](https://npc-engine.com/stable/inference_engine/running_server/) for more details.
 
 ## Roadmap
 
@@ -77,15 +27,16 @@ print(f"Response message {message}")
 - Semantic similarity
 - Real-time speech to text (experimental)
 - Unity integration
+- CLI tool for importing models from [Huggingface](https://huggingface.co/transformers/index.html)
+- Asynchronous API features
 
 ### In progress:
 
+- Actions and planning
 - Unreal integration
-- CLI tool for importing models from [Huggingface](https://huggingface.co/transformers/index.html) and [Coqui TTS](https://tts.readthedocs.io/en/latest/)
-- Asynchronous API features
+- Importing models from popular TTS libraries
 - Emotion features
 - Multiple languages support
-- Behaviours from semantics (next action prediction)
 - **Much more**
 
 ## Build on Windows
