@@ -1,31 +1,30 @@
-NPC Engine is a local python [JSON-RPC](https://www.jsonrpc.org/specification) server. It is using 0MQ TCP sockets and it can used with any programming language that has 0MQ bindings.
-
-The main goal of this server is to provide access to inference services that handle various functionalities required for storytelling and in-game AI.
+This is the documentation for inference 0MQ server. It describes how it works internally, how to integrate with it and how to extend it.
 
 ## How does it work
 
-Each service is defined in it's own folder in provided `--models-path`. Service's folder name becomes it's unique Id. On start NPC Engine will expose a special service called `control` that allows you to get services metadata and to control their lifetime. 
+Inference server is build around 0MQ REQ/REP sockets and is using [JSON-RPC 2.0](https://www.jsonrpc.org/specification) protocol to communicate.
 
-Services are running in separate processes but handle requests sequentially (including situations when services call each-other).
+When starting a server models path must be provided
 
-To route requests NPC Engine uses [0MQ identity](https://zguide.zeromq.org/docs/chapter3/#Identities-and-Addresses). It can be defined only before connecting, therefore each connected socket will be refering to it's own service. 
+```
+cli.exe run --models-path models
+```
 
-Service resolution rules are simple:
-- If no identity provided, request is routed to the first service that implements the method called.
-- If identity is API name, request is routed to the first service that implements the API.
-- Same logic in case identity is a service class name.
-- Identity could be a service ID (folder name), then request is routed to the service with that ID. 
+When the server starts it scans the folder for any valid models, loads them and exposes their API.
 
-Service APIs are defined in [API classes](api_classes.md).  
-Service exposes methods that are listed in `API_METHODS` class variable.
-You can find a description of default services available in [Default Models](../models/#default-models) section.
+Each model's API is defined in [API classes](api_classes.md).  
+Server exposes methods that are listed in `API_METHODS` class variable.
 
-The specifics of how model is loaded and how inference is done is defined in [specific service classes](models.md)
+You can find a description of default models available in [Default Models](../models/#default-models) section.
 
-Here is an example of JSON RPC request:
+The specifics of how model is loaded and how inference is done is defined in [specific model classes](models.md)
+
+!!! danger "Warning"
+    Right now only single model of the same API type can be loaded.
+
+When the server is started you can run model apis via JSON-RPC requests.
 
 !!! example ""
-    request with identity "some_model"
     ```
     {  
         "method": "do_smth",  
@@ -34,7 +33,7 @@ Here is an example of JSON RPC request:
         "id": 0  
     }
     ```  
-    will result in call to `some_model.do_smth('hello')` on the server, or will fail if the service wasn't started.  
+    will result in call to `some_model.do_smth('hello')` on the server.  
 
 ## Creating an integration
 

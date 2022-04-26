@@ -19,9 +19,12 @@ Build instructions can be found [here](https://onnxruntime.ai/)
 
 #### (Optional) Run tests
 
-```
-tox -e py38
-```
++ Download models to run tests against into `npc-engine\resources\models`.  
+You can use default models from [here](https://drive.google.com/drive/folders/1_3iOrhgvDyrKnC-tWEdysxpJyUcun0X3?usp=sharing)
++ Run tests with
+    ```
+    tox
+    ```
 
 #### Compile to exe with
 

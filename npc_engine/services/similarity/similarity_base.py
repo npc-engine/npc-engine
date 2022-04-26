@@ -41,10 +41,14 @@ class SimilarityAPI(BaseService):
         return similarities.tolist()
 
     def cache(self, context: List[str]):
-        """Cache embeddings of given sequences.
+        """Compare a query to the context.
 
         Args:
-            context: A list of sentences to cache.
+            query: A sentence to compare.
+            context: A list of sentences to compare to. This will be cached if caching is enabled
+
+        Returns:
+            List of similarities
         """
         self.lru_cache.cache_compute(
             context, lambda values: self.compute_embedding_batch(values)

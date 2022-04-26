@@ -23,7 +23,8 @@ class HfClassifier(SequenceClassifierAPI):
         """Create and load biencoder model for semantic similarity.
 
         Args:
-            model_path: A path where model config and weights are.
+            model_path: A path where model config and weights are
+            metric: distance to compute semantic similarity
         """
         super().__init__(*args, **kwargs)
         sess_options = rt.SessionOptions()
@@ -62,7 +63,7 @@ class HfClassifier(SequenceClassifierAPI):
         """Compute scores.
 
         Args:
-            texts: Sentence to embed
+            lines: Sentence to embed
 
         Returns:
             scores: Scores for each text

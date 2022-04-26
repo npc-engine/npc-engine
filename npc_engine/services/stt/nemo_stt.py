@@ -52,16 +52,16 @@ class NemoSTT(SpeechToTextAPI):
         frame_size: int = 1000,
         sample_rate: int = 16000,
         predict_punctuation: bool = False,
+        alpha: float = 0.5,
+        beta: float = 1,
         *args,
         **kwargs,
     ):
         """Create and load biencoder model for semantic similarity.
 
         Args:
-            model_path: A path where model config and weights are stored.
-            frame_size: Size of the audio frame in milliseconds.
-            sample_rate: Sample rate of the audio.
-            predict_punctuation: Whether to predict punctuation and capitalization.
+            model_path: A path where model config and weights are
+            metric: distance to compute semantic similarity
         """
         super().__init__(
             sample_rate=sample_rate,
@@ -151,6 +151,7 @@ class NemoSTT(SpeechToTextAPI):
             context: Text context of the speech recognized
                 (e.g. a question to which speech recognized is a reply to).
             text: Recognized speech so far
+            pause_time: Pause after last speech in milliseconds
 
         Returns:
             Decision to stop recognition and finalize results.

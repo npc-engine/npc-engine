@@ -35,7 +35,6 @@ setup(
     name="npc-engine",
     description="ZMQ JSONRPC 2.0 server for text generation and speech synthesis.",
     long_description=long_description,
-    long_description_content_type='text/markdown',
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),
     version=version,
     install_requires=requirements,

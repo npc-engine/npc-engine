@@ -17,10 +17,10 @@ class SequenceClassifierClient(ServiceClient):
         super().__init__(zmq_context, port, service_id)
 
     def classify(self, texts: List[Union[str, Tuple[str, str]]]) -> str:
-        """Send a classify request to the SequenceClassifierAPI.
+        """Send a chatbot request to the server.
 
         Args:
-            texts: List of texts to classify.
+            context: A dictionary containing the chatbot request.
         """
         request = {
             "jsonrpc": "2.0",

@@ -1,38 +1,29 @@
-Service classes are specific implementations of API classes. 
+Model classes are specific implementations of API classes. 
 They define the loading process in `__init__` function and 
 all the abstract methods required by the API class to function.
 
 ## How models are loaded?
 
-[ServiceManager](../reference/#npc_engine.service_manager.service_manager.ServiceManager) Scans the models folder. For each discovered subfolder ServiceManager validates the `config.yml` and creates descriptors with metadata for each service. The mandatory field of `config.yml` is `type` (or `model_type`) that must contain correct service class that was discovered and registered by `BaseService` parent class. This service class will be instantiated with parsed dictionary as parameters on [ServiceManager.start_service](../reference/#npc_engine.service_manager.service_manager.ServiceManager.start_service) request to `control` service. 
+[ModelManager](../reference/#npc_engine.models.model_manager.ModelManager) Scans the models folder. For each discovered subfolder [Model.load](../reference/#npc_engine.models.base_model.Model.load) is called, which tries to read `config.yml` field `model_type`. This field must contain correct model class that was discovered and registered by `Model` parent class, and if it does, this class is instantiated with whole `config.yml` parsed dictionary as parameters. 
 
 ## How is their API exposed?
 
-When service is started [ServiceManager](../reference/#npc_engine.service_manager.service_manager.ServiceManager) starts a new process with [BaseService](../reference/#npc_engine.services.base_service.BaseService) message handling loop. [BaseService](../reference/#npc_engine.services.base_service.BaseService) handles ZMQ IPC requests to it's exposed functions from API's API_METHODS class variable to the main process, while main process handles routing requests to this service. 
+[ModelManager](../reference/#npc_engine.models.model_manager.ModelManager) 
+builds a mapping from model's API_METHODS class variable to anonymous functions that call these methods on the model. This dictionary is then served through `json-rpc` protocol implementation. 
 
-## Existing service classes
+## Existing model classes
 
-:::npc_engine.services.sequence_classifier.hf_classifier.HfClassifier
+:::npc_engine.models.chatbot.bart.BartChatbot
     rendering:
       show_root_heading: true
       show_source: false
 
-:::npc_engine.services.chatbot.hf_chatbot.HfChatbot
+:::npc_engine.models.similarity.similarity_transformers.TransformerSemanticSimilarity
     rendering:
       show_root_heading: true
       show_source: false
 
-:::npc_engine.services.chatbot.bart.BartChatbot
-    rendering:
-      show_root_heading: true
-      show_source: false
-
-:::npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity
-    rendering:
-      show_root_heading: true
-      show_source: false
-
-:::npc_engine.services.tts.flowtron.FlowtronTTS
+:::npc_engine.models.tts.flowtron.FlowtronTTS
     rendering:
       show_root_heading: true
       show_source: false
@@ -41,7 +32,7 @@ When service is started [ServiceManager](../reference/#npc_engine.service_manage
 
 - ### Fantasy Chatbot
 
-    [BartChatbot](../reference/#npc_engine.services.chatbot.chatbot_base.ChatbotAPI)
+    [BartChatbot](../reference/#npc_engine.models.chatbot.chatbot_base.ChatbotAPI)
     trained on [LIGHT Dataset](https://parl.ai/projects/light/). 
     Model consumes both self, other personas and location dialogue is happening in.
 
@@ -69,14 +60,14 @@ When service is started [ServiceManager](../reference/#npc_engine.service_manage
     - Custom transformer for recognizing end of response to the context initialized from [all-MiniLM-L6-v2](nreimers/MiniLM-L6-H384-uncased)
 
 
-## Creating new Services
+## Creating new models
 
 You can use this dummy model example to create your own:
 
 ```python
-from npc_engine.services.chatbot.chatbot_base import ChatbotAPI
+from npc_engine.models.base_model import Model
 
-class EchoService(ChatbotAPI):
+class EchoModel(ChatbotAPI):
 
     def __init__(self, model_path:str, *args, **kwargs):
         print("model is in {model_path}")
@@ -89,4 +80,4 @@ class EchoService(ChatbotAPI):
 ```
 
 !!! note "Dont forget"
-    Import new model to npc-engine.services so that it is discovered. 
+    Import new model to npc-engine.models so that it is discovered. 
