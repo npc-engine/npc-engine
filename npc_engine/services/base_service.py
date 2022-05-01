@@ -14,6 +14,9 @@ from npc_engine.services.utils.config import get_type_from_dict
 class BaseService(ABC):
     """Abstract base class for managed services."""
 
+    # A list of resolvable names of services that Service depends on
+    DEPENDENCIES = []
+
     models = {}
 
     def __init_subclass__(cls, **kwargs):

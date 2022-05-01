@@ -10,11 +10,13 @@ import zmq.asyncio
 from npc_engine.service_manager.service_manager import ServiceManager, ServiceState
 
 
-class TestClass:
+class TestServiceManager:
     """Test that starts npc-engine server and tests all the APIs"""
 
     def setup_class(cls):
         cls.context = zmq.asyncio.Context()
+        if sys.platform == "win32":
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
     def test_service_manager_get_metadata(self):
         """Test if all api methods are registered"""
@@ -44,8 +46,6 @@ class TestClass:
     def test_service_manager_start_stop_service(self):
         """Test if models are printed without error."""
 
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         model_manager = ServiceManager(
             type(self).context,
             os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
@@ -60,8 +60,6 @@ class TestClass:
     def test_service_manager_start_error_service(self):
         """Test if models are printed without error."""
 
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         model_manager = ServiceManager(
             type(self).context,
             os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
@@ -79,8 +77,6 @@ class TestClass:
     def test_service_manager_restart_service(self):
         """Test if models are printed without error."""
 
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         model_manager = ServiceManager(
             type(self).context,
             os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
@@ -95,8 +91,6 @@ class TestClass:
     def test_service_manager_handle_request(self):
         """Test if models are printed without error."""
 
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         model_manager = ServiceManager(
             type(self).context,
             os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
@@ -112,6 +106,46 @@ class TestClass:
         )
         with pytest.raises(ValueError, match="Service mock-distilgpt2 is not running"):
             asyncio.run(model_manager.handle_request(address, request))
+
+    def test_service_manager_dependencies(self):
+        model_manager = ServiceManager(
+            type(self).context,
+            os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
+        )
+        model_manager.services["mock-distilgpt2"] = model_manager.services[
+            "mock-distilgpt2"
+        ]._replace(dependencies=["SimilarityAPI"])
+        model_manager.check_dependencies()
+        model_manager.check_dependency_cycles()
+
+    def test_service_manager_no_dep(self):
+        model_manager = ServiceManager(
+            type(self).context,
+            os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
+        )
+        model_manager.services["mock-distilgpt2"] = model_manager.services[
+            "mock-distilgpt2"
+        ]._replace(dependencies=["123"])
+        print(model_manager.services["mock-distilgpt2"].id)
+        with pytest.raises(
+            ValueError,
+            match="Service mock-distilgpt2 requires 123 service to be present.",
+        ):
+            model_manager.check_dependencies()
+
+    def test_service_manager_dep_cycle(self):
+        model_manager = ServiceManager(
+            type(self).context,
+            os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
+        )
+        model_manager.services["mock-distilgpt2"] = model_manager.services[
+            "mock-distilgpt2"
+        ]._replace(dependencies=["SimilarityAPI"])
+        model_manager.services["mock-paraphrase-MiniLM-L6-v2"].dependencies.append(
+            "ChatbotAPI"
+        )
+        with pytest.raises(ValueError, match="There are dependency cycles"):
+            model_manager.check_dependency_cycles()
 
     def teardown_class(cls):
         cls.context.destroy()

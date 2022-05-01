@@ -29,7 +29,16 @@ class ServiceState:
 
 ServiceDescriptor = namedtuple(
     "ServiceDescriptor",
-    ["id", "type", "path", "uri", "api_name", "api_methods", "process_data"],
+    [
+        "id",
+        "type",
+        "path",
+        "uri",
+        "api_name",
+        "api_methods",
+        "process_data",
+        "dependencies",
+    ],
 )
 
 
@@ -55,6 +64,8 @@ class ServiceManager:
     def __init__(self, zmq_context: zmq.asyncio.Context, path):
         """Create model manager and load models from the given path."""
         self.services = self._scan_path(path)
+        self.check_dependencies()
+        self.check_dependency_cycles()
         self.control_dispatcher = Dispatcher()
         self.control_dispatcher.update(
             {
@@ -221,6 +232,58 @@ class ServiceManager:
         self.stop_service(service_id)
         self.start_service(service_id)
 
+    def check_dependencies(self):
+        """Check if all dependencies are installed."""
+        for service_id, service in self.services.items():
+            if service.dependencies:
+                for dependency in service.dependencies:
+                    try:
+                        self.resolve_and_check_service(dependency)
+                    except ValueError:
+                        raise ValueError(
+                            f"Service {service_id} requires {dependency} service to be present."
+                        )
+
+    def check_dependency_cycles(self):
+        """Check if there are any dependency cycles."""
+        # build graph
+        graph = {}
+        for service_id, service in self.services.items():
+            if service.dependencies:
+                graph[service_id] = [
+                    self.resolve_and_check_service(dep) for dep in service.dependencies
+                ]
+        # Tarjan's algorithm
+        visited = {}
+        llvs = {}
+        stack = []
+        sccs = []
+        self.idx = 0
+        for node in graph:
+            if node not in visited:
+                self.__scc(graph, node, llvs, visited, stack, sccs)
+        cycles = [scc for scc in sccs if len(scc) > 1]
+        if len(cycles) > 0:
+            to_str = "\n".join([" -> ".join(cycle) for cycle in cycles])
+            raise ValueError(f"There are dependency cycles: {to_str} ")
+        del self.idx
+
+    def __scc(self, graph, node, llvs, visited, stack, sccs):
+        visited[node] = self.idx
+        llvs[node] = self.idx
+        self.idx += 1
+        stack.append(node)
+        for v in graph[node]:
+            if v not in visited:
+                self.__scc(graph, v, llvs, visited, stack, sccs)
+                llvs[node] = min(llvs[node], llvs[v])
+            elif v in stack:
+                llvs[node] = min(llvs[node], visited.get(v, -1))
+        if llvs[node] == visited[node]:
+            sccs.append([stack.pop()])
+            while sccs[-1][-1] != node:
+                sccs[-1].append(stack.pop())
+
     def _scan_path(self, path: str) -> Dict[str, ServiceDescriptor]:
         """Scan services defined in the given path."""
         norm_path = ntpath.normpath(path).replace("\\", os.path.sep)
@@ -239,13 +302,18 @@ class ServiceManager:
                     config_dict.get("model_type", config_dict.get("type", None)),
                 )
                 svcs[os.path.basename(path)] = ServiceDescriptor(
-                    os.path.basename(path),
-                    config_dict.get("model_type", config_dict.get("type", None)),
-                    path,
-                    uri,
-                    cls.get_api_name(),
-                    cls.API_METHODS,
-                    {"process": None, "socket": None, "state": ServiceState.STOPPED},
+                    id=os.path.basename(path),
+                    type=config_dict.get("model_type", config_dict.get("type", None)),
+                    path=path,
+                    uri=uri,
+                    api_name=cls.get_api_name(),
+                    api_methods=cls.API_METHODS,
+                    process_data={
+                        "process": None,
+                        "socket": None,
+                        "state": ServiceState.STOPPED,
+                    },
+                    dependencies=cls.DEPENDENCIES,
                 )
 
         return svcs
