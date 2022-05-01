@@ -29,7 +29,6 @@ class BaseService(ABC):
         self.zmq_context = context
         self.socket = context.socket(zmq.REP)
         self.socket.setsockopt(zmq.LINGER, 0)
-        print(uri)
         if uri.startswith("ipc://"):
             os.makedirs(Path(uri.replace("ipc://", "")).parent, exist_ok=True)
             os.chmod(Path(uri.replace("ipc://", "")).parent, 777)
