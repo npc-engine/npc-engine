@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://npc-engine.com/master/inference_engine/models/">
       
       <link rel="icon" href="../../resources/fav.svg">
-      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.11">
+      <meta name="generator" content="mkdocs-1.3.0, mkdocs-material-8.2.13">
     
     
       
@@ -19,10 +19,10 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.8c5ef100.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.e411adfe.min.css">
       
         
-        <link rel="stylesheet" href="../../assets/stylesheets/palette.9647289d.min.css">
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cc9b2e1e.min.css">
         
           
           
@@ -69,7 +69,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#how-models-are-loaded" class="md-skip">
+        <a href="#how-services-are-configured" class="md-skip">
           Skip to content
         </a>
       
@@ -412,8 +412,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-models-are-loaded" class="md-nav__link">
-    How models are loaded?
+  <a href="#how-services-are-configured" class="md-nav__link">
+    How services are configured?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-inter-communication" class="md-nav__link">
+    Service inter-communication
   </a>
   
 </li>
@@ -674,6 +681,19 @@
   <a href="#creating-new-services" class="md-nav__link">
     Creating new Services
   </a>
+  
+    <nav class="md-nav" aria-label="Creating new Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-other-services-from-your-service" class="md-nav__link">
+    Using other services from your service
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -746,8 +766,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#how-models-are-loaded" class="md-nav__link">
-    How models are loaded?
+  <a href="#how-services-are-configured" class="md-nav__link">
+    How services are configured?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#service-inter-communication" class="md-nav__link">
+    Service inter-communication
   </a>
   
 </li>
@@ -1009,6 +1036,19 @@
     Creating new Services
   </a>
   
+    <nav class="md-nav" aria-label="Creating new Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-other-services-from-your-service" class="md-nav__link">
+    Using other services from your service
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
     </ul>
@@ -1034,10 +1074,13 @@
 <p>Service classes are specific implementations of API classes. 
 They define the loading process in <code>__init__</code> function and 
 all the abstract methods required by the API class to function.</p>
-<h2 id="how-models-are-loaded">How models are loaded?</h2>
-<p><a href="../reference/#npc_engine.service_manager.service_manager.ServiceManager">ServiceManager</a> Scans the models folder. For each discovered subfolder ServiceManager validates the <code>config.yml</code> and creates descriptors with metadata for each service. The mandatory field of <code>config.yml</code> is <code>type</code> (or <code>model_type</code>) that must contain correct service class that was discovered and registered by <code>BaseService</code> parent class. This service class will be instantiated with parsed dictionary as parameters on <a href="../reference/#npc_engine.service_manager.service_manager.ServiceManager.start_service">ServiceManager.start_service</a> request to <code>control</code> service. </p>
+<h2 id="how-services-are-configured">How services are configured?</h2>
+<p><a href="../reference/#npc_engine.server.metadata_manager.MetadataManager">MetadataManager</a> Scans the models folder. For each discovered subfolder ServiceManager validates the <code>config.yml</code> and creates descriptors with metadata for each service. The mandatory field of <code>config.yml</code> is <code>type</code> (or <code>model_type</code>) that must contain correct service class that was discovered and registered by <code>BaseService</code> parent class. This service class will be instantiated with parsed dictionary as parameters on <a href="../reference/#npc_engine.server.control_service.ControlService.start_service">ControlService.start_service</a> request to <code>control</code> service. </p>
+<h2 id="service-inter-communication">Service inter-communication</h2>
+<p>Each service class may define class variable <code>DEPENDENCIES</code> that contains list of other resolvable service names that are used by this service. These services will be validated by ServiceManager to be configured and to not contain cyclic dependencies. They will also be started before this service.</p>
+<p>Service is then free to use it's dependencies in its own logic.</p>
 <h2 id="how-is-their-api-exposed">How is their API exposed?</h2>
-<p>When service is started <a href="../reference/#npc_engine.service_manager.service_manager.ServiceManager">ServiceManager</a> starts a new process with <a href="../reference/#npc_engine.services.base_service.BaseService">BaseService</a> message handling loop. <a href="../reference/#npc_engine.services.base_service.BaseService">BaseService</a> handles ZMQ IPC requests to it's exposed functions from API's API_METHODS class variable to the main process, while main process handles routing requests to this service. </p>
+<p>When service is started <a href="../reference/#npc_engine.server.control_service.ControlService">ControlService</a> starts a new process with <a href="../reference/#npc_engine.services.base_service.BaseService">BaseService</a> message handling loop. <a href="../reference/#npc_engine.services.base_service.BaseService">BaseService</a> handles ZMQ IPC requests to it's exposed functions from API's API_METHODS class variable to the main process, while main process handles routing requests to this service. </p>
 <h2 id="existing-service-classes">Existing service classes</h2>
 
 
@@ -2480,6 +2523,11 @@ class EchoService(ChatbotAPI):
 <p class="admonition-title">Dont forget</p>
 <p>Import new model to npc-engine.services so that it is discovered. </p>
 </div>
+<h3 id="using-other-services-from-your-service">Using other services from your service</h3>
+<p>You can use other services from your service by adding them to the <code>DEPENDENCIES</code> class variable list.</p>
+<p>When your service starts ControlService will create clients for each dependency.
+They can be accessed from inside the service with <code>self.get_client(name)</code> where <code>name</code> is the name of the dependency.</p>
+<p>These clients expose the same API as the dependency and can be just called from your service.</p>
 
               
             </article>
@@ -2576,7 +2624,7 @@ class EchoService(ChatbotAPI):
     <script id="__config" type="application/json">{"base": "../..", "features": ["header.autohide", "navigation.instant", "navigation.tabs", "navigation.sections"], "search": "../../assets/javascripts/workers/search.2a1c317c.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.748e2769.min.js"></script>
+      <script src="../../assets/javascripts/bundle.ed9748b7.min.js"></script>
       
     
   </body>
