@@ -249,10 +249,9 @@ class ServiceManager:
         # build graph
         graph = {}
         for service_id, service in self.services.items():
-            if service.dependencies:
-                graph[service_id] = [
-                    self.resolve_and_check_service(dep) for dep in service.dependencies
-                ]
+            graph[service_id] = [
+                self.resolve_and_check_service(dep) for dep in service.dependencies
+            ]
         # Tarjan's algorithm
         visited = {}
         llvs = {}
@@ -264,7 +263,7 @@ class ServiceManager:
                 self.__scc(graph, node, llvs, visited, stack, sccs)
         cycles = [scc for scc in sccs if len(scc) > 1]
         if len(cycles) > 0:
-            to_str = "\n".join([" -> ".join(cycle) for cycle in cycles])
+            to_str = "\n".join([" -> ".join(cycle + [cycle[0]]) for cycle in cycles])
             raise ValueError(f"There are dependency cycles: {to_str} ")
         del self.idx
 

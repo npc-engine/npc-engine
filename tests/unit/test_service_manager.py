@@ -141,9 +141,9 @@ class TestServiceManager:
         model_manager.services["mock-distilgpt2"] = model_manager.services[
             "mock-distilgpt2"
         ]._replace(dependencies=["SimilarityAPI"])
-        model_manager.services["mock-paraphrase-MiniLM-L6-v2"].dependencies.append(
-            "ChatbotAPI"
-        )
+        model_manager.services["mock-paraphrase-MiniLM-L6-v2"] = model_manager.services[
+            "mock-paraphrase-MiniLM-L6-v2"
+        ]._replace(dependencies=["mock-distilgpt2"])
         with pytest.raises(ValueError, match="There are dependency cycles"):
             model_manager.check_dependency_cycles()
 
