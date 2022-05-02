@@ -57,4 +57,9 @@ class ServiceClient(ABC):
     @classmethod
     def get_api_client(cls, api_name: str) -> "ServiceClient":
         """Return the client for the api."""
-        return cls.clients[api_name]
+        try:
+            return cls.clients[api_name]
+        except KeyError:
+            raise RuntimeError(
+                f"Client for the API {api_name} not found. Available clients: {list(cls.clients.keys())}"
+            )
