@@ -30,3 +30,8 @@ class SequenceClassifierClient(ServiceClient):
         }
         reply = self.send_request(request)
         return reply
+
+    @classmethod
+    def get_api_name(cls) -> str:
+        """Return the name of the API."""
+        return "SequenceClassifierAPI"

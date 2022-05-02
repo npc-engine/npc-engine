@@ -2,19 +2,32 @@
 from typing import Any, Dict
 import zmq
 import zmq.asyncio
+from abc import ABC, abstractclassmethod
 
 from loguru import logger
 
 
-class ServiceClient:
+class ServiceClient(ABC):
     """Base json rpc client."""
 
-    def __init__(self, zmq_context: zmq.Context, port: str, service_id: str):
+    clients = {}
+
+    def __init_subclass__(cls, **kwargs):
+        """Init subclass where service classes get registered to be discovered."""
+        super().__init_subclass__(**kwargs)
+        cls.clients[cls.get_api_name()] = cls
+
+    def __init__(self, zmq_context: zmq.Context, port: str, service_id: str = None):
         """Connect to the server on the port."""
         self.context = zmq_context
         self.socket = self.context.socket(zmq.REQ)
         self.socket.setsockopt(zmq.LINGER, 0)
-        self.socket.setsockopt(zmq.IDENTITY, service_id.encode("utf-8"))
+        self.socket.setsockopt(
+            zmq.IDENTITY,
+            service_id.encode("utf-8")
+            if service_id
+            else self.get_api_name().encode("utf-8"),
+        )
         self.socket.connect(f"tcp://localhost:{port}")
         logger.info("Connected to server")
 
@@ -35,3 +48,18 @@ class ServiceClient:
             return response["result"]
         elif "code" in response:
             raise RuntimeError(f"code: {response['code']}. {response['message']}")
+
+    @abstractclassmethod
+    def get_api_name(cls) -> str:
+        """Return the name of the API."""
+        pass
+
+    @classmethod
+    def get_api_client(cls, api_name: str) -> "ServiceClient":
+        """Return the client for the api."""
+        try:
+            return cls.clients[api_name]
+        except KeyError:
+            raise RuntimeError(
+                f"Client for the API {api_name} not found. Available clients: {list(cls.clients.keys())}"
+            )

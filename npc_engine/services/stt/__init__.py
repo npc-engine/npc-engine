@@ -14,10 +14,3 @@ Example:
 
 from .stt_base import SpeechToTextAPI  # noqa: F401
 from .nemo_stt import NemoSTT  # noqa: F401
-
-
-# pyinstaller hidden modules
-import sklearn.utils._cython_blas  # noqa: F401
-import sklearn.utils._typedefs  # noqa: F401
-import sklearn.neighbors._partition_nodes  # noqa: F401
-import sklearn.tree._utils  # noqa: F401

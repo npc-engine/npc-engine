@@ -6,7 +6,7 @@ from npc_engine.services.base_service import BaseService
 from jinja2 import Template
 from jinja2schema import infer, to_json_schema
 
-from npc_engine.service_manager.utils import schema_to_json
+from npc_engine.server.utils import schema_to_json
 
 
 class ChatbotAPI(BaseService):

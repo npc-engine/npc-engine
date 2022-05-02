@@ -4,52 +4,33 @@ import os
 import sys
 import asyncio
 import time
+from importlib_metadata import metadata
 import pytest
 import zmq
 import zmq.asyncio
-from npc_engine.service_manager.service_manager import ServiceManager, ServiceState
+from npc_engine.server.control_service import ControlService, ServiceState
+from npc_engine.server.metadata_manager import MetadataManager
 
 
-class TestClass:
+class TestControlService:
     """Test that starts npc-engine server and tests all the APIs"""
 
     def setup_class(cls):
         cls.context = zmq.asyncio.Context()
-
-    def test_service_manager_get_metadata(self):
-        """Test if all api methods are registered"""
+        if sys.platform == "win32":
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         path = os.path.join(
             os.path.sep.join(os.path.dirname(__file__).split(os.path.sep)[:-1]),
             "resources",
             "models",
         )
 
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        model_manager = ServiceManager(type(self).context, path)
-        metadata = model_manager.get_services_metadata()
-        paths = [
-            f.path
-            for f in os.scandir(path)
-            if f.is_dir() and os.path.exists(os.path.join(f, "config.yml"))
-        ]
-        assert len(metadata) == len(paths)
-        for metadata_item in metadata:
-            assert metadata_item["id"] in [
-                path.split(os.path.sep)[-1] for path in paths
-            ]
-        for metadata_item in metadata:
-            assert metadata_item["path"] in paths
+        cls.metadata = MetadataManager(path, "5555")
 
     def test_service_manager_start_stop_service(self):
         """Test if models are printed without error."""
 
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        model_manager = ServiceManager(
-            type(self).context,
-            os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
-        )
+        model_manager = ControlService(self.context, self.metadata)
         service = next(iter(model_manager.services.keys()))
         assert model_manager.get_service_status(service) == ServiceState.STOPPED
         model_manager.start_service(service)
@@ -60,17 +41,12 @@ class TestClass:
     def test_service_manager_start_error_service(self):
         """Test if models are printed without error."""
 
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        model_manager = ServiceManager(
-            type(self).context,
-            os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
-        )
+        model_manager = ControlService(self.context, self.metadata)
         service = next(iter(model_manager.services.keys()))
         assert model_manager.get_service_status(service) == ServiceState.STOPPED
         model_manager.start_service(service)
         assert model_manager.get_service_status(service) == ServiceState.RUNNING
-        model_manager.services[service].process_data["process"].terminate()
+        model_manager.services[service]["process"].terminate()
         time.sleep(0.5)
         with pytest.raises(ValueError):
             model_manager.get_service_status(service)
@@ -79,12 +55,7 @@ class TestClass:
     def test_service_manager_restart_service(self):
         """Test if models are printed without error."""
 
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        model_manager = ServiceManager(
-            type(self).context,
-            os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
-        )
+        model_manager = ControlService(self.context, self.metadata)
         service = next(iter(model_manager.services.keys()))
         assert model_manager.get_service_status(service) == ServiceState.STOPPED
         model_manager.start_service(service)
@@ -95,12 +66,7 @@ class TestClass:
     def test_service_manager_handle_request(self):
         """Test if models are printed without error."""
 
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        model_manager = ServiceManager(
-            type(self).context,
-            os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
-        )
+        model_manager = ControlService(self.context, self.metadata)
         address = "mock-distilgpt2"
         request = json.dumps(
             {
