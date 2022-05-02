@@ -2,13 +2,19 @@ Service classes are specific implementations of API classes.
 They define the loading process in `__init__` function and 
 all the abstract methods required by the API class to function.
 
-## How models are loaded?
+## How services are configured?
 
-[ServiceManager](../reference/#npc_engine.service_manager.service_manager.ServiceManager) Scans the models folder. For each discovered subfolder ServiceManager validates the `config.yml` and creates descriptors with metadata for each service. The mandatory field of `config.yml` is `type` (or `model_type`) that must contain correct service class that was discovered and registered by `BaseService` parent class. This service class will be instantiated with parsed dictionary as parameters on [ServiceManager.start_service](../reference/#npc_engine.service_manager.service_manager.ServiceManager.start_service) request to `control` service. 
+[MetadataManager](../reference/#npc_engine.server.metadata_manager.MetadataManager) Scans the models folder. For each discovered subfolder ServiceManager validates the `config.yml` and creates descriptors with metadata for each service. The mandatory field of `config.yml` is `type` (or `model_type`) that must contain correct service class that was discovered and registered by `BaseService` parent class. This service class will be instantiated with parsed dictionary as parameters on [ControlService.start_service](../reference/#npc_engine.server.control_service.ControlService.start_service) request to `control` service. 
+
+## Service inter-communication
+
+Each service class may define class variable `DEPENDENCIES` that contains list of other resolvable service names that are used by this service. These services will be validated by ServiceManager to be configured and to not contain cyclic dependencies. They will also be started before this service.
+
+Service is then free to use it's dependencies in its own logic.
 
 ## How is their API exposed?
 
-When service is started [ServiceManager](../reference/#npc_engine.service_manager.service_manager.ServiceManager) starts a new process with [BaseService](../reference/#npc_engine.services.base_service.BaseService) message handling loop. [BaseService](../reference/#npc_engine.services.base_service.BaseService) handles ZMQ IPC requests to it's exposed functions from API's API_METHODS class variable to the main process, while main process handles routing requests to this service. 
+When service is started [ControlService](../reference/#npc_engine.server.control_service.ControlService) starts a new process with [BaseService](../reference/#npc_engine.services.base_service.BaseService) message handling loop. [BaseService](../reference/#npc_engine.services.base_service.BaseService) handles ZMQ IPC requests to it's exposed functions from API's API_METHODS class variable to the main process, while main process handles routing requests to this service. 
 
 ## Existing service classes
 
@@ -90,3 +96,12 @@ class EchoService(ChatbotAPI):
 
 !!! note "Dont forget"
     Import new model to npc-engine.services so that it is discovered. 
+
+### Using other services from your service
+
+You can use other services from your service by adding them to the `DEPENDENCIES` class variable list.
+
+When your service starts ControlService will create clients for each dependency.
+They can be accessed from inside the service with `self.get_client(name)` where `name` is the name of the dependency.
+
+These clients expose the same API as the dependency and can be just called from your service.
