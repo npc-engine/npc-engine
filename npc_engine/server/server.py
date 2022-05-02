@@ -9,7 +9,8 @@ import zmq
 import zmq.asyncio
 import traceback as tb
 
-from npc_engine.service_manager.service_manager import ServiceManager
+from npc_engine.server.control_service import ControlService
+from npc_engine.server.metadata_manager import MetadataManager
 
 
 class Server:
@@ -18,15 +19,15 @@ class Server:
     def __init__(
         self,
         zmq_context: zmq.asyncio.Context,
-        service_manager: ServiceManager,
-        port: str,
+        service_manager: ControlService,
+        metadata: MetadataManager,
         start_services: bool = True,
     ):
         """Create a server on the port."""
         self.context = zmq_context
         self.socket = self.context.socket(zmq.ROUTER)
         self.socket.setsockopt(zmq.LINGER, 0)
-        self.socket.bind(f"tcp://*:{port}")
+        self.socket.bind(f"tcp://*:{metadata.port}")
         self.service_manager = service_manager
         self.start_services = start_services
 

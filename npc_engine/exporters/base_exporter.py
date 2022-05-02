@@ -3,7 +3,7 @@ from typing import Any, List
 from abc import ABC, abstractmethod
 import inspect
 import click
-from npc_engine.service_manager.utils import start_test_server
+from npc_engine.server.utils import start_test_server
 
 
 class Exporter(ABC):

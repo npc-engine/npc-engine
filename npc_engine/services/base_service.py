@@ -1,7 +1,7 @@
 """Module with Model base class."""
-from typing import Dict
 from abc import ABC, abstractmethod
 import os
+from typing import List
 import yaml
 import zmq
 from loguru import logger
@@ -9,6 +9,7 @@ from jsonrpc import JSONRPCResponseManager, Dispatcher
 from pathlib import Path
 
 from npc_engine.services.utils.config import get_type_from_dict
+from npc_engine.service_clients import ServiceClient
 
 
 class BaseService(ABC):
@@ -24,7 +25,14 @@ class BaseService(ABC):
         super().__init_subclass__(**kwargs)
         cls.models[cls.__name__] = cls
 
-    def __init__(self, context: zmq.Context, uri: str, *args, **kwargs):
+    def __init__(
+        self,
+        context: zmq.Context,
+        uri: str,
+        dependency_clients: List[ServiceClient] = [],
+        *args,
+        **kwargs,
+    ):
         """Initialize the service."""
         self.zmq_context = context
         self.socket = context.socket(zmq.REP)
@@ -34,6 +42,8 @@ class BaseService(ABC):
             os.chmod(Path(uri.replace("ipc://", "")).parent, 777)
         self.socket.bind(uri)
 
+        self.dependency_clients = dependency_clients
+
     @classmethod
     @abstractmethod
     def get_api_name(cls):
@@ -41,15 +51,35 @@ class BaseService(ABC):
         pass
 
     @classmethod
-    def create(cls, context: zmq.Context, path: str, uri: str):
+    def create(
+        cls,
+        context: zmq.Context,
+        path: str,
+        uri: str,
+        dependency_clients: List[ServiceClient] = [],
+    ):
         """Create a service from the path."""
         config_path = os.path.join(path, "config.yml")
         with open(config_path) as f:
             config_dict = yaml.load(f, Loader=yaml.Loader)
         config_dict["model_path"] = path
-        config_dict["uri"] = uri
         model_cls = cls.models[get_type_from_dict(config_dict)]
-        return model_cls(**config_dict, context=context)
+        return model_cls(
+            **config_dict,
+            context=context,
+            uri=uri,
+            dependency_clients=dependency_clients,
+        )
+
+    def get_client(self, name: str):
+        """Get a dependency client by name to use it in service logic."""
+        try:
+            return self.dependency_clients[self.DEPENDENCIES.index(name)]
+        except ValueError:
+            raise ValueError(
+                f"No dependency client with name {name}."
+                + "Please make sure you specified all dependencies in the `DEPENDENCIES` class variable."
+            )
 
     def start(self):
         """Run service main loop that accepts json rpc."""
@@ -70,7 +100,7 @@ class BaseService(ABC):
 
     def status(self):
         """Return status of the service."""
-        from npc_engine.service_manager.service_manager import ServiceState
+        from npc_engine.server.control_service import ServiceState
 
         return ServiceState.RUNNING
 
@@ -84,32 +114,7 @@ class BaseService(ABC):
         api_dict = {}
         for method in type(self).API_METHODS:
             logger.info(
-                f"Registering method {method} for model {type(self).__name__}"
-            )  # TODO
+                f"Registering method {method} for service {type(self).__name__}"
+            )
             api_dict[method] = getattr(self, method)
         return api_dict
-
-    @classmethod
-    def get_metadata(cls, path: str) -> Dict[str, str]:
-        """Print the model from the path."""
-        path = path.replace("\\", os.path.sep)
-        model_id = path.split(os.path.sep)[-1]
-        config_path = os.path.join(path, "config.yml")
-        readme_path = os.path.join(path, "README.md")
-        with open(config_path) as f:
-            config_dict = yaml.load(f, Loader=yaml.Loader)
-        try:
-            with open(readme_path) as f:
-                readme = f.read().split("---")[-1]
-        except FileNotFoundError:
-            readme = ""
-        return {
-            "id": model_id,
-            "service": get_type_from_dict(config_dict),
-            "path": path,
-            "service_short_description": cls.models[
-                get_type_from_dict(config_dict)
-            ].__doc__.split("\n\n")[0],
-            "service_description": cls.models[get_type_from_dict(config_dict)].__doc__,
-            "readme": readme,
-        }

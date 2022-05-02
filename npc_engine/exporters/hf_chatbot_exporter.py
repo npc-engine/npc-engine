@@ -9,7 +9,7 @@ import json
 import zmq
 
 from npc_engine.service_clients import ControlClient, ChatbotClient
-from npc_engine.service_manager.utils import schema_to_json
+from npc_engine.server.utils import schema_to_json
 
 
 class HfChatbotExporter(BaseHfExporter):

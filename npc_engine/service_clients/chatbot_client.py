@@ -57,3 +57,8 @@ class ChatbotClient(ServiceClient):
             "params": [],
         }
         return self.send_request(request)
+
+    @classmethod
+    def get_api_name(cls) -> str:
+        """Return the name of the API."""
+        return "ChatbotAPI"
