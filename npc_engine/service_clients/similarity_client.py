@@ -7,13 +7,11 @@ from npc_engine.service_clients.service_client import ServiceClient
 class SimilarityClient(ServiceClient):
     """Json rpc client for chatbot service."""
 
-    def __init__(
-        self, zmq_context: zmq.Context, port: str, service_id: str = "SimilarityAPI"
-    ):
+    def __init__(self, zmq_context: zmq.Context, service_id: str = "SimilarityAPI"):
         """Connect to the server on the port."""
-        super().__init__(zmq_context, port, service_id)
+        super().__init__(zmq_context, service_id)
 
-    def compare(self, query: str, context: List[str]) -> str:
+    def compare(self, query: str, context: List[str]) -> float:
         """Send a chatbot request to the server.
 
         Args:

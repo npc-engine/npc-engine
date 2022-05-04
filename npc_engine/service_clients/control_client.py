@@ -7,9 +7,9 @@ from npc_engine.service_clients.service_client import ServiceClient
 class ControlClient(ServiceClient):
     """Json rpc client for control requests."""
 
-    def __init__(self, zmq_context: zmq.Context, port: str):
+    def __init__(self, zmq_context: zmq.Context):
         """Connect to the server on the port."""
-        super().__init__(zmq_context, port, "control")
+        super().__init__(zmq_context, "control")
 
     def start_service(self, service_id):
         """Send a start service request to the server."""

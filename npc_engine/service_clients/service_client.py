@@ -6,6 +6,8 @@ from abc import ABC, abstractclassmethod
 
 from loguru import logger
 
+from npc_engine.server.metadata_manager import MetadataManager
+
 
 class ServiceClient(ABC):
     """Base json rpc client."""
@@ -17,7 +19,7 @@ class ServiceClient(ABC):
         super().__init_subclass__(**kwargs)
         cls.clients[cls.get_api_name()] = cls
 
-    def __init__(self, zmq_context: zmq.Context, port: str, service_id: str = None):
+    def __init__(self, zmq_context: zmq.Context, service_id: str = None):
         """Connect to the server on the port."""
         self.context = zmq_context
         self.socket = self.context.socket(zmq.REQ)
@@ -28,7 +30,7 @@ class ServiceClient(ABC):
             if service_id
             else self.get_api_name().encode("utf-8"),
         )
-        self.socket.connect(f"tcp://localhost:{port}")
+        self.socket.connect(MetadataManager.build_ipc_uri("self"))
         logger.info("Connected to server")
 
     def send_request(self, request: Dict[str, Any]) -> Any:
