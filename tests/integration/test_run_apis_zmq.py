@@ -3,10 +3,15 @@ import subprocess
 import os
 import zmq
 import time
-from npc_engine.service_clients import ControlClient, ChatbotClient
+from npc_engine.service_clients import (
+    ControlClient,
+    ChatbotClient,
+    SimilarityClient,
+    SequenceClassifierClient,
+)
 
 
-class TestClass:
+class TestHTTPServer:
     """Test that starts npc-engine server and tests all the APIs"""
 
     def setup_class(cls):
@@ -27,12 +32,14 @@ class TestClass:
                 "--port",
                 "5555",
                 "--start-all",
-            ]
+                "--protocol",
+                "http",
+            ],
         )
         cls.server_process = server_process
         cls.context = zmq.Context()
         print("Starting server")
-        cls.cc = ControlClient(cls.context, "5555")
+        cls.cc = ControlClient(cls.context)
         all_running = False
         services = [svc["id"] for svc in cls.cc.get_services_metadata()]
         while not all_running:
@@ -240,11 +247,11 @@ class TestClass:
         print(message)
         assert "result" in message
 
-    def test_chatbot_api(self):
+    def test_chatbot_api_self_client(self):
 
         #  Socket to talk to server
         print("Connecting to npc-engine server")
-        hf_chatbot = ChatbotClient(type(self).context, "5555", "mock-distilgpt2")
+        hf_chatbot = ChatbotClient(type(self).context)
 
         ctx = hf_chatbot.get_context_template()
 
@@ -254,6 +261,28 @@ class TestClass:
         reply = hf_chatbot.generate_reply(ctx)
         assert isinstance(reply, str)
         assert reply != ""
+
+    def test_similarity_api_self_client(self):
+        print("Connecting to npc-engine server")
+        similarity_client = SimilarityClient(type(self).context)
+
+        reply = similarity_client.compare(
+            "I shall provide you my assistance", ["I shall provide you my assistance"]
+        )
+
+        assert isinstance(reply, list)
+        assert isinstance(reply[0], float)
+
+    def test_sequence_classifier_self_client(self):
+        print("Connecting to npc-engine server")
+        sequence_classifier_client = SequenceClassifierClient(type(self).context)
+
+        reply = sequence_classifier_client.classify(
+            ["I shall provide you my assistance", ["hello", "world"]]
+        )
+
+        assert len(reply) == 2
+        assert len(reply[0]) == len(reply[1])
 
     def teardown_class(cls):
         services = cls.cc.get_services_metadata()
