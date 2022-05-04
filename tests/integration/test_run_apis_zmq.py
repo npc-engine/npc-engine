@@ -11,7 +11,7 @@ from npc_engine.service_clients import (
 )
 
 
-class TestHTTPServer:
+class TestZMQServer:
     """Test that starts npc-engine server and tests all the APIs"""
 
     def setup_class(cls):
