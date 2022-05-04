@@ -10,11 +10,10 @@ class SequenceClassifierClient(ServiceClient):
     def __init__(
         self,
         zmq_context: zmq.Context,
-        port: str,
         service_id: str = "SequenceClassifierAPI",
     ):
         """Connect to the server on the port."""
-        super().__init__(zmq_context, port, service_id)
+        super().__init__(zmq_context, service_id)
 
     def classify(self, texts: List[Union[str, Tuple[str, str]]]) -> str:
         """Send a classify request to the SequenceClassifierAPI.

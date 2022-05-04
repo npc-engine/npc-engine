@@ -120,7 +120,7 @@ class MetadataManager:
         for path in paths:
             with open(os.path.join(path, "config.yml")) as f:
                 config_dict = yaml.safe_load(f)
-                uri = f"ipc://{os.path.join(user_cache_dir('npc-engine', 'NpcEngine'), os.path.basename(path))}"
+                uri = self.build_ipc_uri(os.path.basename(path))
                 cls = getattr(
                     services,
                     config_dict.get("model_type", config_dict.get("type", None)),
@@ -137,6 +137,11 @@ class MetadataManager:
 
         return svcs
 
+    @staticmethod
+    def build_ipc_uri(service_id: str) -> str:
+        """Build ipc uri for the given service."""
+        return f"ipc://{os.path.join(user_cache_dir('npc-engine', 'NpcEngine'), service_id)}"
+
     def get_metadata(self, service_id: str) -> Dict[str, str]:
         """Print the model from the path."""
         service_id = self.resolve_service(service_id)
@@ -150,7 +155,8 @@ class MetadataManager:
         except FileNotFoundError:
             readme = ""
         cls = getattr(
-            services, config_dict.get("model_type", config_dict.get("type", None)),
+            services,
+            config_dict.get("model_type", config_dict.get("type", None)),
         )
         return {
             "id": self.services[service_id].id,

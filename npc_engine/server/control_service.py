@@ -14,6 +14,9 @@ from loguru import logger
 from npc_engine.service_clients.service_client import ServiceClient
 
 
+# TODO: Start dependency services
+
+
 class ServiceState:
     """Enum for the state of the service."""
 
@@ -93,7 +96,10 @@ class ControlService:
         if hasattr(self, "services"):
             for service_id, service in self.services.items():
                 if service["state"] == ServiceState.RUNNING:
-                    self.stop_service(service_id)
+                    try:
+                        self.stop_service(service_id)
+                    except Exception:
+                        pass
 
     async def handle_request(self, address: str, request: str) -> str:
         """Parse request string and route request to correct service.

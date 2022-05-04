@@ -21,7 +21,15 @@ class TestClass:
             os.path.dirname(__file__), "..", "..", "npc_engine", "resources", "models"
         )
         server_process = subprocess.Popen(
-            ["python", cli_path, "run", "--models-path", models_path, "--port", "5555",]
+            [
+                "python",
+                cli_path,
+                "run",
+                "--models-path",
+                models_path,
+                "--port",
+                "5555",
+            ]
         )
         cls.server_process = server_process
         time.sleep(25)  # Wait until server has loaded all the models

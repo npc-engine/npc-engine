@@ -36,7 +36,10 @@ def cli(verbose: bool):
             sys.stdout, format="{time} {level} {message}", level="INFO", enqueue=True
         )
         click.echo(
-            click.style("Verbose logging is enabled. (LEVEL=INFO)", fg="yellow",)
+            click.style(
+                "Verbose logging is enabled. (LEVEL=INFO)",
+                fg="yellow",
+            )
         )
 
 
@@ -46,9 +49,9 @@ def cli(verbose: bool):
 @click.option(
     "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models")
 )
-def run(port: str, start_all: bool, models_path: str):
+@click.option("--protocol", default="zmq", type=click.Choice(["zmq", "http"]))
+def run(port: str, start_all: bool, models_path: str, protocol: str):
     """Load the models and start JSONRPC server."""
-    from npc_engine.server.server import Server
     from npc_engine.server.control_service import ControlService
 
     context = zmq.asyncio.Context(io_threads=5)
@@ -56,7 +59,17 @@ def run(port: str, start_all: bool, models_path: str):
     metadata_manager.port = port
     control_service = ControlService(context, metadata_manager)
 
-    server = Server(context, control_service, metadata_manager, start_all)
+    if protocol == "zmq":
+        from npc_engine.server.server import ZMQServer
+
+        server = ZMQServer(context, control_service, metadata_manager, start_all)
+    elif protocol == "http":
+        from npc_engine.server.server import HTTPServer
+
+        server = HTTPServer(context, control_service, metadata_manager, start_all)
+    else:
+        raise ValueError("Unknown protocol: {}".format(protocol))
+
     server.run()
 
 
@@ -163,7 +176,8 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
         )
         remove_source = True
     export_path = os.path.join(
-        models_path, "exported-" + model_id.replace("\\", "/").split("/")[-1],
+        models_path,
+        "exported-" + model_id.replace("\\", "/").split("/")[-1],
     )
     os.makedirs(export_path, exist_ok=True)
 
@@ -191,7 +205,10 @@ def test_model(models_path: str, model_id: str):
 
     if not validate_local_model(models_path, model_id):
         click.echo(
-            click.style(f"{(model_id)} is not a valid npc-engine model.", fg="red",)
+            click.style(
+                f"{(model_id)} is not a valid npc-engine model.",
+                fg="red",
+            )
         )
         return 1
     model_type = get_model_type_name(models_path, model_id)

@@ -127,7 +127,10 @@ def build_output_shape_tensor_(
             )
         dimensions_retrieved.append(f"{shape_name}_{i}")
     node = so.node(
-        "Concat", inputs=dimensions_retrieved, outputs=[f"{shape_name}"], axis=0,
+        "Concat",
+        inputs=dimensions_retrieved,
+        outputs=[f"{shape_name}"],
+        axis=0,
     )
     so.add_node(graph, node)
 
@@ -164,7 +167,10 @@ def create_dim_variable_(
             f"{shape_name}_{dim_id}"
             if postfix is None
             else f"{shape_name}_{dim_id}_{postfix}",
-            np.array([dim_value if dim_value != 0 else 1], dtype=np.int64,),
+            np.array(
+                [dim_value if dim_value != 0 else 1],
+                dtype=np.int64,
+            ),
             data_type="INT64",
         )
 
