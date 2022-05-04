@@ -165,7 +165,10 @@ class TestHTTPServer:
                 "http://localhost:5555", verify_ssl=False, json=request
             ) as resp:
                 message = await resp.json()
-                print(message)
+                try:
+                    print(message)
+                except UnicodeEncodeError:
+                    pass
                 assert "result" in message
 
     @pytest.mark.asyncio
