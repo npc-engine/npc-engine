@@ -206,18 +206,6 @@
   
 
       
-        
-  
-  
-
-
-  <li class="md-tabs__item">
-    <a href="../../benchmarks/" class="md-tabs__link">
-      Benchmarks
-    </a>
-  </li>
-
-      
     </ul>
   </div>
 </nav>
@@ -978,7 +966,7 @@
   
     <li class="md-nav__item">
       <a href="../models/" class="md-nav__link">
-        Models
+        Services
       </a>
     </li>
   
@@ -1001,21 +989,6 @@
           
         </ul>
       </nav>
-    </li>
-  
-
-    
-      
-      
-      
-
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../../benchmarks/" class="md-nav__link">
-        Benchmarks
-      </a>
     </li>
   
 
@@ -3150,16 +3123,12 @@ class EchoAPI(BaseService):
 <span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ChatbotClient</span><span class="p">(</span><span class="n">ServiceClient</span><span class="p">):</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ChatbotClient</span><span class="p">(</span><span class="n">ServiceClient</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Json rpc client for chatbot service.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ChatbotAPI&quot;</span>
-    <span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ChatbotAPI&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Connect to the server on the port.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">generate_reply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Send a chatbot request to the server.</span>
@@ -3229,7 +3198,7 @@ class EchoAPI(BaseService):
 
 
 <h5 class="doc doc-heading" id="npc_engine.service_clients.chatbot_client.ChatbotClient.__init__">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">service_id</span><span class="o">=</span><span class="s1">&#39;ChatbotAPI&#39;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">service_id</span><span class="o">=</span><span class="s1">&#39;ChatbotAPI&#39;</span><span class="p">)</span></code>
 
 
 </h5>
@@ -3243,13 +3212,9 @@ class EchoAPI(BaseService):
           <summary>Source code in <code>npc_engine\service_clients\chatbot_client.py</code></summary>
           <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ChatbotAPI&quot;</span>
-<span class="p">):</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;ChatbotAPI&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Connect to the server on the port.&quot;&quot;&quot;</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
     </div>
@@ -3299,7 +3264,9 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\chatbot_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
@@ -3310,9 +3277,7 @@ class EchoAPI(BaseService):
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">generate_reply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">generate_reply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Send a chatbot request to the server.</span>
 
 <span class="sd">    Args:</span>
@@ -3354,10 +3319,10 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\chatbot_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">61</span>
-<span class="normal">62</span>
-<span class="normal">63</span>
-<span class="normal">64</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
+<span class="normal">60</span>
+<span class="normal">61</span>
+<span class="normal">62</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span> <span class="nf">get_api_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return the name of the API.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;ChatbotAPI&quot;</span>
@@ -3386,15 +3351,15 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\chatbot_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">41</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">39</span>
+<span class="normal">40</span>
+<span class="normal">41</span>
 <span class="normal">42</span>
 <span class="normal">43</span>
 <span class="normal">44</span>
 <span class="normal">45</span>
 <span class="normal">46</span>
-<span class="normal">47</span>
-<span class="normal">48</span>
-<span class="normal">49</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_context_template</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_context_template</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Send a chatbot request to the server.&quot;&quot;&quot;</span>
     <span class="n">request</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;jsonrpc&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
@@ -3428,15 +3393,15 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\chatbot_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
 <span class="normal">32</span>
 <span class="normal">33</span>
 <span class="normal">34</span>
 <span class="normal">35</span>
 <span class="normal">36</span>
-<span class="normal">37</span>
-<span class="normal">38</span>
-<span class="normal">39</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_prompt_template</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_prompt_template</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Send a chatbot request to the server.&quot;&quot;&quot;</span>
     <span class="n">request</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;jsonrpc&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
@@ -3470,15 +3435,15 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\chatbot_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">51</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
 <span class="normal">52</span>
 <span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
-<span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_special_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_special_tokens</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Send a chatbot request to the server.&quot;&quot;&quot;</span>
     <span class="n">request</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;jsonrpc&quot;</span><span class="p">:</span> <span class="s2">&quot;2.0&quot;</span><span class="p">,</span>
@@ -3626,9 +3591,9 @@ class EchoAPI(BaseService):
 <span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ControlClient</span><span class="p">(</span><span class="n">ServiceClient</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Json rpc client for control requests.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Connect to the server on the port.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="s2">&quot;control&quot;</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="s2">&quot;control&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">start_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_id</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Send a start service request to the server.&quot;&quot;&quot;</span>
@@ -3703,7 +3668,7 @@ class EchoAPI(BaseService):
 
 
 <h5 class="doc doc-heading" id="npc_engine.service_clients.control_client.ControlClient.__init__">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">)</span></code>
 
 
 </h5>
@@ -3717,9 +3682,9 @@ class EchoAPI(BaseService):
           <summary>Source code in <code>npc_engine\service_clients\control_client.py</code></summary>
           <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Connect to the server on the port.&quot;&quot;&quot;</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="s2">&quot;control&quot;</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="s2">&quot;control&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
     </div>
@@ -4070,18 +4035,16 @@ class EchoAPI(BaseService):
 <span class="normal">33</span>
 <span class="normal">34</span>
 <span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SequenceClassifierClient</span><span class="p">(</span><span class="n">ServiceClient</span><span class="p">):</span>
+<span class="normal">36</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SequenceClassifierClient</span><span class="p">(</span><span class="n">ServiceClient</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Json rpc client for chatbot service.&quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span>
-        <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SequenceClassifierAPI&quot;</span><span class="p">,</span>
     <span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Connect to the server on the port.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">classify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Send a classify request to the SequenceClassifierAPI.</span>
@@ -4121,7 +4084,7 @@ class EchoAPI(BaseService):
 
 
 <h5 class="doc doc-heading" id="npc_engine.service_clients.sequence_classifier_client.SequenceClassifierClient.__init__">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">service_id</span><span class="o">=</span><span class="s1">&#39;SequenceClassifierAPI&#39;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">service_id</span><span class="o">=</span><span class="s1">&#39;SequenceClassifierAPI&#39;</span><span class="p">)</span></code>
 
 
 </h5>
@@ -4139,15 +4102,13 @@ class EchoAPI(BaseService):
 <span class="normal">13</span>
 <span class="normal">14</span>
 <span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">16</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span>
-    <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SequenceClassifierAPI&quot;</span><span class="p">,</span>
 <span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Connect to the server on the port.&quot;&quot;&quot;</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
     </div>
@@ -4197,7 +4158,8 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\sequence_classifier_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">19</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">18</span>
+<span class="normal">19</span>
 <span class="normal">20</span>
 <span class="normal">21</span>
 <span class="normal">22</span>
@@ -4209,8 +4171,7 @@ class EchoAPI(BaseService):
 <span class="normal">28</span>
 <span class="normal">29</span>
 <span class="normal">30</span>
-<span class="normal">31</span>
-<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">classify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">31</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">classify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">texts</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Send a classify request to the SequenceClassifierAPI.</span>
 
 <span class="sd">    Args:</span>
@@ -4252,10 +4213,10 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\sequence_classifier_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">33</span>
+<span class="normal">34</span>
 <span class="normal">35</span>
-<span class="normal">36</span>
-<span class="normal">37</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">36</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span> <span class="nf">get_api_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return the name of the API.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;SequenceClassifierAPI&quot;</span>
@@ -4335,9 +4296,7 @@ class EchoAPI(BaseService):
 
           <details class="quote">
             <summary>Source code in <code>npc_engine\service_clients\service_client.py</code></summary>
-            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
-<span class="normal">11</span>
-<span class="normal">12</span>
+            <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">12</span>
 <span class="normal">13</span>
 <span class="normal">14</span>
 <span class="normal">15</span>
@@ -4390,7 +4349,9 @@ class EchoAPI(BaseService):
 <span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
-<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ServiceClient</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">ServiceClient</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Base json rpc client.&quot;&quot;&quot;</span>
 
     <span class="n">clients</span> <span class="o">=</span> <span class="p">{}</span>
@@ -4400,7 +4361,7 @@ class EchoAPI(BaseService):
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init_subclass__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="bp">cls</span><span class="o">.</span><span class="n">clients</span><span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">get_api_name</span><span class="p">()]</span> <span class="o">=</span> <span class="bp">cls</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Connect to the server on the port.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">zmq_context</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REQ</span><span class="p">)</span>
@@ -4411,7 +4372,7 @@ class EchoAPI(BaseService):
             <span class="k">if</span> <span class="n">service_id</span>
             <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_api_name</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tcp://localhost:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">MetadataManager</span><span class="o">.</span><span class="n">build_ipc_uri</span><span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">))</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Connected to server&quot;</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">send_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
@@ -4468,7 +4429,7 @@ class EchoAPI(BaseService):
 
 
 <h5 class="doc doc-heading" id="npc_engine.service_clients.service_client.ServiceClient.__init__">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">service_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">service_id</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
 
 </h5>
@@ -4480,9 +4441,7 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\service_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">20</span>
-<span class="normal">21</span>
-<span class="normal">22</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">22</span>
 <span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
@@ -4492,7 +4451,9 @@ class EchoAPI(BaseService):
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
-<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="normal">32</span>
+<span class="normal">33</span>
+<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Connect to the server on the port.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">zmq_context</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">socket</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">REQ</span><span class="p">)</span>
@@ -4503,7 +4464,7 @@ class EchoAPI(BaseService):
         <span class="k">if</span> <span class="n">service_id</span>
         <span class="k">else</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_api_name</span><span class="p">()</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;tcp://localhost:</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">socket</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">MetadataManager</span><span class="o">.</span><span class="n">build_ipc_uri</span><span class="p">(</span><span class="s2">&quot;self&quot;</span><span class="p">))</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Connected to server&quot;</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
@@ -4530,10 +4491,10 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\service_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">15</span>
-<span class="normal">16</span>
-<span class="normal">17</span>
-<span class="normal">18</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">17</span>
+<span class="normal">18</span>
+<span class="normal">19</span>
+<span class="normal">20</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">__init_subclass__</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Init subclass where service classes get registered to be discovered.&quot;&quot;&quot;</span>
     <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">__init_subclass__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="bp">cls</span><span class="o">.</span><span class="n">clients</span><span class="p">[</span><span class="bp">cls</span><span class="o">.</span><span class="n">get_api_name</span><span class="p">()]</span> <span class="o">=</span> <span class="bp">cls</span>
@@ -4565,15 +4526,15 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\service_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">57</span>
-<span class="normal">58</span>
-<span class="normal">59</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
 <span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
 <span class="normal">63</span>
 <span class="normal">64</span>
-<span class="normal">65</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="normal">65</span>
+<span class="normal">66</span>
+<span class="normal">67</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span> <span class="nf">get_api_client</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">api_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ServiceClient&quot;</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return the client for the api.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
@@ -4607,10 +4568,10 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\service_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
-<span class="normal">53</span>
-<span class="normal">54</span>
-<span class="normal">55</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractclassmethod</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">54</span>
+<span class="normal">55</span>
+<span class="normal">56</span>
+<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@abstractclassmethod</span>
 <span class="k">def</span> <span class="nf">get_api_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return the name of the API.&quot;&quot;&quot;</span>
     <span class="k">pass</span>
@@ -4681,9 +4642,7 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\service_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">34</span>
-<span class="normal">35</span>
-<span class="normal">36</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">36</span>
 <span class="normal">37</span>
 <span class="normal">38</span>
 <span class="normal">39</span>
@@ -4697,7 +4656,9 @@ class EchoAPI(BaseService):
 <span class="normal">47</span>
 <span class="normal">48</span>
 <span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">send_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="normal">50</span>
+<span class="normal">51</span>
+<span class="normal">52</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">send_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Send request to the server and return the response.</span>
 
 <span class="sd">    Args:</span>
@@ -4815,18 +4776,14 @@ class EchoAPI(BaseService):
 <span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SimilarityClient</span><span class="p">(</span><span class="n">ServiceClient</span><span class="p">):</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">SimilarityClient</span><span class="p">(</span><span class="n">ServiceClient</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Json rpc client for chatbot service.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SimilarityAPI&quot;</span>
-    <span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SimilarityAPI&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Connect to the server on the port.&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
         <span class="sd">&quot;&quot;&quot;Send a chatbot request to the server.</span>
 
 <span class="sd">        Args:</span>
@@ -4864,7 +4821,7 @@ class EchoAPI(BaseService):
 
 
 <h5 class="doc doc-heading" id="npc_engine.service_clients.similarity_client.SimilarityClient.__init__">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">service_id</span><span class="o">=</span><span class="s1">&#39;SimilarityAPI&#39;</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">service_id</span><span class="o">=</span><span class="s1">&#39;SimilarityAPI&#39;</span><span class="p">)</span></code>
 
 
 </h5>
@@ -4878,13 +4835,9 @@ class EchoAPI(BaseService):
           <summary>Source code in <code>npc_engine\service_clients\similarity_client.py</code></summary>
           <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">10</span>
 <span class="normal">11</span>
-<span class="normal">12</span>
-<span class="normal">13</span>
-<span class="normal">14</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-    <span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SimilarityAPI&quot;</span>
-<span class="p">):</span>
+<span class="normal">12</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">zmq_context</span><span class="p">:</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;SimilarityAPI&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Connect to the server on the port.&quot;&quot;&quot;</span>
-    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
+    <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">zmq_context</span><span class="p">,</span> <span class="n">service_id</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
     </div>
@@ -4934,7 +4887,9 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\similarity_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">16</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">14</span>
+<span class="normal">15</span>
+<span class="normal">16</span>
 <span class="normal">17</span>
 <span class="normal">18</span>
 <span class="normal">19</span>
@@ -4945,9 +4900,7 @@ class EchoAPI(BaseService):
 <span class="normal">24</span>
 <span class="normal">25</span>
 <span class="normal">26</span>
-<span class="normal">27</span>
-<span class="normal">28</span>
-<span class="normal">29</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">compare</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">query</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">context</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Send a chatbot request to the server.</span>
 
 <span class="sd">    Args:</span>
@@ -4989,10 +4942,10 @@ class EchoAPI(BaseService):
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\service_clients\similarity_client.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">31</span>
-<span class="normal">32</span>
-<span class="normal">33</span>
-<span class="normal">34</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
+<span class="normal">30</span>
+<span class="normal">31</span>
+<span class="normal">32</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@classmethod</span>
 <span class="k">def</span> <span class="nf">get_api_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Return the name of the API.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="s2">&quot;SimilarityAPI&quot;</span>
@@ -5060,13 +5013,13 @@ class EchoAPI(BaseService):
       
       
         
-        <a href="../models/" class="md-footer__link md-footer__link--next" aria-label="Next: Models" rel="next">
+        <a href="../models/" class="md-footer__link md-footer__link--next" aria-label="Next: Services" rel="next">
           <div class="md-footer__title">
             <div class="md-ellipsis">
               <span class="md-footer__direction">
                 Next
               </span>
-              Models
+              Services
             </div>
           </div>
           <div class="md-footer__button md-icon">
