@@ -1,6 +1,7 @@
 """Module that implements ZMQ server communication over JSON-RPC 2.0 (https://www.jsonrpc.org/specification)."""
 from abc import ABC, abstractmethod
 import sys
+import os
 import json
 import logging
 from loguru import logger
@@ -13,10 +14,6 @@ import traceback as tb
 from npc_engine.server.control_service import ControlService
 from npc_engine.server.metadata_manager import MetadataManager
 from aiohttp import web
-
-
-# TODO:
-# - Add HTTP server to avoid problems with ZMQ socket on integration side
 
 
 class BaseServer(ABC):
@@ -42,6 +39,9 @@ class BaseServer(ABC):
             asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         self.socket_ipc = self.context.socket(zmq.ROUTER)
         self.socket_ipc.setsockopt(zmq.LINGER, 0)
+        ipc_uri = metadata.build_ipc_uri("self")
+        ipc_path = ipc_uri.replace("ipc://", "")
+        os.makedirs(os.path.dirname(ipc_path), exist_ok=True)
         self.socket_ipc.bind(metadata.build_ipc_uri("self"))
         self.metadata = metadata
         self.service_manager = service_manager
