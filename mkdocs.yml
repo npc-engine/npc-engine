@@ -21,10 +21,8 @@ nav:
       - Build From Source: inference_engine/building.md
       - Exporting models: inference_engine/exporting_models.md
       - API Classes: inference_engine/api_classes.md
-      - Models: inference_engine/models.md
+      - Services: inference_engine/models.md
       - Reference: inference_engine/reference.md
-
-  - Benchmarks: benchmarks.md
 extra:
   version:
     provider: mike
