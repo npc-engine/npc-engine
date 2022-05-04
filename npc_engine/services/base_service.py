@@ -1,7 +1,7 @@
 """Module with Model base class."""
 from abc import ABC, abstractmethod
 import os
-from typing import List
+from typing import Callable, Dict
 import yaml
 import zmq
 from loguru import logger
@@ -9,7 +9,6 @@ from jsonrpc import JSONRPCResponseManager, Dispatcher
 from pathlib import Path
 
 from npc_engine.services.utils.config import get_type_from_dict
-from npc_engine.service_clients import ServiceClient
 
 
 class BaseService(ABC):
@@ -26,14 +25,15 @@ class BaseService(ABC):
         cls.models[cls.__name__] = cls
 
     def __init__(
-        self,
-        context: zmq.Context,
-        uri: str,
-        dependency_clients: List[ServiceClient] = [],
-        *args,
-        **kwargs,
+        self, context: zmq.Context, uri: str, dependency_clients=[], *args, **kwargs,
     ):
-        """Initialize the service."""
+        """Initialize the service.
+
+        Args:
+            context (zmq.Context): ZMQ context
+            uri (str): URI to serve requests to
+            dependency_clients (list(ServiceClient)): List of dependency clients
+        """
         self.zmq_context = context
         self.socket = context.socket(zmq.REP)
         self.socket.setsockopt(zmq.LINGER, 0)
@@ -46,19 +46,23 @@ class BaseService(ABC):
 
     @classmethod
     @abstractmethod
-    def get_api_name(cls):
+    def get_api_name(cls) -> str:
         """Return the name of the API."""
         pass
 
     @classmethod
-    def create(
-        cls,
-        context: zmq.Context,
-        path: str,
-        uri: str,
-        dependency_clients: List[ServiceClient] = [],
-    ):
-        """Create a service from the path."""
+    def create(cls, context: zmq.Context, path: str, uri: str, dependency_clients=[]):
+        """Create a service from the path.
+
+        Args:
+            context (zmq.Context): ZMQ context
+            path (str): Path to the service
+            uri (str): URI to serve requests to
+            dependency_clients (list(ServiceClient)): List of dependency clients
+
+        Returns:
+            Service: Service instance
+        """
         config_path = os.path.join(path, "config.yml")
         with open(config_path) as f:
             config_dict = yaml.load(f, Loader=yaml.Loader)
@@ -72,7 +76,14 @@ class BaseService(ABC):
         )
 
     def get_client(self, name: str):
-        """Get a dependency client by name to use it in service logic."""
+        """Get a dependency client by name to use it in service logic.
+
+        Args:
+            name (str): Name of the dependency
+
+        Returns:
+            ServiceClient: Client for the dependency
+        """
         try:
             return self.dependency_clients[self.DEPENDENCIES.index(name)]
         except ValueError:
@@ -99,12 +110,16 @@ class BaseService(ABC):
             self.zmq_context.destroy()
 
     def status(self):
-        """Return status of the service."""
+        """Return status of the service.
+
+        Returns:
+            ServiceState
+        """
         from npc_engine.server.control_service import ServiceState
 
         return ServiceState.RUNNING
 
-    def build_api_dict(self):
+    def build_api_dict(self) -> Dict[str, Callable]:
         """Build api dict.
 
         Returns:
