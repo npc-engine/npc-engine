@@ -155,7 +155,8 @@ class MetadataManager:
         except FileNotFoundError:
             readme = ""
         cls = getattr(
-            services, config_dict.get("model_type", config_dict.get("type", None)),
+            services,
+            config_dict.get("model_type", config_dict.get("type", None)),
         )
         return {
             "id": self.services[service_id].id,

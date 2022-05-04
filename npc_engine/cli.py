@@ -36,7 +36,10 @@ def cli(verbose: bool):
             sys.stdout, format="{time} {level} {message}", level="INFO", enqueue=True
         )
         click.echo(
-            click.style("Verbose logging is enabled. (LEVEL=INFO)", fg="yellow",)
+            click.style(
+                "Verbose logging is enabled. (LEVEL=INFO)",
+                fg="yellow",
+            )
         )
 
 
@@ -173,7 +176,8 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
         )
         remove_source = True
     export_path = os.path.join(
-        models_path, "exported-" + model_id.replace("\\", "/").split("/")[-1],
+        models_path,
+        "exported-" + model_id.replace("\\", "/").split("/")[-1],
     )
     os.makedirs(export_path, exist_ok=True)
 
@@ -201,7 +205,10 @@ def test_model(models_path: str, model_id: str):
 
     if not validate_local_model(models_path, model_id):
         click.echo(
-            click.style(f"{(model_id)} is not a valid npc-engine model.", fg="red",)
+            click.style(
+                f"{(model_id)} is not a valid npc-engine model.",
+                fg="red",
+            )
         )
         return 1
     model_type = get_model_type_name(models_path, model_id)

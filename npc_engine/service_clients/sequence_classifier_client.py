@@ -8,7 +8,9 @@ class SequenceClassifierClient(ServiceClient):
     """Json rpc client for chatbot service."""
 
     def __init__(
-        self, zmq_context: zmq.Context, service_id: str = "SequenceClassifierAPI",
+        self,
+        zmq_context: zmq.Context,
+        service_id: str = "SequenceClassifierAPI",
     ):
         """Connect to the server on the port."""
         super().__init__(zmq_context, service_id)

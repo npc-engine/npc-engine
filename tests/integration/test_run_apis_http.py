@@ -250,4 +250,3 @@ class TestHTTPServer:
             cls.cc.stop_service(service["id"])
         cls.context.destroy()
         cls.server_process.kill()
-

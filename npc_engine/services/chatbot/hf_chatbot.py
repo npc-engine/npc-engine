@@ -88,7 +88,10 @@ class HfChatbot(ChatbotAPI):
         inputs = self.create_starter_inputs(prompt)
         utterance = []
         for i in range(self.max_steps):
-            o = self.model.run(None, inputs,)
+            o = self.model.run(
+                None,
+                inputs,
+            )
             logit = o[0][0, -1, :]
             if i < self.min_length:
                 logit[self.eos_token_id] = float("-inf")
