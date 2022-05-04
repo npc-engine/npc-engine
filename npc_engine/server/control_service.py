@@ -14,6 +14,9 @@ from loguru import logger
 from npc_engine.service_clients.service_client import ServiceClient
 
 
+# TODO: Start dependency services
+
+
 class ServiceState:
     """Enum for the state of the service."""
 
