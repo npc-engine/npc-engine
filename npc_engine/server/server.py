@@ -38,12 +38,14 @@ class BaseServer(ABC):
             start_services: Start services on initialization.
         """
         self.context = zmq_context
+        if sys.platform == "win32":
+            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         self.socket_ipc = self.context.socket(zmq.ROUTER)
         self.socket_ipc.setsockopt(zmq.LINGER, 0)
         self.socket_ipc.bind(metadata.build_ipc_uri("self"))
-
+        self.metadata = metadata
         self.service_manager = service_manager
-        self.start_services = start_services
+        self.start_services_flag = start_services
 
     @abstractmethod
     def run(self):
@@ -63,6 +65,12 @@ class BaseServer(ABC):
         """Handle interrupts loop."""
         while True:
             await asyncio.sleep(1)
+
+    async def start_services(self):
+        """Start all services."""
+        logger.info("Starting services")
+        for service in self.service_manager.services:
+            self.service_manager.start_service(service)
 
     async def handle_reply(self, socket, address: str, message: str):
         """Handle message and reply."""
@@ -113,17 +121,14 @@ class ZMQServer(BaseServer):
     def run(self):
         """Run an npc-engine json rpc server and start listening."""
         logger.info("Starting server")
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         asyncio.get_event_loop().run_until_complete(self.loop())
 
     async def loop(self):
         """Run the server loop."""
         try:
-            logger.info("Starting services")
-            if self.start_services:
-                for service in self.service_manager.services:
-                    self.service_manager.start_service(service)
+            if self.start_services_flag:
+                await asyncio.create_task(self.start_services())
+
             logger.info("Starting message loop")
             await asyncio.gather(
                 self.msg_loop(self.socket),
@@ -147,42 +152,41 @@ class HTTPServer(BaseServer):
     def __init__(
         self,
         zmq_context: zmq.asyncio.Context,
-        metadata: MetadataManager,
         service_manager: ControlService,
+        metadata: MetadataManager,
         start_services: bool = True,
     ):
         """Create a server on the port."""
         super().__init__(zmq_context, service_manager, metadata, start_services)
         self.app = web.Application()
-        self.app.add_routes([web.get("/", self.handle_request)])
-        self.app.add_routes([web.get("/{name}", self.handle_request)])
-        self.app.add_routes([web.post("/", self.handle_request)])
-        self.app.add_routes([web.post("/{name}", self.handle_request)])
+        self.app.router.add_get("/", self.handle_request)
+        self.app.router.add_get("/{name}", self.handle_request)
+        self.app.router.add_post("/", self.handle_request)
+        self.app.router.add_post("/{name}", self.handle_request)
+
+    async def add_msg_loop_ipc(self, app):
+        """Add message loop for IPC."""
+        app["msg_loop_ipc"] = asyncio.create_task(self.msg_loop(self.socket_ipc))
+
+    async def add_interrupt_loop(self, app):
+        """Add interrupt loop."""
+        app["interrupt_loop"] = asyncio.create_task(self.interrupt_loop())
 
     def run(self):
         """Run an npc-engine json rpc server and start listening."""
-        if self.start_services:
-            for service in self.service_manager.services:
-                self.service_manager.start_service(service)
+        if self.start_services_flag:
+            self.app.on_startup.append(
+                lambda _: asyncio.create_task(self.start_services())
+            )
+        self.app.on_startup.append(self.add_msg_loop_ipc)
+        self.app.on_startup.append(self.add_interrupt_loop)
         logger.info("Starting server")
-        web.run_app(self.init_and_get_app(), port=self.metadata.port)
-
-    async def init_and_get_app(self):
-        """Run the ipc loop and return aiohttp app."""
-        logger.info("Starting services")
-        if self.start_services:
-            for service in self.service_manager.services:
-                self.service_manager.start_service(service)
-        logger.info("Starting message loop")
-        asyncio.create_task(
-            asyncio.gather(self.msg_loop(self.socket_ipc), self.interrupt_loop(),)
-        )
-        return self.app
+        web.run_app(self.app, host="localhost", port=int(self.metadata.port))
 
     async def handle_request(self, request):
         """Handle request."""
         try:
-            address = request.transport.match_info.get("name")
+            address = request.match_info.get("name", "xxxxxxxxxxxx")
             message = await request.text()
             response = await self.service_manager.handle_request(address, message)
         except Exception as e:
@@ -194,4 +198,4 @@ class HTTPServer(BaseServer):
                 else None,
             }
             response = json.dumps(response)
-        return web.Response(text=response)
+        return web.json_response(text=response)

@@ -96,7 +96,10 @@ class ControlService:
         if hasattr(self, "services"):
             for service_id, service in self.services.items():
                 if service["state"] == ServiceState.RUNNING:
-                    self.stop_service(service_id)
+                    try:
+                        self.stop_service(service_id)
+                    except Exception:
+                        pass
 
     async def handle_request(self, address: str, request: str) -> str:
         """Parse request string and route request to correct service.
@@ -164,7 +167,8 @@ class ControlService:
         )
         try:
             asyncio.create_task(self.confirm_state_coroutine(service_id))
-        except RuntimeError:
+        except RuntimeError as e:
+            logger.exception(e)
             logger.warning(
                 "Create task to confirm service state failed."
                 + " Probably asyncio loop is not running."
