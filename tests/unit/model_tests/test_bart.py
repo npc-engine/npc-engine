@@ -33,7 +33,9 @@ bart_paths = [
 
 def test_reply_default():
     """Check if chatbot works"""
-    chatbot_model = BaseService.create(zmq.Context(), bart_paths[0], uri="test")
+    chatbot_model = BaseService.create(
+        zmq.Context(), bart_paths[0], service_id="test", uri="test"
+    )
 
     print(f"Special tokens {chatbot_model.get_special_tokens()}")
 

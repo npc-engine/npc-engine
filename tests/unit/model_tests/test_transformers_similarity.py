@@ -37,7 +37,7 @@ def test_transformers_similarity():
     """Check custom testing"""
     try:
         semantic_tests = services.BaseService.create(
-            zmq.Context(), model_paths[0], "inproc://test"
+            zmq.Context(), model_paths[0], "inproc://test", service_id="test"
         )
     except FileNotFoundError:
         return

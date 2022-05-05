@@ -11,11 +11,6 @@ from npc_engine.server.metadata_manager import MetadataManager
 from jsonrpc import JSONRPCResponseManager, Dispatcher
 from loguru import logger
 
-from npc_engine.service_clients.service_client import ServiceClient
-
-
-# TODO: Start dependency services
-
 
 class ServiceState:
     """Enum for the state of the service."""
@@ -39,20 +34,12 @@ def service_process(metadata: MetadataManager, service_id: str,) -> None:
         rotation="10 MB",
         enqueue=True,
     )
-    dependency_apis = [
-        metadata.services[metadata.resolve_service(dependency, None)].api_name
-        for dependency in metadata.services[service_id].dependencies
-    ]
     context = zmq.Context()
-    dependency_clients = [
-        ServiceClient.get_api_client(api_name)(context, metadata.port, service_id)
-        for api_name in dependency_apis
-    ]
     service = services.BaseService.create(
         context,
         metadata.services[service_id].path,
         metadata.services[service_id].uri,
-        dependency_clients=dependency_clients,
+        service_id,
     )
     service.start()
 
@@ -75,10 +62,12 @@ class ControlService:
         self.control_dispatcher.update(
             {
                 "get_services_metadata": self.metadata.get_services_metadata,
+                "get_service_metadata": self.metadata.get_metadata,
                 "get_service_status": self.get_service_status,
                 "start_service": self.start_service,
                 "stop_service": self.stop_service,
                 "restart_service": self.restart_service,
+                "check_dependency": self.check_dependency,
             }
         )
         self.zmq_context = zmq_context
@@ -210,3 +199,9 @@ class ControlService:
         """Restart the service."""
         self.stop_service(service_id)
         self.start_service(service_id)
+
+    def check_dependency(self, service_id, dependency):
+        """Check if the service has the dependency."""
+        service_id = self.metadata.resolve_service(service_id, None)
+        self.metadata.services[service_id].append(dependency)
+        self.metadata.check_dependency_cycles()

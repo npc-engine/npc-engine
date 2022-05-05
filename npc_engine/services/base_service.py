@@ -7,15 +7,13 @@ import zmq
 from loguru import logger
 from jsonrpc import JSONRPCResponseManager, Dispatcher
 from pathlib import Path
+from npc_engine.service_clients.control_client import ControlClient
 
 from npc_engine.services.utils.config import get_type_from_dict
 
 
 class BaseService(ABC):
     """Abstract base class for managed services."""
-
-    # A list of resolvable names of services that Service depends on
-    DEPENDENCIES = []
 
     models = {}
 
@@ -25,12 +23,7 @@ class BaseService(ABC):
         cls.models[cls.__name__] = cls
 
     def __init__(
-        self,
-        context: zmq.Context,
-        uri: str,
-        dependency_clients=[],
-        *args,
-        **kwargs,
+        self, service_id: str, context: zmq.Context, uri: str, *args, **kwargs,
     ):
         """Initialize the service.
 
@@ -46,8 +39,8 @@ class BaseService(ABC):
             os.makedirs(Path(uri.replace("ipc://", "")).parent, exist_ok=True)
             os.chmod(Path(uri.replace("ipc://", "")).parent, 777)
         self.socket.bind(uri)
-
-        self.dependency_clients = dependency_clients
+        self.service_id = service_id
+        self.control_client = None
 
     @classmethod
     @abstractmethod
@@ -56,14 +49,13 @@ class BaseService(ABC):
         pass
 
     @classmethod
-    def create(cls, context: zmq.Context, path: str, uri: str, dependency_clients=[]):
+    def create(cls, context: zmq.Context, path: str, uri: str, service_id: str):
         """Create a service from the path.
 
         Args:
             context (zmq.Context): ZMQ context
             path (str): Path to the service
             uri (str): URI to serve requests to
-            dependency_clients (list(ServiceClient)): List of dependency clients
 
         Returns:
             Service: Service instance
@@ -73,14 +65,9 @@ class BaseService(ABC):
             config_dict = yaml.load(f, Loader=yaml.Loader)
         config_dict["model_path"] = path
         model_cls = cls.models[get_type_from_dict(config_dict)]
-        return model_cls(
-            **config_dict,
-            context=context,
-            uri=uri,
-            dependency_clients=dependency_clients,
-        )
+        return model_cls(**config_dict, context=context, uri=uri, service_id=service_id)
 
-    def get_client(self, name: str):
+    def create_client(self, name: str):
         """Get a dependency client by name to use it in service logic.
 
         Args:
@@ -89,13 +76,13 @@ class BaseService(ABC):
         Returns:
             ServiceClient: Client for the dependency
         """
-        try:
-            return self.dependency_clients[self.DEPENDENCIES.index(name)]
-        except ValueError:
-            raise ValueError(
-                f"No dependency client with name {name}."
-                + "Please make sure you specified all dependencies in the `DEPENDENCIES` class variable."
-            )
+        if self.control_client is None:
+            self.control_client = ControlClient(self.zmq_context)
+        if name == "control":
+            return self.control_client
+        self.control_client.check_dependency(self.service_id, name)
+        api_name = self.control_client.get_service_metadata(name)["api_name"]
+        return ControlClient.get_api_client(api_name)(self.zmq_context, name)
 
     def start(self):
         """Run service main loop that accepts json rpc."""

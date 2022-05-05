@@ -35,7 +35,7 @@ hf_chatbot_paths = [
 def test_reply_default():
     """Check if chatbot works"""
     chatbot_model = BaseService.create(
-        zmq.Context(), hf_chatbot_paths[0], "inproc://test"
+        zmq.Context(), hf_chatbot_paths[0], "inproc://test", service_id="test"
     )
 
     print(f"Special tokens {chatbot_model.get_special_tokens()}")

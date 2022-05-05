@@ -1,12 +1,13 @@
 """Module that implements lifetime and discoverability of the services."""
 from typing import Dict
-from appdirs import user_cache_dir
 import os
 
 from npc_engine import services
 from collections import namedtuple
 import ntpath
 import yaml
+
+from npc_engine.server.utils import build_ipc_uri
 
 
 ServiceDescriptor = namedtuple(
@@ -21,8 +22,6 @@ class MetadataManager:
     def __init__(self, path: str, port: str):
         """Create model manager and load models from the given path."""
         self.services = self._scan_path(path)
-        self.check_dependencies()
-        self.check_dependency_cycles()
         self.models_path = path
         self.port = port
 
@@ -56,18 +55,6 @@ class MetadataManager:
             if method_name in service.api_methods:
                 return service_id
         raise ValueError(f"Service with method {method_name} not found")
-
-    def check_dependencies(self):
-        """Check if all dependencies are installed."""
-        for service_id, service in self.services.items():
-            if service.dependencies:
-                for dependency in service.dependencies:
-                    try:
-                        self.resolve_service(dependency)
-                    except ValueError:
-                        raise ValueError(
-                            f"Service {service_id} requires {dependency} service to be present."
-                        )
 
     def check_dependency_cycles(self):
         """Check if there are any dependency cycles."""
@@ -120,7 +107,7 @@ class MetadataManager:
         for path in paths:
             with open(os.path.join(path, "config.yml")) as f:
                 config_dict = yaml.safe_load(f)
-                uri = self.build_ipc_uri(os.path.basename(path))
+                uri = build_ipc_uri(os.path.basename(path))
                 cls = getattr(
                     services,
                     config_dict.get("model_type", config_dict.get("type", None)),
@@ -132,15 +119,10 @@ class MetadataManager:
                     uri=uri,
                     api_name=cls.get_api_name(),
                     api_methods=cls.API_METHODS,
-                    dependencies=cls.DEPENDENCIES,
+                    dependencies=[],
                 )
 
         return svcs
-
-    @staticmethod
-    def build_ipc_uri(service_id: str) -> str:
-        """Build ipc uri for the given service."""
-        return f"ipc://{os.path.join(user_cache_dir('npc-engine', 'NpcEngine'), service_id)}"
 
     def get_metadata(self, service_id: str) -> Dict[str, str]:
         """Print the model from the path."""
@@ -155,8 +137,7 @@ class MetadataManager:
         except FileNotFoundError:
             readme = ""
         cls = getattr(
-            services,
-            config_dict.get("model_type", config_dict.get("type", None)),
+            services, config_dict.get("model_type", config_dict.get("type", None)),
         )
         return {
             "id": self.services[service_id].id,

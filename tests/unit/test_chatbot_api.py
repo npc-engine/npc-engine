@@ -19,7 +19,9 @@ template = """
 
 class MockChatbotModel(TextGenerationAPI):
     def __init__(self) -> None:
-        super().__init__(template, context=zmq.Context(), uri="inproc://test")
+        super().__init__(
+            template, service_id="test", context=zmq.Context(), uri="inproc://test"
+        )
 
     def run(self, prompt: str, temperature: float = 1, topk: int = None):
         assert (

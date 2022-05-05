@@ -42,7 +42,7 @@ nemo_stt_paths = [
 def test_sanity_check():
     try:
         stt = services.BaseService.create(
-            zmq.Context(), nemo_stt_paths[0], "inproc://test"
+            zmq.Context(), nemo_stt_paths[0], "inproc://test", service_id="test"
         )
     except FileNotFoundError:
         return
@@ -147,10 +147,7 @@ def test_tune_decoder_parameters():
         return float(wer_divident) / float(wer_divisor) if wer_divisor != 0 else 1
 
     result = gp_minimize(
-        objective,
-        [alpha_space, beta_space],
-        n_calls=10,
-        n_random_starts=4,
+        objective, [alpha_space, beta_space], n_calls=10, n_random_starts=4,
     )
     print(result)
 
@@ -162,18 +159,14 @@ def test_tune_decoder_parameters():
 def test_transcribe():
     try:
         stt = services.BaseService.create(
-            zmq.Context(), nemo_stt_paths[0], "inproc://test"
+            zmq.Context(), nemo_stt_paths[0], "inproc://test", service_id="test"
         )
     except FileNotFoundError:
         return
 
     audio = AudioSegment.from_file(
         os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "resources",
-            "stt_test.m4a",
+            os.path.dirname(__file__), "..", "..", "resources", "stt_test.m4a",
         )
     )
     audio = numpy.frombuffer(audio.raw_data, numpy.int16)
@@ -196,15 +189,13 @@ def test_transcribe():
 
 
 def test_transcribe():
-    stt = services.BaseService.create(zmq.Context(), nemo_stt_paths[0], "inproc://test")
+    stt = services.BaseService.create(
+        zmq.Context(), nemo_stt_paths[0], "inproc://test", service_id="test"
+    )
 
     audio = AudioSegment.from_file(
         os.path.join(
-            os.path.dirname(__file__),
-            "..",
-            "..",
-            "resources",
-            "stt_test.m4a",
+            os.path.dirname(__file__), "..", "..", "resources", "stt_test.m4a",
         )
     )
     audio = numpy.frombuffer(audio.raw_data, numpy.int16)
@@ -219,7 +210,7 @@ def test_transcribe():
 def test_decide_finished():
     try:
         stt = services.BaseService.create(
-            zmq.Context(), nemo_stt_paths[0], "inproc://test"
+            zmq.Context(), nemo_stt_paths[0], "inproc://test", service_id="test"
         )
     except FileNotFoundError:
         return

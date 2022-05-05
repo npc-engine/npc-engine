@@ -14,7 +14,9 @@ num_calls = 0
 
 class MockSimilarityModel(SimilarityAPI):
     def __init__(self) -> None:
-        super().__init__(10, context=zmq.Context(), uri="inproc://test")
+        super().__init__(
+            10, service_id="test", context=zmq.Context(), uri="inproc://test"
+        )
 
     def compute_embedding(self, line):
         return np.asarray([123]).reshape(1, 1)

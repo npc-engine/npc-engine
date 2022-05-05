@@ -38,7 +38,9 @@ flowtron_paths = [
 
 def test_flowtron():
     """Run flowtron inference, skip if no models in resources."""
-    tts_module = BaseService.create(zmq.Context(), flowtron_paths[0], "inproc://test")
+    tts_module = BaseService.create(
+        zmq.Context(), flowtron_paths[0], "inproc://test", service_id="test"
+    )
 
     test_line = "Test"
     tts_module.tts_start("6", test_line, 7)
@@ -57,7 +59,7 @@ def test_flowtron_manual():
     """Run flowtron inference, skip if no models in resources."""
     try:
         tts_module = BaseService.create(
-            zmq.Context(), flowtron_paths[0], "inproc://test"
+            zmq.Context(), flowtron_paths[0], "inproc://test", service_id="test"
         )
     except FileNotFoundError:
         return
