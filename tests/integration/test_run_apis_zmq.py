@@ -5,7 +5,7 @@ import zmq
 import time
 from npc_engine.service_clients import (
     ControlClient,
-    ChatbotClient,
+    TextGenerationClient,
     SimilarityClient,
     SequenceClassifierClient,
 )
@@ -125,7 +125,7 @@ class TestZMQServer:
         print(message)
         assert "result" in message
 
-    def test_no_id_chatbot_api(self):
+    def test_no_id_text_generation_api(self):
 
         #  Socket to talk to server
         print("Connecting to npc-engine server")
@@ -245,11 +245,11 @@ class TestZMQServer:
         print(message)
         assert "result" in message
 
-    def test_chatbot_api_self_client(self):
+    def test_text_generation_api_self_client(self):
 
         #  Socket to talk to server
         print("Connecting to npc-engine server")
-        hf_chatbot = ChatbotClient(type(self).context)
+        hf_chatbot = TextGenerationClient(type(self).context)
 
         ctx = hf_chatbot.get_context_template()
 

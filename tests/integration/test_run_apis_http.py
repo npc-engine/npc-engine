@@ -125,7 +125,7 @@ class TestHTTPServer:
                 assert "result" in message
 
     @pytest.mark.asyncio
-    async def test_no_id_chatbot_api(self):
+    async def test_no_id_text_generation_api(self):
         async with aiohttp.ClientSession() as session:
 
             request = {

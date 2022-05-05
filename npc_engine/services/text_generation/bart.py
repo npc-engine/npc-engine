@@ -3,13 +3,13 @@ from typing import Dict
 import numpy as np
 import scipy.special as scp
 import onnxruntime as rt
-from npc_engine.services.chatbot.chatbot_base import ChatbotAPI
+from npc_engine.services.text_generation.text_generation_base import TextGenerationAPI
 from tokenizers import Tokenizer
 import os
 import json
 
 
-class BartChatbot(ChatbotAPI):
+class BartChatbot(TextGenerationAPI):
     """BART based chatbot implementation class.
 
     This model class requires two ONNX models `encoder_bart.onnx` and `decoder_bart.onnx`

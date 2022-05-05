@@ -11,7 +11,7 @@ If you are running it on linux you should specify `cpu` extra instead of `dml` a
 
 To be able to ship it with your game you will need pyinstaller packaged version from:
 
-* [Releases page](https://github.com/eublefar/chatbot_server/releases)  
+* [Releases page](https://github.com/npc-engine/npc-engine/releases)  
 * Resulting folder after following [build instructions](../building/)
 
 If using packaged version you should run `cli.exe` inside the `npc-engine` folder instead of `npc-engine` command. 

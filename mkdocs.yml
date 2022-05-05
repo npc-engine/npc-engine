@@ -1,6 +1,6 @@
 site_name: npc-engine
 site_url: https://npc-engine.com/
-repo_url: https://github.com/eublefar/chatbot_server
+repo_url: https://github.com/npc-engine/npc-engine
 theme:
   name: "material"
   logo: "resources/settings.svg"

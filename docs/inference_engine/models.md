@@ -23,12 +23,12 @@ When service is started [ControlService](../reference/#npc_engine.server.control
       show_root_heading: true
       show_source: false
 
-:::npc_engine.services.chatbot.hf_chatbot.HfChatbot
+:::npc_engine.services.text_generation.hf_chatbot.HfChatbot
     rendering:
       show_root_heading: true
       show_source: false
 
-:::npc_engine.services.chatbot.bart.BartChatbot
+:::npc_engine.services.text_generation.bart.BartChatbot
     rendering:
       show_root_heading: true
       show_source: false
@@ -47,7 +47,7 @@ When service is started [ControlService](../reference/#npc_engine.server.control
 
 - ### Fantasy Chatbot
 
-    [BartChatbot](../reference/#npc_engine.services.chatbot.chatbot_base.ChatbotAPI)
+    [BartChatbot](../reference/#npc_engine.services.text_generation.bart.BartChatbot)
     trained on [LIGHT Dataset](https://parl.ai/projects/light/). 
     Model consumes both self, other personas and location dialogue is happening in.
 
@@ -80,9 +80,9 @@ When service is started [ControlService](../reference/#npc_engine.server.control
 You can use this dummy model example to create your own:
 
 ```python
-from npc_engine.services.chatbot.chatbot_base import ChatbotAPI
+from npc_engine.services.text_generation.text_generation_base import TextGenerationAPI
 
-class EchoService(ChatbotAPI):
+class EchoService(TextGenerationAPI):
 
     def __init__(self, model_path:str, *args, **kwargs):
         print("model is in {model_path}")
