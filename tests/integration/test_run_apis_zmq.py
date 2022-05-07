@@ -270,8 +270,8 @@ class TestZMQServer:
 
     def test_sequence_classifier_self_client(self):
         print("Connecting to npc-engine server")
-        sequence_classifier_client = npc_engine.service_clients.SequenceClassifierClient(
-            type(self).context
+        sequence_classifier_client = (
+            npc_engine.service_clients.SequenceClassifierClient(type(self).context)
         )
 
         reply = sequence_classifier_client.classify(

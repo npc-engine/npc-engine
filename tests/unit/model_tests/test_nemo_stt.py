@@ -147,7 +147,10 @@ def test_tune_decoder_parameters():
         return float(wer_divident) / float(wer_divisor) if wer_divisor != 0 else 1
 
     result = gp_minimize(
-        objective, [alpha_space, beta_space], n_calls=10, n_random_starts=4,
+        objective,
+        [alpha_space, beta_space],
+        n_calls=10,
+        n_random_starts=4,
     )
     print(result)
 
@@ -166,7 +169,11 @@ def test_transcribe():
 
     audio = AudioSegment.from_file(
         os.path.join(
-            os.path.dirname(__file__), "..", "..", "resources", "stt_test.m4a",
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "resources",
+            "stt_test.m4a",
         )
     )
     audio = numpy.frombuffer(audio.raw_data, numpy.int16)
@@ -195,7 +202,11 @@ def test_transcribe():
 
     audio = AudioSegment.from_file(
         os.path.join(
-            os.path.dirname(__file__), "..", "..", "resources", "stt_test.m4a",
+            os.path.dirname(__file__),
+            "..",
+            "..",
+            "resources",
+            "stt_test.m4a",
         )
     )
     audio = numpy.frombuffer(audio.raw_data, numpy.int16)

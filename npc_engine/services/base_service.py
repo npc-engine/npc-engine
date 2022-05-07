@@ -23,7 +23,12 @@ class BaseService(ABC):
         cls.models[cls.__name__] = cls
 
     def __init__(
-        self, service_id: str, context: zmq.Context, uri: str, *args, **kwargs,
+        self,
+        service_id: str,
+        context: zmq.Context,
+        uri: str,
+        *args,
+        **kwargs,
     ):
         """Initialize the service.
 

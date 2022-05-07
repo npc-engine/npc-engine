@@ -34,7 +34,8 @@ model_paths = [
 
 
 @pytest.mark.skipif(
-    len(model_paths) == 0, reason="Model missing",
+    len(model_paths) == 0,
+    reason="Model missing",
 )
 def test_transformers_classification():
     """Check custom testing"""

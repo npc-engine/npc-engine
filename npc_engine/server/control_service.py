@@ -23,7 +23,10 @@ class ServiceState:
     ERROR = "error"
 
 
-def service_process(metadata: MetadataManager, service_id: str,) -> None:
+def service_process(
+    metadata: MetadataManager,
+    service_id: str,
+) -> None:
     """Service subprocess function.
 
     Starts the service and runs it's loop.
@@ -48,7 +51,9 @@ class ControlService:
     """Service that manages other services and routes requests."""
 
     def __init__(
-        self, zmq_context: zmq.asyncio.Context, metadata_manager: MetadataManager,
+        self,
+        zmq_context: zmq.asyncio.Context,
+        metadata_manager: MetadataManager,
     ) -> None:
         """Initialize control service.
 
@@ -143,7 +148,9 @@ class ControlService:
             raise ValueError(f"Service {service_id} is already running")
 
         process = Process(
-            target=service_process, args=(self.metadata, service_id), daemon=True,
+            target=service_process,
+            args=(self.metadata, service_id),
+            daemon=True,
         )
         process.start()
         self.services[service_id]["process"] = process
