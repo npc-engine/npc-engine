@@ -1,4 +1,4 @@
-name: "Release Documentation Deployment"
+name: "Release Documentation"
 
 on:
   push:

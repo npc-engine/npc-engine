@@ -1,4 +1,4 @@
-name: "Master Branch Documentation Deployment"
+name: "Master Documentation"
 
 on:
   push:
