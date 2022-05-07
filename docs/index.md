@@ -5,7 +5,7 @@ hide:
 ---
 # Welcome
 
-NPC Engine is an inference engine that allows you to design game NPC AI using natural language.  
+NPC Engine is a deep learning and natural language processing toolkit aimed at designing game NPC AI using natural language.  
 
 It uses state of the art deep learning models and allows you to:
 

@@ -29,7 +29,11 @@ and execute cli.exe with run command
 ```
 npc-engine run --models-path models --port 5555
 ```
-This will start a server but if no models were added to the folder it will expose only conrol API.
+This will start a server using ZMQ sockets but if no models were added to the folder it will expose only control API.
+It's also possible to start the server with HTTP interface:
+```
+npc-engine run --models-path models --port 5555 --http
+```
 
 You can download default models via
 ```
@@ -39,7 +43,7 @@ npc-engine download-default-models --models-path models
 See descriptions of the default models in [Default Models](../models/#default-models) section.
 
 !!! note "NOTE"
-    Model API examples can be found in `npc-engine\tests\integration`.   
+    Service API usage examples can be found in `npc-engine\tests\integration`.   
 
 Now lets test npc-engine with this example request from python:
 
