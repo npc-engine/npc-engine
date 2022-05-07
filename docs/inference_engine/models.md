@@ -18,7 +18,7 @@ When service is started [ControlService](../reference/#npc_engine.server.control
       show_root_heading: true
       show_source: false
 
-:::npc_engine.services.text_generation.hf_chatbot.HfChatbot
+:::npc_engine.services.text_generation.hf_text_generation.HfChatbot
     rendering:
       show_root_heading: true
       show_source: false
