@@ -23,7 +23,7 @@ These are the existing API classes and corresponding API_METHODS:
       show_root_heading: true
       show_source: false
 
-:::npc_engine.services.chatbot.chatbot_base.ChatbotAPI
+:::npc_engine.services.text_generation.text_generation_base.TextGenerationAPI
     selection:
         members:
             - generate_reply

@@ -26,5 +26,9 @@ tox -e py38
 #### Compile to exe with
 
 ```
-pyinstaller --additional-hooks-dir hooks --exclude-module matplotlib --exclude-module jupyter --exclude-module torch --exclude-module torchvision .\npc-engine\cli.py --onedir
+> pyinstaller --hidden-import="sklearn.utils._cython_blas" --hidden-import="sklearn.neighbors.typedefs" ^
+--hidden-import="sklearn.neighbors.quad_tree" --hidden-import="sklearn.tree._utils" ^
+--hidden-import="sklearn.neighbors._typedefs" --hidden-import="sklearn.utils._typedefs" ^
+--hidden-import="sklearn.neighbors._partition_nodes" --additional-hooks-dir hooks ^
+--exclude-module tkinter --exclude-module matplotlib .\npc_engine\cli.py --onedir
 ```

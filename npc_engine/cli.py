@@ -49,8 +49,8 @@ def cli(verbose: bool):
 @click.option(
     "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models")
 )
-@click.option("--protocol", default="zmq", type=click.Choice(["zmq", "http"]))
-def run(port: str, start_all: bool, models_path: str, protocol: str):
+@click.option("--http/--zmq", default=False)
+def run(port: str, start_all: bool, models_path: str, http: bool):
     """Load the models and start JSONRPC server."""
     from npc_engine.server.control_service import ControlService
 
@@ -59,17 +59,14 @@ def run(port: str, start_all: bool, models_path: str, protocol: str):
     metadata_manager.port = port
     control_service = ControlService(context, metadata_manager)
 
-    if protocol == "zmq":
+    if not http:
         from npc_engine.server.server import ZMQServer
 
         server = ZMQServer(context, control_service, metadata_manager, start_all)
-    elif protocol == "http":
+    else:
         from npc_engine.server.server import HTTPServer
 
         server = HTTPServer(context, control_service, metadata_manager, start_all)
-    else:
-        raise ValueError("Unknown protocol: {}".format(protocol))
-
     server.run()
 
 

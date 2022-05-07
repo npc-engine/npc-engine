@@ -8,7 +8,7 @@ import os
 import json
 import zmq
 
-from npc_engine.service_clients import ControlClient, ChatbotClient
+from npc_engine.service_clients import ControlClient, TextGenerationClient
 from npc_engine.server.utils import schema_to_json
 
 
@@ -25,7 +25,7 @@ class HfChatbotExporter(BaseHfExporter):
     @classmethod
     def get_api(cls) -> str:
         """Get the api for the exporter."""
-        return "ChatbotAPI"
+        return "TextGenerationAPI"
 
     @classmethod
     def get_model_name(cls):
@@ -94,7 +94,7 @@ class HfChatbotExporter(BaseHfExporter):
         print(f"Context: {context}")
         zmq_context = zmq.Context()
         control_client = ControlClient(zmq_context, "5555")
-        chatbot_client = ChatbotClient(zmq_context, "5555", model_id)
+        chatbot_client = TextGenerationClient(zmq_context, "5555", model_id)
         control_client.start_service(model_id)
         time.sleep(1)
         response = None

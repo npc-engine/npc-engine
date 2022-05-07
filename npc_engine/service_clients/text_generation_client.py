@@ -4,10 +4,10 @@ import zmq
 from npc_engine.service_clients.service_client import ServiceClient
 
 
-class ChatbotClient(ServiceClient):
+class TextGenerationClient(ServiceClient):
     """Json rpc client for chatbot service."""
 
-    def __init__(self, zmq_context: zmq.Context, service_id: str = "ChatbotAPI"):
+    def __init__(self, zmq_context: zmq.Context, service_id: str = "TextGenerationAPI"):
         """Connect to the server on the port."""
         super().__init__(zmq_context, service_id)
 
@@ -59,4 +59,4 @@ class ChatbotClient(ServiceClient):
     @classmethod
     def get_api_name(cls) -> str:
         """Return the name of the API."""
-        return "ChatbotAPI"
+        return "TextGenerationAPI"

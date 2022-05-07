@@ -1,4 +1,4 @@
-"""Module that implements chatbot model API."""
+"""Module that implements text generation model API."""
 from typing import Dict, Any, List
 
 from abc import abstractmethod
@@ -9,8 +9,8 @@ from jinja2schema import infer, to_json_schema
 from npc_engine.server.utils import schema_to_json
 
 
-class ChatbotAPI(BaseService):
-    """Abstract base class for Chatbot models."""
+class TextGenerationAPI(BaseService):
+    """Abstract base class for text generation models."""
 
     API_METHODS: List[str] = [
         "generate_reply",
@@ -33,7 +33,7 @@ class ChatbotAPI(BaseService):
     @classmethod
     def get_api_name(cls) -> str:
         """Get the API name."""
-        return "ChatbotAPI"
+        return "TextGenerationAPI"
 
     def generate_reply(self, context: Dict[str, Any], *args, **kwargs) -> str:
         """Format the model prompt and generate response.
@@ -48,7 +48,7 @@ class ChatbotAPI(BaseService):
         """
         if not self.initialized:
             raise AssertionError(
-                "Can not generate replies before base Chatbot class was initialized"
+                "Can not generate replies before Base Service class was initialized"
             )
         prompt = self.template.render(**context, **self.get_special_tokens())
         return self.run(prompt, *args, **kwargs)

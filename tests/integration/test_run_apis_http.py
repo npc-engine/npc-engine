@@ -29,8 +29,7 @@ class TestHTTPServer:
                 "--port",
                 "5555",
                 "--start-all",
-                "--protocol",
-                "http",
+                "--http",
             ],
         )
         cls.server_process = server_process
@@ -125,7 +124,7 @@ class TestHTTPServer:
                 assert "result" in message
 
     @pytest.mark.asyncio
-    async def test_no_id_chatbot_api(self):
+    async def test_no_id_text_generation_api(self):
         async with aiohttp.ClientSession() as session:
 
             request = {

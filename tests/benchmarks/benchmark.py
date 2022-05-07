@@ -86,7 +86,7 @@ class TestClass:
         )
         # TODO: Add realtime factor for next results
 
-    def test_chatbot_api(self):
+    def test_text_generation_api(self):
         context = zmq.Context()
 
         #  Socket to talk to server

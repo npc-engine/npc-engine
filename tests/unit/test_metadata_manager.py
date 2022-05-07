@@ -39,22 +39,7 @@ class TestMetadataManager:
         model_manager.services["mock-distilgpt2"] = model_manager.services[
             "mock-distilgpt2"
         ]._replace(dependencies=["SimilarityAPI"])
-        model_manager.check_dependencies()
         model_manager.check_dependency_cycles()
-
-    def test_no_dep(self):
-        model_manager = MetadataManager(
-            os.path.join(os.path.dirname(__file__), "..", "resources", "models"), "5555"
-        )
-        model_manager.services["mock-distilgpt2"] = model_manager.services[
-            "mock-distilgpt2"
-        ]._replace(dependencies=["123"])
-        print(model_manager.services["mock-distilgpt2"].id)
-        with pytest.raises(
-            ValueError,
-            match="Service mock-distilgpt2 requires 123 service to be present.",
-        ):
-            model_manager.check_dependencies()
 
     def test_dep_cycle(self):
         model_manager = MetadataManager(

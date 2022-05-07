@@ -6,7 +6,7 @@ from abc import ABC, abstractclassmethod
 
 from loguru import logger
 
-from npc_engine.server.metadata_manager import MetadataManager
+from npc_engine.server.utils import build_ipc_uri
 
 
 class ServiceClient(ABC):
@@ -30,7 +30,7 @@ class ServiceClient(ABC):
             if service_id
             else self.get_api_name().encode("utf-8"),
         )
-        self.socket.connect(MetadataManager.build_ipc_uri("self"))
+        self.socket.connect(build_ipc_uri("self"))
         logger.info("Connected to server")
 
     def send_request(self, request: Dict[str, Any]) -> Any:

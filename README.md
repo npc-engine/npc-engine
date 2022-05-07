@@ -1,6 +1,6 @@
 # npc-engine
 
-NPC-Engine is a deep learning inference engine for designing NPC AI with natural language.
+NPC-Engine is a deep learning and NLP toolkit for designing NPC AI with natural language.
 
 [![Build Status](https://github.com/npc-engine/npc-engine/actions/workflows/documentation_master.yml/badge.svg)](https://npc-engine.github.io/npc-engine/)
 [![Build Status](https://github.com/npc-engine/npc-engine/actions/workflows/ci.yml/badge.svg)](https://npc-engine.github.io/npc-engine/)
@@ -17,7 +17,7 @@ NPC-Engine is a deep learning inference engine for designing NPC AI with natural
 
 The easiest way to get started is to use NPC Engine through the [Unity integration](https://assetstore.unity.com/packages/tools/ai/npc-engine-208498)
 
-You can also use it directly through ZMQ. See [Documentation](https://npc-engine.com/stable/inference_engine/running_server/) for more details.
+You can also use it directly through ZMQ or HTTP. See [Documentation](https://npc-engine.com/stable/inference_engine/running_server/) for more details.
 
 ## Roadmap
 
@@ -59,12 +59,6 @@ You can also use it directly through ZMQ. See [Documentation](https://npc-engine
     Build instructions here https://onnxruntime.ai/
 
 - (Optional) Run tests
-
-    + Download models to run tests against into `npc-engine\resources\models`.  
-    ```
-    npc-engine download-default-models --models-path npc-engine\resources\models
-    ```
-    + Run tests with
     ```
     > tox
     ```
@@ -72,7 +66,11 @@ You can also use it directly through ZMQ. See [Documentation](https://npc-engine
 - Compile to exe with:
 
     ```
-    > pyinstaller --additional-hooks-dir hooks --exclude-module matplotlib --exclude-module jupyter --exclude-module torch --exclude-module torchvision .\npc-engine\cli.py --onedir
+    > pyinstaller --hidden-import="sklearn.utils._cython_blas" --hidden-import="sklearn.neighbors.typedefs" ^
+    --hidden-import="sklearn.neighbors.quad_tree" --hidden-import="sklearn.tree._utils" ^
+    --hidden-import="sklearn.neighbors._typedefs" --hidden-import="sklearn.utils._typedefs" ^
+    --hidden-import="sklearn.neighbors._partition_nodes" --additional-hooks-dir hooks ^
+    --exclude-module tkinter --exclude-module matplotlib .\npc_engine\cli.py --onedir
     ```
 
 ## Authors

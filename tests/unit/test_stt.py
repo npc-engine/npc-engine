@@ -13,7 +13,7 @@ import mocks.zmq_mocks as zmq
 
 class MockSTTModel(SpeechToTextAPI):
     def __init__(self) -> None:
-        super().__init__(context=zmq.Context(), uri="inproc://test")
+        super().__init__(context=zmq.Context(), service_id="test", uri="inproc://test")
         self.i = 0
 
     def transcribe_frame(self, frame):

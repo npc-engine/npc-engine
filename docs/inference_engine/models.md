@@ -6,11 +6,6 @@ all the abstract methods required by the API class to function.
 
 [MetadataManager](../reference/#npc_engine.server.metadata_manager.MetadataManager) Scans the models folder. For each discovered subfolder ServiceManager validates the `config.yml` and creates descriptors with metadata for each service. The mandatory field of `config.yml` is `type` (or `model_type`) that must contain correct service class that was discovered and registered by `BaseService` parent class. This service class will be instantiated with parsed dictionary as parameters on [ControlService.start_service](../reference/#npc_engine.server.control_service.ControlService.start_service) request to `control` service. 
 
-## Service inter-communication
-
-Each service class may define class variable `DEPENDENCIES` that contains list of other resolvable service names that are used by this service. These services will be validated by ServiceManager to be configured and to not contain cyclic dependencies. They will also be started before this service.
-
-Service is then free to use it's dependencies in its own logic.
 
 ## How is their API exposed?
 
@@ -23,12 +18,12 @@ When service is started [ControlService](../reference/#npc_engine.server.control
       show_root_heading: true
       show_source: false
 
-:::npc_engine.services.chatbot.hf_chatbot.HfChatbot
+:::npc_engine.services.text_generation.hf_chatbot.HfChatbot
     rendering:
       show_root_heading: true
       show_source: false
 
-:::npc_engine.services.chatbot.bart.BartChatbot
+:::npc_engine.services.text_generation.bart.BartChatbot
     rendering:
       show_root_heading: true
       show_source: false
@@ -47,7 +42,7 @@ When service is started [ControlService](../reference/#npc_engine.server.control
 
 - ### Fantasy Chatbot
 
-    [BartChatbot](../reference/#npc_engine.services.chatbot.chatbot_base.ChatbotAPI)
+    [BartChatbot](../reference/#npc_engine.services.text_generation.bart.BartChatbot)
     trained on [LIGHT Dataset](https://parl.ai/projects/light/). 
     Model consumes both self, other personas and location dialogue is happening in.
 
@@ -80,9 +75,9 @@ When service is started [ControlService](../reference/#npc_engine.server.control
 You can use this dummy model example to create your own:
 
 ```python
-from npc_engine.services.chatbot.chatbot_base import ChatbotAPI
+from npc_engine.services.text_generation.text_generation_base import TextGenerationAPI
 
-class EchoService(ChatbotAPI):
+class EchoService(TextGenerationAPI):
 
     def __init__(self, model_path:str, *args, **kwargs):
         print("model is in {model_path}")
@@ -99,9 +94,7 @@ class EchoService(ChatbotAPI):
 
 ### Using other services from your service
 
-You can use other services from your service by adding them to the `DEPENDENCIES` class variable list.
+You can use other services from your service by using service clients.
 
-When your service starts ControlService will create clients for each dependency.
-They can be accessed from inside the service with `self.get_client(name)` where `name` is the name of the dependency.
-
+They can be created from inside the service with `self.create_client(name)` where `name` is the name of the dependency.
 These clients expose the same API as the dependency and can be just called from your service.

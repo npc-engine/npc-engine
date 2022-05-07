@@ -42,7 +42,7 @@ nemo_stt_paths = [
 def test_sanity_check():
     try:
         stt = services.BaseService.create(
-            zmq.Context(), nemo_stt_paths[0], "inproc://test"
+            zmq.Context(), nemo_stt_paths[0], "inproc://test", service_id="test"
         )
     except FileNotFoundError:
         return
@@ -162,7 +162,7 @@ def test_tune_decoder_parameters():
 def test_transcribe():
     try:
         stt = services.BaseService.create(
-            zmq.Context(), nemo_stt_paths[0], "inproc://test"
+            zmq.Context(), nemo_stt_paths[0], "inproc://test", service_id="test"
         )
     except FileNotFoundError:
         return
@@ -196,7 +196,9 @@ def test_transcribe():
 
 
 def test_transcribe():
-    stt = services.BaseService.create(zmq.Context(), nemo_stt_paths[0], "inproc://test")
+    stt = services.BaseService.create(
+        zmq.Context(), nemo_stt_paths[0], "inproc://test", service_id="test"
+    )
 
     audio = AudioSegment.from_file(
         os.path.join(
@@ -219,7 +221,7 @@ def test_transcribe():
 def test_decide_finished():
     try:
         stt = services.BaseService.create(
-            zmq.Context(), nemo_stt_paths[0], "inproc://test"
+            zmq.Context(), nemo_stt_paths[0], "inproc://test", service_id="test"
         )
     except FileNotFoundError:
         return

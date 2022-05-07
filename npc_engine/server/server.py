@@ -15,6 +15,8 @@ from npc_engine.server.control_service import ControlService
 from npc_engine.server.metadata_manager import MetadataManager
 from aiohttp import web
 
+from npc_engine.server.utils import build_ipc_uri
+
 
 class BaseServer(ABC):
     """Base JSON RPC server."""
@@ -39,10 +41,10 @@ class BaseServer(ABC):
             asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         self.socket_ipc = self.context.socket(zmq.ROUTER)
         self.socket_ipc.setsockopt(zmq.LINGER, 0)
-        ipc_uri = metadata.build_ipc_uri("self")
+        ipc_uri = build_ipc_uri("self")
         ipc_path = ipc_uri.replace("ipc://", "")
         os.makedirs(os.path.dirname(ipc_path), exist_ok=True)
-        self.socket_ipc.bind(metadata.build_ipc_uri("self"))
+        self.socket_ipc.bind(build_ipc_uri("self"))
         self.metadata = metadata
         self.service_manager = service_manager
         self.start_services_flag = start_services

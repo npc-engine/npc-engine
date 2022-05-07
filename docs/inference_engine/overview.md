@@ -1,4 +1,4 @@
-NPC Engine is a local python [JSON-RPC](https://www.jsonrpc.org/specification) server. It is using 0MQ TCP sockets and it can used with any programming language that has 0MQ bindings.
+NPC Engine is a local python [JSON-RPC](https://www.jsonrpc.org/specification) server. It supports using 0MQ TCP sockets and HTTP protocols.
 
 The main goal of this server is to provide access to inference services that handle various functionalities required for storytelling and in-game AI.
 

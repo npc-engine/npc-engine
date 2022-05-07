@@ -1,11 +1,11 @@
-"""Huggingface chatbot interface client implementation."""
+"""Huggingface sequence classifier interface client implementation."""
 from typing import List, Tuple, Union
 import zmq
 from npc_engine.service_clients.service_client import ServiceClient
 
 
 class SequenceClassifierClient(ServiceClient):
-    """Json rpc client for chatbot service."""
+    """Json rpc client for sequence classifier service."""
 
     def __init__(
         self,
@@ -19,7 +19,7 @@ class SequenceClassifierClient(ServiceClient):
         """Send a classify request to the SequenceClassifierAPI.
 
         Args:
-            texts: List of texts to classify.
+            texts: Batch of texts to classify.
         """
         request = {
             "jsonrpc": "2.0",

@@ -1,5 +1,5 @@
 """Chatbot test."""
-from npc_engine.services.chatbot import ChatbotAPI
+from npc_engine.services.text_generation import TextGenerationAPI
 import inspect
 import os
 import sys
@@ -17,9 +17,11 @@ template = """
 """
 
 
-class MockChatbotModel(ChatbotAPI):
+class MockChatbotModel(TextGenerationAPI):
     def __init__(self) -> None:
-        super().__init__(template, context=zmq.Context(), uri="inproc://test")
+        super().__init__(
+            template, service_id="test", context=zmq.Context(), uri="inproc://test"
+        )
 
     def run(self, prompt: str, temperature: float = 1, topk: int = None):
         assert (

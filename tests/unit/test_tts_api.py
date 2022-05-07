@@ -14,7 +14,7 @@ import pytest
 
 class MockTTSModel(TextToSpeechAPI):
     def __init__(self) -> None:
-        super().__init__(context=zmq.Context(), uri="inproc://test")
+        super().__init__(context=zmq.Context(), service_id="test", uri="inproc://test")
 
     def run(self, speaker_id: str, text: str, n_chunks: int):
         return iter([np.asarray([123]).reshape(1, 1)])

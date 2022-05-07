@@ -61,6 +61,26 @@ class ControlClient(ServiceClient):
         }
         return self.send_request(request)
 
+    def get_service_metadata(self, service_id: str) -> Dict[str, Any]:
+        """Send a get services metadata request to the server."""
+        request = {
+            "jsonrpc": "2.0",
+            "method": "get_service_metadata",
+            "id": 0,
+            "params": [service_id],
+        }
+        return self.send_request(request)
+
+    def check_dependency(self, service_id, dependency_id) -> bool:
+        """Send a check dependency request to the server."""
+        request = {
+            "jsonrpc": "2.0",
+            "method": "check_dependency",
+            "id": 0,
+            "params": [service_id, dependency_id],
+        }
+        return self.send_request(request)
+
     @classmethod
     def get_api_name(cls) -> str:
         """Return the name of the API."""

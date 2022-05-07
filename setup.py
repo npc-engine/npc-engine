@@ -33,7 +33,7 @@ with open("requirements_doc.txt", encoding="utf-8") as f:
 
 setup(
     name="npc-engine",
-    description="ZMQ JSONRPC 2.0 server for text generation and speech synthesis.",
+    description="Deep learning inference and NLP toolkit for game development.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     packages=find_packages(exclude=["*.tests", "*.tests.*", "tests.*", "tests"]),

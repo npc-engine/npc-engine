@@ -3,12 +3,7 @@ import subprocess
 import os
 import zmq
 import time
-from npc_engine.service_clients import (
-    ControlClient,
-    ChatbotClient,
-    SimilarityClient,
-    SequenceClassifierClient,
-)
+import npc_engine.service_clients
 
 
 class TestZMQServer:
@@ -37,7 +32,7 @@ class TestZMQServer:
         cls.server_process = server_process
         cls.context = zmq.Context()
         print("Starting server")
-        cls.cc = ControlClient(cls.context)
+        cls.cc = npc_engine.service_clients.ControlClient(cls.context)
         all_running = False
         services = [svc["id"] for svc in cls.cc.get_services_metadata()]
         while not all_running:
@@ -125,7 +120,7 @@ class TestZMQServer:
         print(message)
         assert "result" in message
 
-    def test_no_id_chatbot_api(self):
+    def test_no_id_text_generation_api(self):
 
         #  Socket to talk to server
         print("Connecting to npc-engine server")
@@ -245,11 +240,11 @@ class TestZMQServer:
         print(message)
         assert "result" in message
 
-    def test_chatbot_api_self_client(self):
+    def test_text_generation_api_self_client(self):
 
         #  Socket to talk to server
         print("Connecting to npc-engine server")
-        hf_chatbot = ChatbotClient(type(self).context)
+        hf_chatbot = npc_engine.service_clients.TextGenerationClient(type(self).context)
 
         ctx = hf_chatbot.get_context_template()
 
@@ -262,7 +257,9 @@ class TestZMQServer:
 
     def test_similarity_api_self_client(self):
         print("Connecting to npc-engine server")
-        similarity_client = SimilarityClient(type(self).context)
+        similarity_client = npc_engine.service_clients.SimilarityClient(
+            type(self).context
+        )
 
         reply = similarity_client.compare(
             "I shall provide you my assistance", ["I shall provide you my assistance"]
@@ -273,7 +270,9 @@ class TestZMQServer:
 
     def test_sequence_classifier_self_client(self):
         print("Connecting to npc-engine server")
-        sequence_classifier_client = SequenceClassifierClient(type(self).context)
+        sequence_classifier_client = (
+            npc_engine.service_clients.SequenceClassifierClient(type(self).context)
+        )
 
         reply = sequence_classifier_client.classify(
             ["I shall provide you my assistance", ["hello", "world"]]

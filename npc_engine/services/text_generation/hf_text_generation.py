@@ -3,14 +3,14 @@ from typing import Any, Dict
 import numpy as np
 import scipy.special as scp
 import onnxruntime as rt
-from npc_engine.services.chatbot.chatbot_base import ChatbotAPI
+from npc_engine.services.text_generation.text_generation_base import TextGenerationAPI
 from tokenizers import Tokenizer
 import os
 import json
 from npc_engine.services.utils import DTYPE_MAP
 
 
-class HfChatbot(ChatbotAPI):
+class HfChatbot(TextGenerationAPI):
     """Chatbot that uses Huggingface transformer architectures.
 
     ONNX export of Huggingface transformer is required (see https://huggingface.co/docs/transformers/serialization).

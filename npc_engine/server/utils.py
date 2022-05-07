@@ -1,6 +1,9 @@
 """Utility functions for RPC communication."""
 from typing import Any, Dict, Callable
+import os
 import subprocess
+
+from platformdirs import user_cache_dir
 
 
 def schema_to_json(
@@ -35,4 +38,11 @@ def start_test_server(port: str, models_path: str):  # pragma: no cover
             models_path,
         ],
         creationflags=subprocess.CREATE_NEW_CONSOLE,
+    )
+
+
+def build_ipc_uri(service_id: str) -> str:
+    """Build ipc uri for the given service."""
+    return (
+        f"ipc://{os.path.join(user_cache_dir('npc-engine', 'NpcEngine'), service_id)}"
     )

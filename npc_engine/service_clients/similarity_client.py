@@ -1,21 +1,22 @@
-"""Huggingface chatbot interface client implementation."""
+"""Huggingface semantic similarity interface client implementation."""
 from typing import List
 import zmq
 from npc_engine.service_clients.service_client import ServiceClient
 
 
 class SimilarityClient(ServiceClient):
-    """Json rpc client for chatbot service."""
+    """Json rpc client for semantic similarity service."""
 
     def __init__(self, zmq_context: zmq.Context, service_id: str = "SimilarityAPI"):
         """Connect to the server on the port."""
         super().__init__(zmq_context, service_id)
 
     def compare(self, query: str, context: List[str]) -> float:
-        """Send a chatbot request to the server.
+        """Send a comparison request to the server.
 
         Args:
-            context: A dictionary containing the chatbot request.
+            query: A string to compute similarity with contexts.
+            context: A list of strings to compute similiarity with query.
         """
         request = {
             "jsonrpc": "2.0",
