@@ -21,7 +21,7 @@ class Socket:
         self._connected = False
 
     def setsockopt(self, name, value):
-        assert name in [zmq.LINGER, zmq.RCVTIMEO]
+        pass
 
 
 class Context:
