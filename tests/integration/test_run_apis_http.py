@@ -29,8 +29,7 @@ class TestHTTPServer:
                 "--port",
                 "5555",
                 "--start-all",
-                "--protocol",
-                "http",
+                "--http",
             ],
         )
         cls.server_process = server_process
