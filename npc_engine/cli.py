@@ -36,20 +36,23 @@ def cli(verbose: bool):
             sys.stdout, format="{time} {level} {message}", level="INFO", enqueue=True
         )
         click.echo(
-            click.style(
-                "Verbose logging is enabled. (LEVEL=INFO)",
-                fg="yellow",
-            )
+            click.style("Verbose logging is enabled. (LEVEL=INFO)", fg="yellow",)
         )
 
 
 @cli.command()
-@click.option("--port", default="5555")
-@click.option("--start-all/--dont-start", default=True)
+@click.option("--port", default="5555", help="The port to listen on.")
 @click.option(
-    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models")
+    "--start-all/--dont-start",
+    default=True,
+    help="Whether to start all services or not.",
 )
-@click.option("--http/--zmq", default=False)
+@click.option(
+    "--models-path",
+    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
+    help="The path to the folder with service configs",
+)
+@click.option("--http/--zmq", default=False, help="Whether to use HTTP or ZMQ.")
 def run(port: str, start_all: bool, models_path: str, http: bool):
     """Load the models and start JSONRPC server."""
     from npc_engine.server.control_service import ControlService
@@ -72,7 +75,9 @@ def run(port: str, start_all: bool, models_path: str, http: bool):
 
 @cli.command()
 @click.option(
-    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models")
+    "--models-path",
+    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
+    help="The path to the folder with service configs.",
 )
 def download_default_models(models_path: str):
     """Download default models into the folder."""
@@ -90,16 +95,24 @@ def download_default_models(models_path: str):
 
 @cli.command()
 @click.option(
-    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models")
+    "--models-path",
+    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
+    help="The path to the folder with service configs.",
 )
 def set_models_path(models_path: str):
-    """Set the models path."""
+    """Set the default models path.
+
+    Args:
+        models_path (str): The path to the models.
+    """
     os.environ["NPC_ENGINE_MODELS_PATH"] = models_path
 
 
 @cli.command()
 @click.option(
-    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models")
+    "--models-path",
+    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
+    help="The path to the folder with service configs.",
 )
 def list_models(models_path: str):
     """List the models in the folder."""
@@ -111,17 +124,22 @@ def list_models(models_path: str):
         click.echo("Service description:")
         click.echo(metadata["service_short_description"])
         click.echo("Model description:")
-        click.echo(metadata["readme"])
+        click.echo(metadata["readme"].split("\n\n")[0])
         click.echo("--------------------")
 
 
 @cli.command()
 @click.option(
-    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models")
+    "--models-path",
+    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
+    help="The path to the folder with service configs.",
 )
 @click.argument("model_id")
 def describe(models_path: str, model_id: str):
-    """List the models in the folder."""
+    """Show service detailed information.
+
+    model_id argument follows service resolution rules of the npc-engine.
+    """
     model_manager = MetadataManager(models_path, "not_used")
     metadata = model_manager.get_metadata(model_id)
 
@@ -135,11 +153,13 @@ def describe(models_path: str, model_id: str):
 
 @cli.command()
 @click.option(
-    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models")
+    "--models-path",
+    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models",),
+    help="The path to the folder with service configs.",
 )
 @click.argument("model_id")
 def download_model(models_path: str, model_id: str):
-    """Download the model."""
+    """Download a model from Huggingface Hub."""
     model_correct = validate_hub_model(model_id)
     if model_correct:
         logger.info("Downloading model {}", model_id)
@@ -157,7 +177,9 @@ def download_model(models_path: str, model_id: str):
 
 @cli.command()
 @click.option(
-    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models")
+    "--models-path",
+    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models",),
+    help="The path to the folder with service configs.",
 )
 @click.argument("model_id")
 def export_model(models_path: str, model_id: str, remove_source: bool = False):
@@ -173,8 +195,7 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
         )
         remove_source = True
     export_path = os.path.join(
-        models_path,
-        "exported-" + model_id.replace("\\", "/").split("/")[-1],
+        models_path, "exported-" + model_id.replace("\\", "/").split("/")[-1],
     )
     os.makedirs(export_path, exist_ok=True)
 
@@ -193,7 +214,9 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
 
 @cli.command()
 @click.option(
-    "--models-path", default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models")
+    "--models-path",
+    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
+    help="The path to the folder with service configs.",
 )
 @click.argument("model_id")
 def test_model(models_path: str, model_id: str):
@@ -202,10 +225,7 @@ def test_model(models_path: str, model_id: str):
 
     if not validate_local_model(models_path, model_id):
         click.echo(
-            click.style(
-                f"{(model_id)} is not a valid npc-engine model.",
-                fg="red",
-            )
+            click.style(f"{(model_id)} is not a valid npc-engine model.", fg="red",)
         )
         return 1
     model_type = get_model_type_name(models_path, model_id)
