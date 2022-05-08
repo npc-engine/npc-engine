@@ -93,8 +93,8 @@ class HfChatbotExporter(BaseHfExporter):
         context = schema_to_json(schema, get_text)
         print(f"Context: {context}")
         zmq_context = zmq.Context()
-        control_client = ControlClient(zmq_context, "5555")
-        chatbot_client = TextGenerationClient(zmq_context, "5555", model_id)
+        control_client = ControlClient(zmq_context)
+        chatbot_client = TextGenerationClient(zmq_context, model_id)
         control_client.start_service(model_id)
         time.sleep(1)
         response = None

@@ -47,8 +47,8 @@ class HfClassifierExporter(BaseHfExporter):
             texts = [click.prompt("Text 1"), click.prompt("Text 2")]
 
         zmq_context = zmq.Context()
-        control_client = ControlClient(zmq_context, "5555")
-        service_client = SequenceClassifierClient(zmq_context, "5555", model_id)
+        control_client = ControlClient(zmq_context)
+        service_client = SequenceClassifierClient(zmq_context, model_id)
         control_client.start_service(model_id)
         ready = False
         while not ready:

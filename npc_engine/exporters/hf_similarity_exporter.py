@@ -49,8 +49,8 @@ class HfSimilarityExporter(BaseHfExporter):
             context = [click.prompt("Context")]
 
         zmq_context = zmq.Context()
-        control_client = ControlClient(zmq_context, "5555")
-        service_client = SimilarityClient(zmq_context, "5555", model_id)
+        control_client = ControlClient(zmq_context)
+        service_client = SimilarityClient(zmq_context, model_id)
         control_client.start_service(model_id)
         ready = False
         while not ready:
