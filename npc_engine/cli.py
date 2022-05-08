@@ -23,6 +23,7 @@ from huggingface_hub import snapshot_download
 from loguru import logger
 
 from npc_engine.version import __version__
+from multiprocessing import freeze_support
 
 
 @click.group()
@@ -243,4 +244,5 @@ def version():
 
 
 if __name__ == "__main__":
+    freeze_support()
     cli()
