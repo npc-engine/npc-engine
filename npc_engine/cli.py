@@ -91,7 +91,10 @@ def download_default_models(models_path: str):
     for model in model_names:
         logger.info("Downloading model {}", model)
         logger.info("Downloading {}", model)
-        snapshot_download(repo_id=model, revision="main", cache_dir=models_path)
+        tmp_folder = snapshot_download(
+            repo_id=model, revision="main", cache_dir=models_path
+        )
+        os.rename(tmp_folder, os.path.join(models_path, model.split("/")[-1]))
 
 
 @cli.command()
@@ -164,7 +167,10 @@ def download_model(models_path: str, model_id: str):
     model_correct = validate_hub_model(model_id)
     if model_correct:
         logger.info("Downloading model {}", model_id)
-        snapshot_download(repo_id=model_id, revision="main", cache_dir=models_path)
+        tmp_folder = snapshot_download(
+            repo_id=model_id, revision="main", cache_dir=models_path
+        )
+        os.rename(tmp_folder, os.path.join(models_path, model_id.split("/")[-1]))
     else:
         if click.confirm(
             click.style(

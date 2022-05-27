@@ -2,7 +2,6 @@
 from multiprocessing import Process
 import asyncio
 import json
-import os
 import zmq
 import zmq.asyncio
 
@@ -23,17 +22,18 @@ class ServiceState:
     ERROR = "error"
 
 
-def service_process(metadata: MetadataManager, service_id: str) -> None:
+def set_logger(logger_):
+    """Set the logger for the service."""
+    global logger
+    logger = logger_
+
+
+def service_process(metadata: MetadataManager, service_id: str, logger) -> None:
     """Service subprocess function.
 
     Starts the service and runs it's loop.
     """
-    logger.remove()
-    logger.add(
-        os.path.join("logs", f"{metadata.services[service_id].id}.log"),
-        rotation="10 MB",
-        enqueue=True,
-    )
+    set_logger(logger)
     context = zmq.Context()
     service = services.BaseService.create(
         context,
@@ -41,7 +41,7 @@ def service_process(metadata: MetadataManager, service_id: str) -> None:
         metadata.services[service_id].uri,
         service_id,
     )
-    service.start()
+    service.loop()
 
 
 class ControlService:
@@ -143,7 +143,9 @@ class ControlService:
             raise ValueError(f"Service {service_id} is already running")
 
         process = Process(
-            target=service_process, args=(self.metadata, service_id), daemon=True,
+            target=service_process,
+            args=(self.metadata, service_id, logger),
+            daemon=True,
         )
         process.start()
         self.services[service_id]["process"] = process

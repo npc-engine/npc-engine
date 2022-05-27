@@ -10,7 +10,7 @@ import zmq
 import zmq.asyncio
 from npc_engine.server.control_service import ControlService, ServiceState
 from npc_engine.server.metadata_manager import MetadataManager
-
+from loguru import logger
 
 class TestControlService:
     """Test that starts npc-engine server and tests all the APIs"""
@@ -24,7 +24,8 @@ class TestControlService:
             "resources",
             "models",
         )
-
+        logger.remove()
+        logger.add(sys.stdout, level="INFO", enqueue=True)
         cls.metadata = MetadataManager(path, "5555")
 
     def test_service_manager_start_stop_service(self):

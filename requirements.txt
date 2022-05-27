@@ -12,7 +12,6 @@ sounddevice==0.4.3
 Jinja2==3.0.2
 webrtcvad==2.0.10
 numpy~=1.21.4
-pyinstaller~=4.7
 setuptools~=57.0.0
 huggingface-hub==0.1.2
 pyctcdecode>=0.1.1
