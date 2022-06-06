@@ -39,7 +39,7 @@ class TransformerSemanticSimilarity(SimilarityAPI):
         sess_options.graph_optimization_level = opt_level.ORT_ENABLE_ALL
         self.model = rt.InferenceSession(
             os.path.join(model_path, "model.onnx"),
-            providers=[rt.get_available_providers()[0]],
+            providers=self.get_providers(),
             sess_options=sess_options,
         )
         input_names = [inp.name for inp in self.model.get_inputs()]

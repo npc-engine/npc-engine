@@ -57,22 +57,22 @@ class FlowtronTTS(TextToSpeechAPI):
 
         self.encoder = onnxruntime.InferenceSession(
             path.join(model_path, "encoder.onnx"),
-            providers=[provider],
+            providers=self.get_providers(),
             sess_options=sess_options,
         )
         self.backward_flow = onnxruntime.InferenceSession(
             path.join(model_path, "backward_flow.onnx"),
-            providers=[provider],
+            providers=self.get_providers(),
             sess_options=sess_options,
         )
         self.forward_flow = onnxruntime.InferenceSession(
             path.join(model_path, "forward_flow.onnx"),
-            providers=[provider],
+            providers=self.get_providers(),
             sess_options=sess_options,
         )
         self.vocoder = onnxruntime.InferenceSession(
             path.join(model_path, "vocoder.onnx"),
-            providers=[provider],
+            providers=self.get_providers(),
             sess_options=sess_options,
         )
         self.speaker_ids = [str(i) for i in range(127)]

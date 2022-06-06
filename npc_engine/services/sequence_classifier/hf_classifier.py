@@ -30,7 +30,7 @@ class HfClassifier(SequenceClassifierAPI):
         sess_options.graph_optimization_level = opt_level.ORT_ENABLE_ALL
         self.model = rt.InferenceSession(
             os.path.join(model_path, "model.onnx"),
-            providers=[rt.get_available_providers()[0]],
+            providers=self.get_providers(),
             sess_options=sess_options,
         )
         self.tokenizer = Tokenizer.from_file(os.path.join(model_path, "tokenizer.json"))
