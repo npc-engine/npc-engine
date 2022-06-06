@@ -1,8 +1,9 @@
 """Module with Model base class."""
 from abc import ABC, abstractmethod
-from typing import Callable, Dict
+from typing import Callable, Dict, List
 import os
 import zmq
+import onnxruntime as rt
 from loguru import logger
 from jsonrpc import JSONRPCResponseManager, Dispatcher
 from pathlib import Path
@@ -14,7 +15,13 @@ class BaseService(FactoryMixin, ABC):
     """Abstract base class for managed services."""
 
     def __init__(
-        self, service_id: str, context: zmq.Context, uri: str, *args, **kwargs,
+        self,
+        service_id: str,
+        context: zmq.Context,
+        uri: str,
+        providers: List[str] = None,
+        *args,
+        **kwargs,
     ):
         """Initialize the service.
 
@@ -33,6 +40,7 @@ class BaseService(FactoryMixin, ABC):
         self.socket.bind(uri)
         self.service_id = service_id
         self.control_client = None
+        self._set_and_validate_providers(providers)
 
     @classmethod
     @abstractmethod
@@ -98,3 +106,26 @@ class BaseService(FactoryMixin, ABC):
             )
             api_dict[method] = getattr(self, method)
         return api_dict
+
+    def get_providers(self) -> List[str]:
+        """Return onnxruntime providers to use."""
+        return self.providers
+
+    def _set_and_validate_providers(self, providers: List[str]):
+        if providers is not None:
+            self.providers = providers
+            for provider in self.providers:
+                if provider == "gpu":
+                    provider = [
+                        prov
+                        for prov in rt.get_available_providers()
+                        if "DML" in prov or "CUDA" in prov or "Tensorrt" in prov
+                    ][0]
+                if provider == "cpu":
+                    provider = [
+                        prov for prov in rt.get_available_providers() if "CPU" in prov
+                    ][0]
+                if provider not in rt.get_available_providers():
+                    raise RuntimeError(f"Provider {provider} is not available")
+        else:
+            self.providers = rt.get_available_providers()

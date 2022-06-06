@@ -72,12 +72,12 @@ class BartChatbot(TextGenerationAPI):
         )
         self.encoder_model = rt.InferenceSession(
             os.path.join(model_path, "encoder_bart.onnx"),
-            providers=[rt.get_available_providers()[0]],
+            providers=self.get_providers(),
             sess_options=sess_options,
         )
         self.decoder_model = rt.InferenceSession(
             os.path.join(model_path, "decoder_bart.onnx"),
-            providers=[rt.get_available_providers()[0]],
+            providers=self.get_providers(),
             sess_options=sess_options,
         )
         self.tokenizer = Tokenizer.from_file(os.path.join(model_path, "tokenizer.json"))

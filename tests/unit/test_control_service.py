@@ -12,6 +12,7 @@ from npc_engine.server.control_service import ControlService, ServiceState
 from npc_engine.server.metadata_manager import MetadataManager
 from loguru import logger
 
+
 class TestControlService:
     """Test that starts npc-engine server and tests all the APIs"""
 

@@ -83,7 +83,7 @@ class NemoSTT(SpeechToTextAPI):
 
         self.asr_model = rt.InferenceSession(
             path.join(model_path, "ctc.onnx"),
-            providers=[provider],
+            providers=self.get_providers(),
             sess_options=sess_options,
         )
 
@@ -91,7 +91,7 @@ class NemoSTT(SpeechToTextAPI):
         if self.predict_punctuation:
             self.punctuation = rt.InferenceSession(
                 path.join(model_path, "punctuation.onnx"),
-                providers=[provider],
+                providers=self.get_providers(),
                 sess_options=sess_options,
             )
             self.tokenizer = Tokenizer.from_file(
@@ -110,7 +110,7 @@ class NemoSTT(SpeechToTextAPI):
         sess_options.graph_optimization_level = opt_level.ORT_ENABLE_ALL
         self.sentence_model = rt.InferenceSession(
             path.join(model_path, "sentence_prediction.onnx"),
-            providers=[rt.get_available_providers()[0]],
+            providers=self.get_providers(),
             sess_options=sess_options,
         )
         self.sentence_tokenizer = Tokenizer.from_file(
