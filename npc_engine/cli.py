@@ -34,10 +34,28 @@ def cli(verbose: bool):
     logger.remove()
     if verbose:
         logger.add(
-            sys.stdout, format="{time} {level} {message}", level="INFO", enqueue=True
+            sys.stdout, format="{time} {level} {message}", level="DEBUG", enqueue=True
+        )
+        logger.add(
+            os.path.join("Logs", "npc-engine.log"),
+            format="{time} {level} {message}",
+            level="DEBUG",
+            enqueue=True,
+            rotation="500 MB",
         )
         click.echo(
             click.style("Verbose logging is enabled. (LEVEL=INFO)", fg="yellow",)
+        )
+    else:
+        logger.add(
+            sys.stdout, format="{time} {level} {message}", level="WARNING", enqueue=True
+        )
+        logger.add(
+            os.path.join("Logs", "npc-engine.log"),
+            format="{time} {level} {message}",
+            level="WARNING",
+            enqueue=True,
+            rotation="500 MB",
         )
 
 
@@ -164,7 +182,7 @@ def describe(models_path: str, model_id: str):
 @click.argument("model_id")
 def download_model(models_path: str, model_id: str):
     """Download a model from Huggingface Hub."""
-    model_correct = validate_hub_model(model_id)
+    model_correct = validate_hub_model(models_path, model_id)
     if model_correct:
         logger.info("Downloading model {}", model_id)
         tmp_folder = snapshot_download(
