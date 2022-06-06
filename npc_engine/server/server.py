@@ -190,6 +190,7 @@ class HTTPServer(BaseServer):
         try:
             address = request.match_info.get("name", "xxxxxxxxxxxx")
             message = await request.text()
+            logger.info(f"Received request to {address}: {message}")
             response = await self.service_manager.handle_request(address, message)
         except Exception as e:
             response = {
