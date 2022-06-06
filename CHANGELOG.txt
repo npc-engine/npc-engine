@@ -1,39 +1,5 @@
-Major:  
-- Option to access npc-engine through HTTP Server(ZMQ by default).
-- Refactored models into multiprocessing services, with each service running in it's own process and communicating via ZMQ IPC sockets.
-- Services may call other services using service clients that use special ZMQ IPC socket.
-- Refactor ServiceManager to MetadataManager that manages loading and validating metadata and ControlService that implements control service and message routing.
-- Service resolution through method name, API name, service class or service id (folder holding the config).
-- Cyclic service dependencies check (requesting clients from services that produce cycles would raise an error).
-- Exporters module which allows to implement exporting models from popular libraries into NPC Engine services. 
-- New CLI commands to manage and export models.
-- Versioned docs
-- Rename chatbot API to text generation API  
-
 Minor:   
-- Removed useless `benchmarks` from the documentation
-- Hidden imports moved to pyinstaller command
-- PYPI build on release
-- small fixes to cli interface
-- Huggignface tokenizers initialized from the special_tokens_map.json
-- Service type config field now can be in either `type` or `model_type` key
-- Model mocking cli that can be called via `python -m npc_engine.services.utils.mock`
-- Mock models for testing
-- Moved zmq_server in its own module
-- Added automated template schema parsing and example context for text generation Services  
-
-New APIs:  
-- Persona dialogue API
-- Sequence classification API
-
-New Exporters:  
-- Huggingface Transformers -> HfChatbot
-- Huggingface Transformers -> TransformerSemanticSimilarity
-- Huggingface Transformers -> HfClassifier  
-
-New Services:  
-- PersonaDialogue (PersonaDialogueAPI)
-- HfChatbot (TextGenerationAPI)
-- HfClassifier (SequenceClassifierAPI)  
-
-
+- Provider selection from config
+- Multiprocessing logging fix
+- Shorter download names and IPC links to fix `name too long` error
+- Pyinstaller hooks fix
