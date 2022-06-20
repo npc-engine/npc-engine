@@ -6,10 +6,10 @@ import click
 from npc_engine.server.utils import start_test_server
 
 
-class Exporter(ABC):
-    """Abstract base class for exporter.
+class ImportWizard(ABC):
+    """Abstract base class for import wizard.
 
-    Exporters are classes that handle converting models to be used with npc-engine.
+    ImportWizards are classes that handle converting models to be used with npc-engine.
     """
 
     exporters = {}
@@ -20,7 +20,7 @@ class Exporter(ABC):
         cls.exporters[cls.__name__] = cls
 
     @classmethod
-    def get_exporters(cls) -> List[Any]:
+    def get_import_wizards(cls) -> List[Any]:
         """Create all exporters."""
         return [
             cls.exporters[name]()
@@ -34,12 +34,12 @@ class Exporter(ABC):
         return cls.__name__ + "\n\t" + cls.__doc__.split("\n\n")[0]
 
     @abstractmethod
-    def export(self, model_path: str, export_path: str):
-        """Export the model to the export path."""
+    def convert(self, model_path: str, output_path: str):
+        """Convert the model and write it to the output path."""
         pass
 
     @abstractmethod
-    def create_config(self, export_path: str):
+    def create_config(self, output_path: str):
         """Create the config for the model."""
         pass
 
