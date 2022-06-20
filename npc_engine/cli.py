@@ -190,14 +190,12 @@ def download_model(models_path: str, model_id: str):
         )
         os.rename(tmp_folder, os.path.join(models_path, model_id.split("/")[-1]))
     else:
-        if click.confirm(
+        click.echo(
             click.style(
-                f"{model_id} is not a valid npc-engine model."
-                + " \nDo you want to export it?",
+                f"{model_id} is not a valid npc-engine model. You first need to import it.",
                 fg="yellow",
             )
-        ):
-            export_model(models_path, model_id, True)
+        )
 
 
 @cli.command()
@@ -207,8 +205,8 @@ def download_model(models_path: str, model_id: str):
     help="The path to the folder with service configs.",
 )
 @click.argument("model_id")
-def export_model(models_path: str, model_id: str, remove_source: bool = False):
-    """Export the model."""
+def import_model(models_path: str, model_id: str, remove_source: bool = False):
+    """Import the model."""
     from npc_engine.import_wizards.base_import_wizard import ImportWizard
 
     logger.info("Downloading source model {}", model_id)
@@ -220,7 +218,7 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
         )
         remove_source = True
     export_path = os.path.join(
-        models_path, "exported-" + model_id.replace("\\", "/").split("/")[-1],
+        models_path, "converted-" + model_id.replace("\\", "/").split("/")[-1],
     )
     os.makedirs(export_path, exist_ok=True)
 
@@ -231,7 +229,7 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
         click.echo(f"{i+1}. {import_wizard.description()}")
     exporter_id = click.prompt("Please select an exporter", type=int)
     import_wizard = import_wizards[exporter_id - 1]
-    import_wizard.export(source_path, export_path)
+    import_wizard.convert(source_path, export_path)
     import_wizard.create_config(export_path)
     if remove_source:
         shutil.rmtree(source_path)
