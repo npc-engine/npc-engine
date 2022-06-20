@@ -190,14 +190,12 @@ def download_model(models_path: str, model_id: str):
         )
         os.rename(tmp_folder, os.path.join(models_path, model_id.split("/")[-1]))
     else:
-        if click.confirm(
+        click.echo(
             click.style(
-                f"{model_id} is not a valid npc-engine model."
-                + " \nDo you want to export it?",
+                f"{model_id} is not a valid npc-engine model. You first need to import it.",
                 fg="yellow",
             )
-        ):
-            export_model(models_path, model_id, True)
+        )
 
 
 @cli.command()
@@ -207,9 +205,9 @@ def download_model(models_path: str, model_id: str):
     help="The path to the folder with service configs.",
 )
 @click.argument("model_id")
-def export_model(models_path: str, model_id: str, remove_source: bool = False):
-    """Export the model."""
-    from npc_engine.exporters.base_exporter import Exporter
+def import_model(models_path: str, model_id: str, remove_source: bool = False):
+    """Import the model."""
+    from npc_engine.import_wizards.base_import_wizard import ImportWizard
 
     logger.info("Downloading source model {}", model_id)
     if os.path.exists(model_id):
@@ -220,19 +218,19 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
         )
         remove_source = True
     export_path = os.path.join(
-        models_path, "exported-" + model_id.replace("\\", "/").split("/")[-1],
+        models_path, "converted-" + model_id.replace("\\", "/").split("/")[-1],
     )
     os.makedirs(export_path, exist_ok=True)
 
     logger.info("Exporting model {} to {}", model_id, export_path)
-    exporters = Exporter.get_exporters()
+    import_wizards = ImportWizard.get_import_wizards()
     click.echo("Available exporters:")
-    for i, exporter in enumerate(exporters):
-        click.echo(f"{i+1}. {exporter.description()}")
+    for i, import_wizard in enumerate(import_wizards):
+        click.echo(f"{i+1}. {import_wizard.description()}")
     exporter_id = click.prompt("Please select an exporter", type=int)
-    exporter = exporters[exporter_id - 1]
-    exporter.export(source_path, export_path)
-    exporter.create_config(export_path)
+    import_wizard = import_wizards[exporter_id - 1]
+    import_wizard.convert(source_path, export_path)
+    import_wizard.create_config(export_path)
     if remove_source:
         shutil.rmtree(source_path)
 
@@ -246,7 +244,7 @@ def export_model(models_path: str, model_id: str, remove_source: bool = False):
 @click.argument("model_id")
 def test_model(models_path: str, model_id: str):
     """Send test request to the model and print reply."""
-    from npc_engine.exporters.base_exporter import Exporter
+    from npc_engine.import_wizards.base_import_wizard import ImportWizard
 
     if not validate_local_model(models_path, model_id):
         click.echo(
@@ -254,7 +252,7 @@ def test_model(models_path: str, model_id: str):
         )
         return 1
     model_type = get_model_type_name(models_path, model_id)
-    exporters = Exporter.get_exporters()
+    exporters = ImportWizard.get_import_wizards()
     for exporter in exporters:
         if exporter.get_model_name() == model_type:
             exporter.test_model(models_path, model_id)

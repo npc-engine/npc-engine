@@ -2,16 +2,16 @@
 from abc import abstractmethod
 
 from loguru import logger
-from npc_engine.exporters.base_exporter import Exporter
+from npc_engine.import_wizards.base_import_wizard import ImportWizard
 import click
 from transformers import AutoTokenizer
 import sys
 
 
-class BaseHfExporter(Exporter):
-    """Exporter for the Huggingface transformer models."""
+class BaseHfImportWizard(ImportWizard):
+    """ImportWizard for the Huggingface transformer models."""
 
-    def export(self, model_path: str, export_path: str):
+    def convert(self, model_path: str, export_path: str):
         """Export the model to the export path."""
         click.echo("Exporting model to onnx")
         sys.argv = [

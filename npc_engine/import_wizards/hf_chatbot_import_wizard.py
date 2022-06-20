@@ -1,6 +1,6 @@
 """Exporter implementation for the Huggingface text generation models."""
 import time
-from npc_engine.exporters.base_hf_exporter import BaseHfExporter
+from npc_engine.import_wizards.base_hf_import_wizard import BaseHfImportWizard
 from jinja2schema import infer, to_json_schema
 import click
 import yaml
@@ -12,8 +12,8 @@ from npc_engine.service_clients import ControlClient, TextGenerationClient
 from npc_engine.server.utils import schema_to_json
 
 
-class HfChatbotExporter(BaseHfExporter):
-    """Base exporter for Huggingface transformer models to chatbot API."""
+class HfChatbotImportWizard(BaseHfImportWizard):
+    """ImportWizard for Huggingface transformer models to chatbot API."""
 
     SUPPORTED_FEATURES = [
         "causal-lm",
@@ -24,7 +24,7 @@ class HfChatbotExporter(BaseHfExporter):
 
     @classmethod
     def get_api(cls) -> str:
-        """Get the api for the exporter."""
+        """Get the api for the ImportWizard."""
         return "TextGenerationAPI"
 
     @classmethod
