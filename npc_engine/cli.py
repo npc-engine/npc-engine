@@ -44,7 +44,10 @@ def cli(verbose: bool):
             rotation="500 MB",
         )
         click.echo(
-            click.style("Verbose logging is enabled. (LEVEL=INFO)", fg="yellow",)
+            click.style(
+                "Verbose logging is enabled. (LEVEL=INFO)",
+                fg="yellow",
+            )
         )
     else:
         logger.add(
@@ -176,7 +179,10 @@ def describe(models_path: str, model_id: str):
 @cli.command()
 @click.option(
     "--models-path",
-    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models",),
+    default=os.environ.get(
+        "NPC_ENGINE_MODELS_PATH",
+        "./models",
+    ),
     help="The path to the folder with service configs.",
 )
 @click.argument("model_id")
@@ -201,7 +207,10 @@ def download_model(models_path: str, model_id: str):
 @cli.command()
 @click.option(
     "--models-path",
-    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models",),
+    default=os.environ.get(
+        "NPC_ENGINE_MODELS_PATH",
+        "./models",
+    ),
     help="The path to the folder with service configs.",
 )
 @click.argument("model_id")
@@ -218,7 +227,8 @@ def import_model(models_path: str, model_id: str, remove_source: bool = False):
         )
         remove_source = True
     export_path = os.path.join(
-        models_path, "converted-" + model_id.replace("\\", "/").split("/")[-1],
+        models_path,
+        "converted-" + model_id.replace("\\", "/").split("/")[-1],
     )
     os.makedirs(export_path, exist_ok=True)
 
@@ -248,7 +258,10 @@ def test_model(models_path: str, model_id: str):
 
     if not validate_local_model(models_path, model_id):
         click.echo(
-            click.style(f"{(model_id)} is not a valid npc-engine model.", fg="red",)
+            click.style(
+                f"{(model_id)} is not a valid npc-engine model.",
+                fg="red",
+            )
         )
         return 1
     model_type = get_model_type_name(models_path, model_id)
