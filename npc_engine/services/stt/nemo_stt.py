@@ -76,7 +76,7 @@ class NemoSTT(SpeechToTextAPI):
         logger.info(f"STT uses {provider} provider")
 
         self.stft_filterbanks = librosa.filters.mel(
-            16000, 512, n_mels=64, fmin=0, fmax=8000
+            sr=16000, n_fft=512, n_mels=64, fmin=0, fmax=8000
         )
         self.stft_window = librosa.filters.get_window("hann", 320, fftbins=False)
         self.mel_mean, self.mel_std = self._fixed_normalization()
