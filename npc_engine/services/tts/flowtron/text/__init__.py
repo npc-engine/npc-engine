@@ -1,3 +1,4 @@
+# flake8: noqa
 """ from https://github.com/keithito/tacotron """
 import re
 
