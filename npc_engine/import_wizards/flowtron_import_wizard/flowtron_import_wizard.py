@@ -261,7 +261,7 @@ class FlowtronImportWizard(ImportWizard):
             torch.onnx.export(
                 waveglow,
                 (mels),
-                os.path.join(export_path, "waveglow.onnx"),
+                os.path.join(export_path, "vocoder.onnx"),
                 opset_version=11,
                 do_constant_folding=True,
                 input_names=["mels"],
@@ -294,6 +294,7 @@ class FlowtronImportWizard(ImportWizard):
         smoothing_weight = float(smoothing_weight)
 
         config = {
+            "type": self.get_model_name(),
             "max_frames": n_frames,
             "gate_threshold": gate_threshold,
             "sigma": sigma,
@@ -311,7 +312,7 @@ class FlowtronImportWizard(ImportWizard):
     @classmethod
     def get_model_name(cls) -> str:
         """Get the model name."""
-        return "ESPNetTTS"
+        return "FlowtronTTS"
 
     def test_model_impl(self):
         """Test the model implementation."""
