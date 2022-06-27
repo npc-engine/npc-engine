@@ -110,7 +110,7 @@ class FlowtronImportWizard(ImportWizard):
         except Exception:
             self.n_frames = 512
 
-        speaker_vecs = try_to_cuda(torch.zeros([1], dtype=torch.long))
+        speaker_vecs = try_to_cuda(torch.zeros([1, 1], dtype=torch.long))
         text = try_to_cuda(torch.LongTensor(text_to_sequence(text)).view([1, -1]))
         with torch.no_grad():
             residual = try_to_cuda(
