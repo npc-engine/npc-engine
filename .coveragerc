@@ -8,7 +8,7 @@ omit =
     setup.py
     scratch*.py    
     */.tox/*
-    */npc_engine/text/*
+    */npc_engine/services/tts/flowtron/text/*
     */npc_engine/models/utils/mock.py
 
 [html]

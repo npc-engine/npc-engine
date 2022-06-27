@@ -13,7 +13,7 @@ class HfSimilarityImportWizard(BaseHfImportWizard):
     """ImportWizard for the Huggingface transformer models."""
 
     def get_api(self) -> str:
-        """Get the api for the exporter."""
+        """Get the api for the ImportWizard."""
         return "SimilarityAPI"
 
     @classmethod

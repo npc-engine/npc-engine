@@ -13,7 +13,7 @@ class HfClassifierImportWizard(BaseHfImportWizard):
     """ImportWizard for the Huggingface classification models."""
 
     def get_api(self) -> str:
-        """Get the api for the exporter."""
+        """Get the api for the ImportWizard."""
         return "SequenceClassifierAPI"
 
     @classmethod
