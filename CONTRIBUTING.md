@@ -28,4 +28,4 @@ Here is the prefered workflow for creating pull requests:
 
 ### Spreading the word
 
-If you are using npc-engine in your game/app/program and you are OK to appear in "Made with npc-engine" list let us know at evil.unicorn1@gmail.com.
+If you are using npc-engine in your game/app/program and you are OK to appear in "Made with npc-engine" list let us know at hello@npc-engine.com.

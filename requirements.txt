@@ -17,6 +17,7 @@ huggingface-hub==0.1.2
 pyctcdecode>=0.1.1
 librosa>=0.8.0
 numba==0.48
+platformdirs>=1.0.0
 scikit-learn==1.0.2
 jinja2schema==0.1.4
 appdirs==1.4.4
