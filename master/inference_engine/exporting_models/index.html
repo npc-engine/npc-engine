@@ -70,7 +70,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#create-youre-own-exporter" class="md-skip">
+        <a href="#tutorials" class="md-skip">
           Skip to content
         </a>
       
@@ -373,8 +373,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-youre-own-exporter" class="md-nav__link">
-    Create youre own exporter
+  <a href="#tutorials" class="md-nav__link">
+    Tutorials
   </a>
   
 </li>
@@ -461,8 +461,8 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#create-youre-own-exporter" class="md-nav__link">
-    Create youre own exporter
+  <a href="#tutorials" class="md-nav__link">
+    Tutorials
   </a>
   
 </li>
@@ -487,25 +487,22 @@
 
   <h1>Exporting models</h1>
 
-<p>It's possible to export models from popular libraries to npc-engine.</p>
-<p>Currently, npc-engine supports export from the following libraries/architectures:</p>
+<p>It's possible to convert models from popular libraries into npc-engine services via <a href="https://github.com/npc-engine/npc-engine-import-wizard">npc-engine-import-wizard</a>.</p>
+<p>You can find the installation instructions and list of supported libraries in it's README.</p>
+<p>Most import wizards require some extras installed, here is the list of possible extras:</p>
 <ul>
-<li>HuggingFace transformers</li>
-<li>Sequence classification</li>
-<li>Cosine similarity models</li>
-<li>Text generation</li>
+<li><code>transformers</code> for <a href="https://huggingface.co/docs/transformers/main/en/index">🤗 Transformers</a> integration.</li>
+<li><code>flowtron-tts</code> for NVIDIA's <a href="https://github.com/NVIDIA/flowtron">Flowtron</a> integration.</li>
+<li><code>espnet</code> for <a href="https://espnet.github.io/espnet/espnet2_tutorial.html">ESPNet2</a> integration.</li>
 </ul>
-<p>To use this functionality you need to install a special extra called <code>export</code></p>
-<pre><code class="language-bash">pip install npc-engine[export]
-</code></pre>
-<p>To export model you need to use export-model command.
+<p>Some extras might require additional dependencies installed outside of pip, they will usually report them missing via error messages.</p>
+<h2 id="tutorials">Tutorials</h2>
+<p>To export model you need to use <code>npc-engine-import-wizard import</code> command.
 With Huggingface models you can use Huggingface Hub model id as well as path to the model.</p>
-<pre><code class="language-bash">npc-engine export-model --models-path &lt;path-to-models-folder&gt; &lt;model_id or folder&gt;
+<pre><code class="language-bash">npc-engine-import-wizard import --models-path &lt;path-to-models-folder&gt; &lt;model_id or folder&gt;
 </code></pre>
 <p>This will prompt you to select correct Exporter class and take you through filling in the required parameters.</p>
-<h2 id="create-youre-own-exporter">Create youre own exporter</h2>
-<p>To define your own exporter you need to create child class of <a href="../reference/#npc_engine.exporters.base_exporter.Exporter">Exporter</a> and import it into <code>npc_engine.exporters</code> module so that it's discovered by the CLI.</p>
-<p>This base class has five abstract methods to implement that cover all the functionality of the exporter.</p>
+<p>We will try to cover all the import wizards in the upcoming video tutorials that will appear here.</p>
 
               
             </article>
