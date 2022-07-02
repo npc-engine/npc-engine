@@ -73,6 +73,12 @@ You can also use it directly through ZMQ or HTTP. See [Documentation](https://np
     --exclude-module tkinter --exclude-module matplotlib .\npc_engine\cli.py --onedir
     ```
 
+## Community
+
+We have a [Discord](https://discord.gg/R4zBNmnfrU) server where you can get support, ask questions and show off your creations.
+
+If you would like to donate, you can check out our [Patreon](https://www.patreon.com/npcengine).
+
 ## Authors
 
 - **eublefar** - _Python, Neural Nets_ - [github](https://github.com/eublefar)

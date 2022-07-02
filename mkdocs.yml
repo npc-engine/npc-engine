@@ -28,12 +28,16 @@ extra:
     provider: mike
     default: stable
   social:
-    # - icon: fontawesome/brands/unity
-    #   link: ""
+    - icon: fontawesome/brands/discord
+      link: "https://discord.gg/R4zBNmnfrU"
+    - icon: fontawesome/brands/patreon
+      link: "https://www.patreon.com/npcengine"
+    - icon: fontawesome/brands/unity
+      link: "https://assetstore.unity.com/packages/tools/ai/npc-engine-208498"
     - icon: fontawesome/brands/youtube
       link: "https://www.youtube.com/channel/UCOtXe2JwUTHXrA4V9DwANlQ"
     - icon: fontawesome/regular/envelope
-      link: mailto:support@npc-engine.com
+      link: mailto:hello@npc-engine.com
     - icon: fontawesome/brands/github
       link: https://github.com/npc-engine
 plugins:
