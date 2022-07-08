@@ -157,3 +157,7 @@ class BartChatbot(TextGenerationAPI):
     def get_special_tokens(self) -> Dict[str, str]:
         """Retrun dict of special tokens to be renderable from template."""
         return self.special_tokens
+
+    def string_too_long(self, prompt):
+        """Check if prompt is too long for the model."""
+        return len(self.tokenizer.encode(prompt)) > self.tokenizer.truncation.max_length
