@@ -25,7 +25,7 @@ class TestZMQServer:
                 "--models-path",
                 models_path,
                 "--port",
-                "5555",
+                "55555",
                 "--start-all",
             ],
         )
@@ -53,7 +53,7 @@ class TestZMQServer:
         socket = type(self).context.socket(zmq.REQ)
         socket.setsockopt(zmq.LINGER, 0)
         socket.RCVTIMEO = 2000
-        socket.connect("tcp://localhost:5555")
+        socket.connect("tcp://localhost:55555")
 
         request = {
             "jsonrpc": "2.0",
@@ -84,7 +84,7 @@ class TestZMQServer:
         socket = type(self).context.socket(zmq.REQ)
         socket.setsockopt(zmq.LINGER, 0)
         socket.RCVTIMEO = 2000
-        socket.connect("tcp://localhost:5555")
+        socket.connect("tcp://localhost:55555")
 
         request = {
             "jsonrpc": "2.0",
@@ -127,7 +127,7 @@ class TestZMQServer:
         socket = type(self).context.socket(zmq.REQ)
         socket.setsockopt(zmq.LINGER, 0)
         socket.RCVTIMEO = 2000
-        socket.connect("tcp://localhost:5555")
+        socket.connect("tcp://localhost:55555")
 
         request = {
             "jsonrpc": "2.0",
@@ -170,7 +170,7 @@ class TestZMQServer:
         socket.setsockopt(zmq.LINGER, 0)
         socket.RCVTIMEO = 2000
         socket.setsockopt(zmq.IDENTITY, "mock-paraphrase-MiniLM-L6-v2".encode("utf-8"))
-        socket.connect("tcp://localhost:5555")
+        socket.connect("tcp://localhost:55555")
 
         request = {
             "jsonrpc": "2.0",
@@ -204,7 +204,7 @@ class TestZMQServer:
         socket.setsockopt(
             zmq.IDENTITY, "mock-flowtron-waveglow-librispeech-tts".encode("utf-8")
         )
-        socket.connect("tcp://localhost:5555")
+        socket.connect("tcp://localhost:55555")
 
         request = {
             "jsonrpc": "2.0",
