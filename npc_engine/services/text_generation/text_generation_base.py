@@ -27,7 +27,7 @@ class TextGenerationAPI(BaseService):
         """
         super().__init__(*args, **kwargs)
         self.context_template_string = context_template
-        self.context_template_string = history_template
+        self.history_template_string = history_template
         self.context_template = Template(context_template)
         self.history_template = Template(history_template)
         self.initialized = True
@@ -53,23 +53,17 @@ class TextGenerationAPI(BaseService):
                 "Can not generate replies before Base Service class was initialized"
             )
         history = context.get("history", [])
-        history_prompt = [
-            self.history_template.render(**h, **context, **self.get_special_tokens())
-            for h in history
-        ]
+        history_prompt = self.history_template.render(**context, **self.get_special_tokens())
         context_prompt = self.context_template.render(
             **context, **self.get_special_tokens()
         )
         prompt = context_prompt + "".join(history_prompt)
         while self.string_too_long(prompt):
             history.pop(0)
-            history_prompt = [
-                self.history_template.render(
-                    **h, **context, **self.get_special_tokens()
-                )
-                for h in history
-            ]
-            prompt = context_prompt + "".join(history_prompt)
+            history_prompt = self.history_template.render(
+                **context, **self.get_special_tokens()
+            )
+            prompt = context_prompt + history_prompt
         return self.run(prompt, *args, **kwargs)
 
     def get_prompt_template(self) -> str:
@@ -78,7 +72,7 @@ class TextGenerationAPI(BaseService):
         Returns:
             A template string.
         """
-        return self.template_string
+        return self.context_template_string + self.history_template_string
 
     def get_context_template(self) -> Dict[str, Any]:
         """Return context template.

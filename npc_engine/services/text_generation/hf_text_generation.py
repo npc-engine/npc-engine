@@ -23,6 +23,7 @@ class HfChatbot(TextGenerationAPI):
         max_length=100,
         min_length=2,
         repetition_penalty=1,
+        trunc_length=512,
         *args,
         **kwargs,
     ):
@@ -72,12 +73,13 @@ class HfChatbot(TextGenerationAPI):
             "past_sequence + sequence": 0,
         }
         self.dtypes = {i.name: DTYPE_MAP[i.type] for i in self.model_inputs}
+        self.trunc_length = trunc_length
 
     def run(self, prompt: str, temperature: float = 1.0, topk: int = None) -> str:
         """Run text generation from given prompt and parameters.
 
         Args:
-            prompt: Fromatted prompt.
+            prompt: Formatted prompt.
             temperature: Temperature parameter for sampling.
                 Controls how random model output is: more temperature - more randomness
             topk: If not none selects top n of predictions to sample from during generation.
@@ -214,9 +216,9 @@ class HfChatbot(TextGenerationAPI):
         return inputs
 
     def get_special_tokens(self) -> Dict[str, str]:
-        """Retrun dict of special tokens to be renderable from template."""
+        """Return dict of special tokens to be renderable from template."""
         return self.special_tokens
 
     def string_too_long(self, prompt):
         """Check if prompt is too long for the model."""
-        return len(self.tokenizer.encode(prompt)) > self.tokenizer.truncation.max_length
+        return len(self.tokenizer.encode(prompt)) > self.trunc_length
