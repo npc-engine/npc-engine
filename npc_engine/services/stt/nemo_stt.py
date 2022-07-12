@@ -228,11 +228,11 @@ class NemoSTT(SpeechToTextAPI):
         )
         spectogram = np.stack([spectogram.real, spectogram.imag], -1)
 
-        spectogram = np.sqrt((spectogram**2).sum(-1))
-        spectogram = spectogram**2
+        spectogram = np.sqrt((spectogram ** 2).sum(-1))
+        spectogram = spectogram ** 2
         spectogram = np.dot(self.stft_filterbanks, spectogram)
         spectogram = np.expand_dims(spectogram, 0)
-        spectogram = np.log(spectogram + (2**-24))
+        spectogram = np.log(spectogram + (2 ** -24))
 
         spectogram = spectogram - np.asarray(self.mel_mean).reshape([1, 64, 1])
         spectogram = spectogram / np.asarray(self.mel_std).reshape([1, 64, 1])

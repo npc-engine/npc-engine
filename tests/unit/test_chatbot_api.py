@@ -20,7 +20,11 @@ template = """
 class MockChatbotModel(TextGenerationAPI):
     def __init__(self) -> None:
         super().__init__(
-            context_template="", history_template= template, service_id="test", context=zmq.Context(), uri="inproc://test"
+            context_template="",
+            history_template=template,
+            service_id="test",
+            context=zmq.Context(),
+            uri="inproc://test",
         )
 
     def run(self, prompt: str, temperature: float = 1, topk: int = None):

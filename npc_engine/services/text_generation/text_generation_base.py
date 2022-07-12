@@ -53,7 +53,9 @@ class TextGenerationAPI(BaseService):
                 "Can not generate replies before Base Service class was initialized"
             )
         history = context.get("history", [])
-        history_prompt = self.history_template.render(**context, **self.get_special_tokens())
+        history_prompt = self.history_template.render(
+            **context, **self.get_special_tokens()
+        )
         context_prompt = self.context_template.render(
             **context, **self.get_special_tokens()
         )
