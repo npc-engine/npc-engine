@@ -58,12 +58,20 @@ class TextGenerationAPI(BaseService):
             **context, **self.get_special_tokens()
         )
         prompt = context_prompt + "".join(history_prompt)
-        while self.string_too_long(prompt):
-            history.pop(0)
+
+        if isinstance(history, list):
+            while self.string_too_long(prompt):
+                history.pop(0)
+                history_prompt = self.history_template.render(
+                    **context, **self.get_special_tokens()
+                )
+                prompt = context_prompt + history_prompt
+        else:
             history_prompt = self.history_template.render(
                 **context, **self.get_special_tokens()
             )
             prompt = context_prompt + history_prompt
+
         return self.run(prompt, *args, **kwargs)
 
     def get_prompt_template(self) -> str:
