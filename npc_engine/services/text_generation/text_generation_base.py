@@ -66,6 +66,8 @@ class TextGenerationAPI(BaseService):
                     **context, **self.get_special_tokens()
                 )
                 prompt = context_prompt + history_prompt
+                if len(history) == 0:
+                    break
         else:
             history_prompt = self.history_template.render(
                 **context, **self.get_special_tokens()
