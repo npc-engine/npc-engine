@@ -493,6 +493,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.string_too_long" class="md-nav__link">
+    string_too_long()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.update_inputs_with_results" class="md-nav__link">
     update_inputs_with_results()
   </a>
@@ -529,6 +536,13 @@
           <li class="md-nav__item">
   <a href="#npc_engine.services.text_generation.bart.BartChatbot.run" class="md-nav__link">
     run()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.string_too_long" class="md-nav__link">
+    string_too_long()
   </a>
   
 </li>
@@ -825,6 +839,13 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.string_too_long" class="md-nav__link">
+    string_too_long()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.update_inputs_with_results" class="md-nav__link">
     update_inputs_with_results()
   </a>
@@ -861,6 +882,13 @@
           <li class="md-nav__item">
   <a href="#npc_engine.services.text_generation.bart.BartChatbot.run" class="md-nav__link">
     run()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.string_too_long" class="md-nav__link">
+    string_too_long()
   </a>
   
 </li>
@@ -1225,7 +1253,7 @@ Features seq2seq-lm, causal-lm, seq2seq-lm-with-past, causal-lm-with-past are su
 
 
 <h4 class="doc doc-heading" id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.__init__">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repetition_penalty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repetition_penalty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trunc_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 </h4>
 
@@ -1421,7 +1449,7 @@ this long in tokens</p></td>
 
   <div class="doc doc-contents ">
   
-      <p>Retrun dict of special tokens to be renderable from template.</p>
+      <p>Return dict of special tokens to be renderable from template.</p>
 
   </div>
 
@@ -1457,7 +1485,7 @@ this long in tokens</p></td>
           <td>
                 <code>str</code>
           </td>
-          <td><p>Fromatted prompt.</p></td>
+          <td><p>Formatted prompt.</p></td>
           <td>
               <em>required</em>
           </td>
@@ -1503,6 +1531,24 @@ Controls how random model output is: more temperature - more randomness</p></td>
         </tr>
     </tbody>
   </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 class="doc doc-heading" id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.string_too_long">
+<code class="highlight language-python"><span class="n">string_too_long</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Check if prompt is too long for the model.</p>
 
   </div>
 
@@ -1646,7 +1692,7 @@ and a tokenizer.json with huggingface tokenizers definition.</p>
 
 
 <h4 class="doc doc-heading" id="npc_engine.services.text_generation.bart.BartChatbot.__init__">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repetition_penalty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bos_token_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">eos_token_id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">pad_token_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sep_token_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repetition_penalty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bos_token_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">eos_token_id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">pad_token_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sep_token_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trunc_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 </h4>
 
@@ -1840,6 +1886,24 @@ Controls how random model output is: more temperature - more randomness</p></td>
         </tr>
     </tbody>
   </table>
+
+  </div>
+
+</div>
+
+<div class="doc doc-object doc-function">
+
+
+
+<h4 class="doc doc-heading" id="npc_engine.services.text_generation.bart.BartChatbot.string_too_long">
+<code class="highlight language-python"><span class="n">string_too_long</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span></code>
+
+</h4>
+
+
+  <div class="doc doc-contents ">
+  
+      <p>Check if prompt is too long for the model.</p>
 
   </div>
 
