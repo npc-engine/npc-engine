@@ -43,6 +43,7 @@ class BartChatbot(TextGenerationAPI):
         eos_token_id=2,
         pad_token_id=1,
         sep_token_id=None,
+        trunc_length=512,
         *args,
         **kwargs,
     ):
@@ -111,6 +112,7 @@ class BartChatbot(TextGenerationAPI):
         self.max_steps = max_steps
         self.min_length = min_length
         self.repetition_penalty = repetition_penalty
+        self.trunc_length = trunc_length
 
     def run(self, prompt: str, temperature: float = 1.0, topk: int = None) -> str:
         """Run text generation from given prompt and parameters.
@@ -157,3 +159,7 @@ class BartChatbot(TextGenerationAPI):
     def get_special_tokens(self) -> Dict[str, str]:
         """Retrun dict of special tokens to be renderable from template."""
         return self.special_tokens
+
+    def string_too_long(self, prompt):
+        """Check if prompt is too long for the model."""
+        return len(self.tokenizer.encode(prompt)) > self.trunc_length

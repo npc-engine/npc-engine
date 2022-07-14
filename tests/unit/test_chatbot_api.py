@@ -20,7 +20,11 @@ template = """
 class MockChatbotModel(TextGenerationAPI):
     def __init__(self) -> None:
         super().__init__(
-            template, service_id="test", context=zmq.Context(), uri="inproc://test"
+            context_template="",
+            history_template=template,
+            service_id="test",
+            context=zmq.Context(),
+            uri="inproc://test",
         )
 
     def run(self, prompt: str, temperature: float = 1, topk: int = None):
@@ -34,6 +38,9 @@ test"""
 
     def get_special_tokens(self):
         return {"bos_token": "{BOS_TOKEN}"}
+
+    def string_too_long(self, prompt: str) -> bool:
+        return False
 
 
 def test_chatbot_api():

@@ -19,15 +19,17 @@ class TextGenerationAPI(BaseService):
         "get_context_template",
     ]
 
-    def __init__(self, template_string: str, *args, **kwargs):
+    def __init__(self, context_template: str, history_template: str, *args, **kwargs):
         """Initialize prompt formatting variables.
 
         Args:
             template_string: Template string to be rendered as prompt.
         """
         super().__init__(*args, **kwargs)
-        self.template_string = template_string
-        self.template = Template(template_string)
+        self.context_template_string = context_template
+        self.history_template_string = history_template
+        self.context_template = Template(context_template)
+        self.history_template = Template(history_template)
         self.initialized = True
 
     @classmethod
@@ -50,8 +52,53 @@ class TextGenerationAPI(BaseService):
             raise AssertionError(
                 "Can not generate replies before Base Service class was initialized"
             )
-        prompt = self.template.render(**context, **self.get_special_tokens())
+        history = context.get("history", [])
+        history_prompt = self.history_template.render(
+            **context, **self.get_special_tokens()
+        )
+        context_prompt = self.context_template.render(
+            **context, **self.get_special_tokens()
+        )
+        prompt = context_prompt + "".join(history_prompt)
+
+        if isinstance(history, list):
+            while self.string_too_long(prompt):
+                history.pop(0)
+                history_prompt = self.history_template.render(
+                    **context, **self.get_special_tokens()
+                )
+                prompt = context_prompt + history_prompt
+                if len(history) == 0:
+                    break
+        else:
+            history_prompt = self.history_template.render(
+                **context, **self.get_special_tokens()
+            )
+            prompt = context_prompt + history_prompt
+
         return self.run(prompt, *args, **kwargs)
+
+    def get_prompt_template(self) -> str:
+        """Return prompt template string used to render model prompt.
+
+        Returns:
+            A template string.
+        """
+        return self.context_template_string + self.history_template_string
+
+    def get_context_template(self) -> Dict[str, Any]:
+        """Return context template.
+
+        Returns:
+            Example context
+        """
+        context_dict = schema_to_json(
+            to_json_schema(infer(self.context_template_string))
+        )
+        context_dict["history"] = [
+            schema_to_json(to_json_schema(infer(self.history_template_string)))
+        ]
+        return context_dict
 
     @abstractmethod
     def run(self, prompt: str, temperature: float = 1, topk: int = None) -> str:
@@ -69,6 +116,18 @@ class TextGenerationAPI(BaseService):
         return None
 
     @abstractmethod
+    def string_too_long(self, prompt: str) -> bool:
+        """Check if prompt is too long.
+
+        Args:
+            prompt: Prompt to check.
+
+        Returns:
+            True if prompt is too long, False otherwise.
+        """
+        return False
+
+    @abstractmethod
     def get_special_tokens(self) -> Dict[str, str]:
         """Return dictionary mapping for special tokens.
 
@@ -78,19 +137,3 @@ class TextGenerationAPI(BaseService):
             Dictionary of special tokens
         """
         return None
-
-    def get_prompt_template(self) -> str:
-        """Return prompt template string used to render model prompt.
-
-        Returns:
-            A template string.
-        """
-        return self.template_string
-
-    def get_context_template(self) -> Dict[str, Any]:
-        """Return context template.
-
-        Returns:
-            Example context
-        """
-        return schema_to_json(to_json_schema(infer(self.template_string)))

@@ -174,13 +174,23 @@ class ControlService:
         socket = self.services[service_id]["socket"]
         try:
             await socket.send_string(request)
-            response = await socket.recv_string()
         except zmq.Again:
-            self.services[service_id]["state"] = ServiceState.ERROR
-            logger.warning(f"Error in service {service_id}. Process is not responding.")
+            self.services[service_id]["state"] = ServiceState.STARTING
+            logger.warning(f"{service_id} is not responding.")
             await asyncio.sleep(1)
             await self.confirm_state_coroutine(service_id)
             return
+
+        response = None
+        while response is None:
+            try:
+                response = await socket.recv_string()
+            except zmq.Again:
+                self.services[service_id]["state"] = ServiceState.STARTING
+                logger.warning(f"{service_id} is not responding.")
+                await asyncio.sleep(1)
+                continue
+
         resp_dict = json.loads(response)
         if resp_dict["result"] == ServiceState.RUNNING:
             self.services[service_id]["state"] = ServiceState.RUNNING

@@ -109,11 +109,17 @@ def download_default_models(models_path: str):
         "npc-engine/exported-nemo-quartznet-ctc-stt",
         "npc-engine/exported-flowtron-waveglow-librispeech-tts",
     ]
-    for model in model_names:
+    revs = [
+        "main",
+        "crop-fix",
+        "main",
+        "main",
+    ]
+    for model, rev in zip(model_names, revs):
         logger.info("Downloading model {}", model)
         logger.info("Downloading {}", model)
         tmp_folder = snapshot_download(
-            repo_id=model, revision="main", cache_dir=models_path
+            repo_id=model, revision=rev, cache_dir=models_path
         )
         os.rename(tmp_folder, os.path.join(models_path, model.split("/")[-1]))
 
@@ -185,14 +191,15 @@ def describe(models_path: str, model_id: str):
     ),
     help="The path to the folder with service configs.",
 )
+@click.option("--revision", default="main", help="The commit/branch to use.")
 @click.argument("model_id")
-def download_model(models_path: str, model_id: str):
+def download_model(models_path: str, revision, model_id: str):
     """Download a model from Huggingface Hub."""
     model_correct = validate_hub_model(models_path, model_id)
     if model_correct:
         logger.info("Downloading model {}", model_id)
         tmp_folder = snapshot_download(
-            repo_id=model_id, revision="main", cache_dir=models_path
+            repo_id=model_id, revision=revision, cache_dir=models_path
         )
         os.rename(tmp_folder, os.path.join(models_path, model_id.split("/")[-1]))
     else:

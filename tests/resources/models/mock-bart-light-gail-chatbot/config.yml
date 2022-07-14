@@ -2,7 +2,7 @@ model_type: "BartChatbot"
 max_steps: 128
 min_length: 2
 repetition_penalty: 1
-template_string: >
+context_template: >
   _setting_name {{ location_name }}
 
   _setting_desc {{ location }}</s>
@@ -15,6 +15,7 @@ template_string: >
 
   _other_persona {{ other_persona }}</s>
 
+history_template: >
   {% for line in history -%}
   {% if line.speaker == name -%}
   <speaker_self>
