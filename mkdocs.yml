@@ -49,9 +49,6 @@ plugins:
         python:
           rendering:
             heading_level: 3
-          setup_commands:
-            - import sys
-            - sys.path.append("npc-engine")
 markdown_extensions:
   - admonition
   - footnotes

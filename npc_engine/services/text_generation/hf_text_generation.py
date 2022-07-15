@@ -19,11 +19,11 @@ class HfChatbot(TextGenerationAPI):
 
     def __init__(
         self,
-        model_path,
-        max_length=100,
-        min_length=2,
-        repetition_penalty=1,
-        trunc_length=512,
+        model_path: str,
+        max_length: int = 100,
+        min_length: int = 2,
+        repetition_penalty: float = 1,
+        trunc_length: int = 512,
         *args,
         **kwargs,
     ):
@@ -35,6 +35,7 @@ class HfChatbot(TextGenerationAPI):
             min_length: model can't stop generating text before it's atleast
                 this long in tokens
             repetition_penalty: probability coef for same tokens to appear multiple times
+            trunc_length: length to truncate model prompt to
 
         """
         super().__init__(*args, **kwargs)
