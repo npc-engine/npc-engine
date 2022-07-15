@@ -1,34 +1,42 @@
 """NPC engine integration tests"""
-import subprocess
+from multiprocessing import freeze_support, Process
+
+import coverage
 import os
 import zmq
 import time
+import npc_engine.server.control_service
 import npc_engine.service_clients
+from npc_engine.cli import run
+
+
+def server_func(models_path):
+    coverage.process_startup()
+    from loguru import logger
+
+    logger.remove()
+    freeze_support()
+    run("55555", True, models_path, False)
+
+
+def wrapped_service(*args, **kwargs):
+    coverage.process_startup()
+    return npc_engine.server.control_service.service_process(*args, **kwargs)
 
 
 class TestZMQServer:
     """Test that starts npc-engine server and tests all the APIs"""
 
     def setup_class(cls):
-        cli_path = os.path.join(
-            os.path.dirname(__file__), "..", "..", "npc_engine", "cli.py"
-        )
         models_path = os.path.join(
             os.path.dirname(__file__), "..", "resources", "models"
         )
-        server_process = subprocess.Popen(
-            [
-                "python",
-                cli_path,
-                "--verbose",
-                "run",
-                "--models-path",
-                models_path,
-                "--port",
-                "55555",
-                "--start-all",
-            ],
-        )
+        os.environ["COVERAGE_PROCESS_START"] = ".coveragerc"
+        old_sp = npc_engine.server.control_service.service_process
+        npc_engine.server.control_service.service_process = wrapped_service
+        server_process = Process(target=server_func, args=(str(models_path),))
+        server_process.start()
+        npc_engine.server.control_service.service_process = old_sp
         cls.server_process = server_process
         cls.context = zmq.Context()
         print("Starting server")

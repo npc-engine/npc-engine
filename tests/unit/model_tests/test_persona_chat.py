@@ -83,3 +83,34 @@ class TestPersonaDialog:
             persona_dialogue = PersonaDialogue(
                 service_id="test", uri="inproc://test", context=Context()
             )
+
+    def test_auto_dialogue_id(self):
+        PersonaDialogue.create_client = (
+            lambda self, name: MockControlClient()
+            if name == "control"
+            else MockSimilarityClient()
+            if name == "SimilarityAPI"
+            else MockTextGenerationClient(
+                context_template={
+                    "persona": "",
+                    "name": "",
+                    "location": "",
+                    "location_name": "",
+                    "other_name": "",
+                    "other_persona": "",
+                    "history": [],
+                }
+            )
+        )
+        persona_dialogue = PersonaDialogue(
+            service_id="test", uri="inproc://test", context=Context()
+        )
+        dialogue_id = persona_dialogue.start_dialogue(
+            name1="test_speaker1",
+            persona1="test2",
+            name2="test_speaker2",
+            persona2="test4",
+            location_name="test5",
+            location_description="test6",
+        )
+        assert dialogue_id == "dialogue_0"
