@@ -1,4 +1,5 @@
 """Module that implements text generation model API."""
+from itertools import chain
 from typing import Dict, Any, List
 
 from abc import abstractmethod
@@ -26,7 +27,7 @@ class TextGenerationAPI(BaseService):
         context_template: str = None,
         history_template: str = None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         """Initialize prompt formatting variables.
 
@@ -121,10 +122,21 @@ class TextGenerationAPI(BaseService):
             context_dict = schema_to_json(
                 to_json_schema(infer(self.context_template_string))
             )
-            context_dict["history"] = [
-                schema_to_json(to_json_schema(infer(self.history_template_string)))
-            ]
-            return context_dict
+            history_dict = schema_to_json(
+                to_json_schema(infer(self.history_template_string))
+            )
+            combined_dict = {}
+            for key in chain(context_dict, history_dict):
+                if key in history_dict and key in context_dict:
+                    if context_dict[key] != history_dict[key]:
+                        raise AssertionError(
+                            f"Context and history templates have different values for {key}"
+                        )
+                if key in history_dict:
+                    combined_dict[key] = history_dict[key]
+                else:
+                    combined_dict[key] = context_dict[key]
+            return combined_dict
 
     @abstractmethod
     def run(self, prompt: str, temperature: float = 1, topk: int = None) -> str:

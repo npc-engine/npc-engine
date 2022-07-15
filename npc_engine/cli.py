@@ -7,13 +7,11 @@ import logging
 
 
 logging.basicConfig(level=logging.ERROR)
-import shutil
 import zmq
 import zmq.asyncio
 from npc_engine.services.utils.config import (
-    get_model_type_name,
+    get_type_from_dict,
     validate_hub_model,
-    validate_local_model,
 )
 from npc_engine.server.metadata_manager import MetadataManager
 
@@ -30,7 +28,6 @@ from multiprocessing import freeze_support
 @click.option("--verbose/--silent", "-v", default=False, help="Enable verbose output.")
 def cli(verbose: bool):
     """NPC engine JSON RPC server CLI."""
-    # Use the verbosity count to determine the logging level...
     logger.remove()
     if verbose:
         logger.add(
@@ -62,7 +59,7 @@ def cli(verbose: bool):
         )
 
 
-@cli.command()
+@cli.command("run")
 @click.option("--port", default="5555", help="The port to listen on.")
 @click.option(
     "--start-all/--dont-start",
@@ -75,6 +72,11 @@ def cli(verbose: bool):
     help="The path to the folder with service configs",
 )
 @click.option("--http/--zmq", default=False, help="Whether to use HTTP or ZMQ.")
+def run_command(port: str, start_all: bool, models_path: str, http: bool):
+    """Start the server."""
+    run(port, start_all, models_path, http)
+
+
 def run(port: str, start_all: bool, models_path: str, http: bool):
     """Load the models and start JSONRPC server."""
     from npc_engine.server.control_service import ControlService
@@ -101,7 +103,7 @@ def run(port: str, start_all: bool, models_path: str, http: bool):
     default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
     help="The path to the folder with service configs.",
 )
-def download_default_models(models_path: str):
+def download_default_models(models_path: str):  # pragma: no cover
     """Download default models into the folder."""
     model_names = [
         "npc-engine/exported-paraphrase-MiniLM-L6-v2",
@@ -175,7 +177,7 @@ def describe(models_path: str, model_id: str):
     metadata = model_manager.get_metadata(model_id)
 
     click.echo(metadata["id"])
-    click.echo(metadata["type"])
+    click.echo(get_type_from_dict(metadata))
     click.echo("Service description:")
     click.echo(metadata["service_description"])
     click.echo("Model description:")
@@ -193,7 +195,7 @@ def describe(models_path: str, model_id: str):
 )
 @click.option("--revision", default="main", help="The commit/branch to use.")
 @click.argument("model_id")
-def download_model(models_path: str, revision, model_id: str):
+def download_model(models_path: str, revision, model_id: str):  # pragma: no cover
     """Download a model from Huggingface Hub."""
     model_correct = validate_hub_model(models_path, model_id)
     if model_correct:
@@ -209,74 +211,6 @@ def download_model(models_path: str, revision, model_id: str):
                 fg="yellow",
             )
         )
-
-
-@cli.command()
-@click.option(
-    "--models-path",
-    default=os.environ.get(
-        "NPC_ENGINE_MODELS_PATH",
-        "./models",
-    ),
-    help="The path to the folder with service configs.",
-)
-@click.argument("model_id")
-def import_model(models_path: str, model_id: str, remove_source: bool = False):
-    """Import the model."""
-    from npc_engine.import_wizards.base_import_wizard import ImportWizard
-
-    logger.info("Downloading source model {}", model_id)
-    if os.path.exists(model_id):
-        source_path = model_id
-    else:
-        source_path = snapshot_download(
-            repo_id=model_id, revision="main", cache_dir=models_path
-        )
-        remove_source = True
-    export_path = os.path.join(
-        models_path,
-        "converted-" + model_id.replace("\\", "/").split("/")[-1],
-    )
-    os.makedirs(export_path, exist_ok=True)
-
-    logger.info("Exporting model {} to {}", model_id, export_path)
-    import_wizards = ImportWizard.get_import_wizards()
-    click.echo("Available exporters:")
-    for i, import_wizard in enumerate(import_wizards):
-        click.echo(f"{i+1}. {import_wizard.description()}")
-    exporter_id = click.prompt("Please select an exporter", type=int)
-    import_wizard = import_wizards[exporter_id - 1]
-    import_wizard.convert(source_path, export_path)
-    import_wizard.create_config(export_path)
-    if remove_source:
-        shutil.rmtree(source_path)
-
-
-@cli.command()
-@click.option(
-    "--models-path",
-    default=os.environ.get("NPC_ENGINE_MODELS_PATH", "./models"),
-    help="The path to the folder with service configs.",
-)
-@click.argument("model_id")
-def test_model(models_path: str, model_id: str):
-    """Send test request to the model and print reply."""
-    from npc_engine.import_wizards.base_import_wizard import ImportWizard
-
-    if not validate_local_model(models_path, model_id):
-        click.echo(
-            click.style(
-                f"{(model_id)} is not a valid npc-engine model.",
-                fg="red",
-            )
-        )
-        return 1
-    model_type = get_model_type_name(models_path, model_id)
-    exporters = ImportWizard.get_import_wizards()
-    for exporter in exporters:
-        if exporter.get_model_name() == model_type:
-            exporter.test_model(models_path, model_id)
-            return 0
 
 
 @cli.command()
