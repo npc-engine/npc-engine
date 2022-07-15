@@ -2,8 +2,7 @@ model_type: "HfChatbot"
 max_length: 128
 min_length: 3
 repetition_penalty: 1.0
-context_template: ""
-history_template:
+template_string:
   "{#\nPlease create a template that will map context fields to prompt\n\
   Any context fields defined here must be then sent over the request via json as context\
   \ arg\nSee Jinja docs for template design https://jinja.palletsprojects.com/en/3.1.x/templates/#\

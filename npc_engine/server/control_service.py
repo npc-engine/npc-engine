@@ -143,7 +143,6 @@ class ControlService:
         self.check_service(service_id)
         if self.services[service_id]["state"] == ServiceState.RUNNING:
             raise ValueError(f"Service {service_id} is already running")
-
         process = Process(
             target=service_process,
             args=(self.metadata, service_id, logger),
@@ -224,5 +223,5 @@ class ControlService:
     def check_dependency(self, service_id, dependency):
         """Check if the service has the dependency."""
         service_id = self.metadata.resolve_service(service_id, None)
-        self.metadata.services[service_id].append(dependency)
+        self.metadata.services[service_id].dependencies.append(dependency)
         self.metadata.check_dependency_cycles()

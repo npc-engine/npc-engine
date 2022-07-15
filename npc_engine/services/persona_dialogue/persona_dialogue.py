@@ -64,6 +64,9 @@ class PersonaDialogue(PersonaDialogueAPI):
         if dialogue_id is None:
             dialogue_id = f"dialogue_{self.dialogue_id_counter}"
             self.dialogue_id_counter += 1
+            while dialogue_id in self.dialogues:
+                dialogue_id = f"dialogue_{self.dialogue_id_counter}"
+                self.dialogue_id_counter += 1
         self.dialogues[dialogue_id] = {
             "characters": [
                 {"name": name1, "persona": persona1},
