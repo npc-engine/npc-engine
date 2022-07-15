@@ -1,5 +1,3 @@
 Minor:   
-- Provider selection from config
-- Multiprocessing logging fix
-- Shorter download names and IPC links to fix `name too long` error
-- Pyinstaller hooks fix
+- Changed text generation model config format to support context field that is not cropped.
+- Minor fixes.
