@@ -1069,22 +1069,23 @@ all the abstract methods required by the API class to function.</p>
 <h2 id="existing-service-classes">Existing service classes</h2>
 
 
-<div class="doc doc-object doc-class">
+  <div class="doc doc-object doc-class">
 
 
 
 <h3 id="npc_engine.services.sequence_classifier.hf_classifier.HfClassifier" class="doc doc-heading">
-        <code>npc_engine.services.sequence_classifier.hf_classifier.HfClassifier</code>
+          <code>npc_engine.services.sequence_classifier.hf_classifier.HfClassifier</code>
+
 
 
 </h3>
 
 
-  <div class="doc doc-contents first">
-      <p class="doc doc-class-bases">
-        Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.sequence_classifier.sequence_classifier_base.SequenceClassifierAPI" href="../api_classes/#npc_engine.services.sequence_classifier.sequence_classifier_base.SequenceClassifierAPI">SequenceClassifierAPI</a></code></p>
+    <div class="doc doc-contents first">
+        <p class="doc doc-class-bases">
+          Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.sequence_classifier.sequence_classifier_base.SequenceClassifierAPI" href="../reference/#npc_engine.services.sequence_classifier.sequence_classifier_base.SequenceClassifierAPI">SequenceClassifierAPI</a></code></p>
 
-  
+
       <p>Huggingface transformers sequence classification.</p>
 <p>Uses ONNX export of Huggingface transformers
 (https://huggingface.co/models) with sequence-classification feature.
@@ -1092,7 +1093,7 @@ Also requires saved tokenizer with huggingface tokenizers.</p>
 
 
 
-  
+
 
   <div class="doc doc-children">
 
@@ -1104,18 +1105,24 @@ Also requires saved tokenizer with huggingface tokenizers.</p>
 
 
 
-<div class="doc doc-object doc-function">
+
+
+
+
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.sequence_classifier.hf_classifier.HfClassifier.__init__" class="doc doc-heading">
 <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Create and load biencoder model for semantic similarity.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -1142,22 +1149,25 @@ Also requires saved tokenizer with huggingface tokenizers.</p>
     </tbody>
   </table>
 
+    </div>
+
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.sequence_classifier.hf_classifier.HfClassifier.compute_scores_batch" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">compute_scores_batch</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Compute scores.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -1202,41 +1212,46 @@ Also requires saved tokenizer with huggingface tokenizers.</p>
     </tbody>
   </table>
 
-  </div>
-
-</div>
-
-
+    </div>
 
   </div>
 
+
+
+
+
   </div>
 
-</div>
+    </div>
 
-<div class="doc doc-object doc-class">
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
 
 
 
 <h3 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot" class="doc doc-heading">
-        <code>npc_engine.services.text_generation.hf_text_generation.HfChatbot</code>
+          <code>npc_engine.services.text_generation.hf_text_generation.HfChatbot</code>
+
 
 
 </h3>
 
 
-  <div class="doc doc-contents first">
-      <p class="doc doc-class-bases">
-        Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.text_generation.text_generation_base.TextGenerationAPI" href="../api_classes/#npc_engine.services.text_generation.text_generation_base.TextGenerationAPI">TextGenerationAPI</a></code></p>
+    <div class="doc doc-contents first">
+        <p class="doc doc-class-bases">
+          Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.text_generation.text_generation_base.TextGenerationAPI" href="../reference/#npc_engine.services.text_generation.text_generation_base.TextGenerationAPI">TextGenerationAPI</a></code></p>
 
-  
+
       <p>Chatbot that uses Huggingface transformer architectures.</p>
 <p>ONNX export of Huggingface transformer is required (see https://huggingface.co/docs/transformers/serialization).
 Features seq2seq-lm, causal-lm, seq2seq-lm-with-past, causal-lm-with-past are supported</p>
 
 
 
-  
+
 
   <div class="doc doc-children">
 
@@ -1248,18 +1263,31 @@ Features seq2seq-lm, causal-lm, seq2seq-lm-with-past, causal-lm-with-past are su
 
 
 
-<div class="doc doc-object doc-function">
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.__init__" class="doc doc-heading">
 <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repetition_penalty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trunc_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Create the chatbot from config args and kwargs.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -1276,6 +1304,7 @@ Features seq2seq-lm, causal-lm, seq2seq-lm-with-past, causal-lm-with-past are su
         <tr>
           <td><code>model_path</code></td>
           <td>
+                <code>str</code>
           </td>
           <td><p>path to scan for model files (weights and configs)</p></td>
           <td>
@@ -1285,6 +1314,7 @@ Features seq2seq-lm, causal-lm, seq2seq-lm-with-past, causal-lm-with-past are su
         <tr>
           <td><code>max_length</code></td>
           <td>
+                <code>int</code>
           </td>
           <td><p>stop generation at this number of tokens</p></td>
           <td>
@@ -1294,6 +1324,7 @@ Features seq2seq-lm, causal-lm, seq2seq-lm-with-past, causal-lm-with-past are su
         <tr>
           <td><code>min_length</code></td>
           <td>
+                <code>int</code>
           </td>
           <td><p>model can't stop generating text before it's atleast
 this long in tokens</p></td>
@@ -1304,31 +1335,45 @@ this long in tokens</p></td>
         <tr>
           <td><code>repetition_penalty</code></td>
           <td>
+                <code>float</code>
           </td>
           <td><p>probability coef for same tokens to appear multiple times</p></td>
           <td>
                 <code>1</code>
           </td>
         </tr>
+        <tr>
+          <td><code>trunc_length</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>length to truncate model prompt to</p></td>
+          <td>
+                <code>512</code>
+          </td>
+        </tr>
     </tbody>
   </table>
 
+    </div>
+
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.create_starter_inputs" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">create_starter_inputs</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Create starter inputs for the model.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -1373,22 +1418,25 @@ this long in tokens</p></td>
     </tbody>
   </table>
 
+    </div>
+
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.decode_logit" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">decode_logit</span><span class="p">(</span><span class="n">logit</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">topk</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Decode logit to token.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -1433,40 +1481,46 @@ this long in tokens</p></td>
     </tbody>
   </table>
 
+    </div>
+
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.get_special_tokens" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">get_special_tokens</span><span class="p">()</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Return dict of special tokens to be renderable from template.</p>
+
+    </div>
 
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.run" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">run</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">topk</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Run text generation from given prompt and parameters.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -1532,40 +1586,46 @@ Controls how random model output is: more temperature - more randomness</p></td>
     </tbody>
   </table>
 
+    </div>
+
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.string_too_long" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">string_too_long</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Check if prompt is too long for the model.</p>
+
+    </div>
 
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.update_inputs_with_results" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">update_inputs_with_results</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">decoded_token</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Update inputs with results from model.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -1626,34 +1686,39 @@ Controls how random model output is: more temperature - more randomness</p></td>
     </tbody>
   </table>
 
-  </div>
-
-</div>
-
-
+    </div>
 
   </div>
 
+
+
+
+
   </div>
 
-</div>
+    </div>
 
-<div class="doc doc-object doc-class">
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
 
 
 
 <h3 id="npc_engine.services.text_generation.bart.BartChatbot" class="doc doc-heading">
-        <code>npc_engine.services.text_generation.bart.BartChatbot</code>
+          <code>npc_engine.services.text_generation.bart.BartChatbot</code>
+
 
 
 </h3>
 
 
-  <div class="doc doc-contents first">
-      <p class="doc doc-class-bases">
-        Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.text_generation.text_generation_base.TextGenerationAPI" href="../api_classes/#npc_engine.services.text_generation.text_generation_base.TextGenerationAPI">TextGenerationAPI</a></code></p>
+    <div class="doc doc-contents first">
+        <p class="doc doc-class-bases">
+          Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.text_generation.text_generation_base.TextGenerationAPI" href="../reference/#npc_engine.services.text_generation.text_generation_base.TextGenerationAPI">TextGenerationAPI</a></code></p>
 
-  
+
       <p>BART based chatbot implementation class.</p>
 <p>This model class requires two ONNX models <code>encoder_bart.onnx</code> and <code>decoder_bart.onnx</code>
 that correspond to encoder and decoder from transformers
@@ -1675,7 +1740,7 @@ and a tokenizer.json with huggingface tokenizers definition.</p>
 
 
 
-  
+
 
   <div class="doc doc-children">
 
@@ -1687,18 +1752,30 @@ and a tokenizer.json with huggingface tokenizers definition.</p>
 
 
 
-<div class="doc doc-object doc-function">
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.text_generation.bart.BartChatbot.__init__" class="doc doc-heading">
 <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repetition_penalty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">bos_token_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">eos_token_id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">pad_token_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sep_token_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trunc_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Create the chatbot from config args and kwargs.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -1788,40 +1865,46 @@ this long in tokens</p></td>
     </tbody>
   </table>
 
+    </div>
+
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.text_generation.bart.BartChatbot.get_special_tokens" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">get_special_tokens</span><span class="p">()</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Retrun dict of special tokens to be renderable from template.</p>
+
+    </div>
 
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.text_generation.bart.BartChatbot.run" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">run</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">topk</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Run text generation from given prompt and parameters.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -1887,52 +1970,60 @@ Controls how random model output is: more temperature - more randomness</p></td>
     </tbody>
   </table>
 
+    </div>
+
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.text_generation.bart.BartChatbot.string_too_long" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">string_too_long</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Check if prompt is too long for the model.</p>
 
-  </div>
-
-</div>
-
-
+    </div>
 
   </div>
 
+
+
+
+
   </div>
 
-</div>
+    </div>
 
-<div class="doc doc-object doc-class">
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
 
 
 
 <h3 id="npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity" class="doc doc-heading">
-        <code>npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity</code>
+          <code>npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity</code>
+
 
 
 </h3>
 
 
-  <div class="doc doc-contents first">
-      <p class="doc doc-class-bases">
-        Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.similarity.similarity_base.SimilarityAPI" href="../api_classes/#npc_engine.services.similarity.similarity_base.SimilarityAPI">SimilarityAPI</a></code></p>
+    <div class="doc doc-contents first">
+        <p class="doc doc-class-bases">
+          Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.similarity.similarity_base.SimilarityAPI" href="../reference/#npc_engine.services.similarity.similarity_base.SimilarityAPI">SimilarityAPI</a></code></p>
 
-  
+
       <p>Huggingface transformers semantic similarity.</p>
 <p>Uses ONNX export of Huggingface transformers
 (https://huggingface.co/models) with biencoder architecture.
@@ -1948,7 +2039,7 @@ Also requires a tokenizer.json with huggingface tokenizers definition.</p>
 
 
 
-  
+
 
   <div class="doc doc-children">
 
@@ -1960,18 +2051,25 @@ Also requires a tokenizer.json with huggingface tokenizers definition.</p>
 
 
 
-<div class="doc doc-object doc-function">
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.__init__" class="doc doc-heading">
 <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Create and load biencoder model for semantic similarity.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -2008,22 +2106,26 @@ Also requires a tokenizer.json with huggingface tokenizers definition.</p>
     </tbody>
   </table>
 
+    </div>
+
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.compute_embedding" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">compute_embedding</span><span class="p">(</span><span class="n">line</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Compute sentence embedding.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -2068,22 +2170,25 @@ Also requires a tokenizer.json with huggingface tokenizers definition.</p>
     </tbody>
   </table>
 
+    </div>
+
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.compute_embedding_batch" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">compute_embedding_batch</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Compute line embeddings in batch.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -2128,22 +2233,25 @@ Also requires a tokenizer.json with huggingface tokenizers definition.</p>
     </tbody>
   </table>
 
+    </div>
+
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.metric" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">metric</span><span class="p">(</span><span class="n">embedding_a</span><span class="p">,</span> <span class="n">embedding_b</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Similarity between two embeddings.</p>
 <p>Embeddings are of broadcastable shapes. (1 or batch_size)</p>
 
@@ -2199,34 +2307,39 @@ Also requires a tokenizer.json with huggingface tokenizers definition.</p>
     </tbody>
   </table>
 
-  </div>
-
-</div>
-
-
+    </div>
 
   </div>
 
+
+
+
+
   </div>
 
-</div>
+    </div>
 
-<div class="doc doc-object doc-class">
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
 
 
 
 <h3 id="npc_engine.services.tts.flowtron.FlowtronTTS" class="doc doc-heading">
-        <code>npc_engine.services.tts.flowtron.FlowtronTTS</code>
+          <code>npc_engine.services.tts.flowtron.FlowtronTTS</code>
+
 
 
 </h3>
 
 
-  <div class="doc doc-contents first">
-      <p class="doc doc-class-bases">
-        Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.tts.tts_base.TextToSpeechAPI" href="../api_classes/#npc_engine.services.tts.tts_base.TextToSpeechAPI">TextToSpeechAPI</a></code></p>
+    <div class="doc doc-contents first">
+        <p class="doc doc-class-bases">
+          Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.tts.tts_base.TextToSpeechAPI" href="../reference/#npc_engine.services.tts.tts_base.TextToSpeechAPI">TextToSpeechAPI</a></code></p>
 
-  
+
       <p>Implements Flowtron architecture inference.</p>
 <p>Paper:
 <a href="https://arxiv.org/abs/2005.05957">arXiv:2005.05957</a>
@@ -2241,7 +2354,7 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
 
 
 
-  
+
 
   <div class="doc doc-children">
 
@@ -2253,54 +2366,75 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
 
 
 
-<div class="doc doc-object doc-function">
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.__init__" class="doc doc-heading">
 <code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_frames</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">gate_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">smoothing_window</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">smoothing_weight</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Create and load Flowtron and vocoder models.</p>
+
+    </div>
 
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+
+
+
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.get_speaker_ids" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">get_speaker_ids</span><span class="p">()</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Return available ids of different speakers.</p>
+
+    </div>
 
   </div>
 
-</div>
 
-<div class="doc doc-object doc-function">
+
+  <div class="doc doc-object doc-function">
 
 
 
 <h4 id="npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.run" class="doc doc-heading">
 <code class="highlight language-python"><span class="n">run</span><span class="p">(</span><span class="n">speaker_id</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">n_chunks</span><span class="p">)</span></code>
 
+
 </h4>
 
 
-  <div class="doc doc-contents ">
-  
+    <div class="doc doc-contents ">
+
       <p>Create a generator for iterative generation of speech.</p>
 
   <p><strong>Parameters:</strong></p>
@@ -2365,17 +2499,21 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
     </tbody>
   </table>
 
-  </div>
-
-</div>
-
-
+    </div>
 
   </div>
 
+
+
+
+
   </div>
 
-</div><h2 id="default-models">Default Models</h2>
+    </div>
+
+  </div>
+
+<h2 id="default-models">Default Models</h2>
 <ul>
 <li>
 <h3 id="fantasy-chatbot">Fantasy Chatbot</h3>
