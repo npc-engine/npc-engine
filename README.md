@@ -79,6 +79,10 @@ We have a [Discord](https://discord.gg/R4zBNmnfrU) server where you can get supp
 
 If you would like to donate, you can check out our [Patreon](https://www.patreon.com/npcengine).
 
+### Our Patrons
+
+- Marrech Games
+
 ## Authors
 
 - **eublefar** - _Python, Neural Nets_ - [github](https://github.com/eublefar)
