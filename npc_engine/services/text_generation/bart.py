@@ -69,7 +69,7 @@ class BartChatbot(TextGenerationAPI):
 
         sess_options = rt.SessionOptions()
         sess_options.graph_optimization_level = (
-            rt.GraphOptimizationLevel.ORT_DISABLE_ALL
+            rt.GraphOptimizationLevel.ORT_ENABLE_ALL
         )
         self.encoder_model = rt.InferenceSession(
             os.path.join(model_path, "encoder_bart.onnx"),

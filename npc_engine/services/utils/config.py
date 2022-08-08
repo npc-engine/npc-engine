@@ -95,11 +95,10 @@ def validate_hub_model(models_path: str, model_id: str) -> bool:
             config_dict = yaml.load(f, Loader=yaml.Loader)
         if "model_type" not in config_dict:
             model_correct = False
+        if os.path.exists(config_path):
+            os.remove(config_path)
     except ValueError:
         model_correct = False
-
-    if os.path.exists(config_path):
-        os.remove(config_path)
     if os.path.exists(tmp_model_path):
         os.rmdir(tmp_model_path)
     return model_correct

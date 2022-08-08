@@ -128,4 +128,4 @@ class BaseService(FactoryMixin, ABC):
                 if provider not in rt.get_available_providers():
                     raise RuntimeError(f"Provider {provider} is not available")
         else:
-            self.providers = rt.get_available_providers()
+            self.providers = ["DmlExecutionProvider"]
