@@ -67,8 +67,8 @@ class TestControlService:
         assert model_manager.get_service_status(service) == ServiceState.STOPPED
         model_manager.start_service(service)
         assert model_manager.get_service_status(service) == ServiceState.RUNNING
-        model_manager.services[service]["process"].terminate()
-        time.sleep(0.5)
+        model_manager.services[service]["process"].kill()
+        time.sleep(1)
         with pytest.raises(ValueError):
             model_manager.get_service_status(service)
         assert model_manager.get_service_status(service) == ServiceState.ERROR
