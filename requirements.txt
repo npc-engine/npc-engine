@@ -22,4 +22,3 @@ scikit-learn==1.0.2
 jinja2schema==0.1.4
 appdirs==1.4.4
 aiohttp==3.8.1
-espnet-onnx==0.1.9
