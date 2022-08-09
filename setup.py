@@ -36,6 +36,11 @@ with open("requirements_dev.txt", encoding="utf-8") as f:
 with open("requirements_doc.txt", encoding="utf-8") as f:
     requirements_doc = f.readlines()
 
+requirements_deploy = [   
+    "pip-licenses>=3.5.3"
+    "pyinstaller==5.0"
+]
+
 packages_no_deps = [
     "espnet-onnx==0.1.9",
 ]
@@ -52,6 +57,7 @@ setup(
     version=version,
     install_requires=requirements,
     extras_require={
+        "deploy": requirements_deploy,
         "dev": requirements_dev,
         "doc": requirements_doc,
         "benchmarks": ["py3nvml"],
