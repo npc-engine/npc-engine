@@ -42,7 +42,7 @@ def test_reply_default():
     answer = chatbot_model.generate_reply(
         context=dict(
             location_name="Brimswood pub, Tavern",
-            location_description="""The Brimswood pub is an old establishment. 
+            location="""The Brimswood pub is an old establishment. 
 It is sturdy, has a lot of life in its walls, but hasn't been updated in decades.
 The clientele are the same as they always are, and they don't see very many strangers. 
 The vibe is somber, and conversations are usually had in hushed tones.""",
@@ -54,7 +54,10 @@ I sleep at his feet and guard the room at night from things that go bump in the 
 I tend to be in very good spirits and enjoy selling delicious baked goods that my wife has made.  
 My wife is great at baking but she is lousy at washing my clothes.  
 They keep shrinking!""",
-            history=["<speaker_other>Hello friend!"],
+            history=[
+                {"speaker": "the town baker's husband", "line": "Hello friend!"},
+                {"speaker": "pet dog", "line": "Hello!"},
+            ],
         ),
         temperature=0.8,
         topk=None,
