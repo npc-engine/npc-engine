@@ -27,7 +27,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install tox tox-gh-actions
-          pip install .[dml]
+          pip install .[deploy,dml]
 
       - name: Build release
         run: |
