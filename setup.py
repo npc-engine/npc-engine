@@ -10,6 +10,7 @@ import subprocess
 import sys
 
 def install(package):
+    """Install package without dependencies."""
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-deps", package])
 
 
