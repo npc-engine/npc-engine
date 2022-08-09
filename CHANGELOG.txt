@@ -1,3 +1,4 @@
 Minor:   
 - Performance fix that removes freezes during TTS and text generation.
+- Corrected release build process.
 - Minor fixes.
