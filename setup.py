@@ -37,7 +37,7 @@ with open("requirements_doc.txt", encoding="utf-8") as f:
     requirements_doc = f.readlines()
 
 requirements_deploy = [   
-    "pip-licenses>=3.5.3"
+    "pip-licenses>=3.5.3",
     "pyinstaller==5.0"
 ]
 
