@@ -1,3 +1,3 @@
 Minor:   
-- Changed text generation model config format to support context field that is not cropped.
+- Performance fix that removes freezes during TTS and text generation.
 - Minor fixes.

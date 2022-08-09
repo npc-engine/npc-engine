@@ -16,7 +16,8 @@ context_template: >
   _other_persona {{ other_persona }}</s>
 
 history_template: >
-  {% for line in history -%}
+  {% for line in history %}
+  
   {% if line.speaker == name -%}
   <speaker_self>
   {%- elif line.speaker == other_name -%}
@@ -24,8 +25,7 @@ history_template: >
   {%- endif -%}
   {{- line.line -}}
   </s>
-
-  {% endfor -%}
+  {%- endfor -%}
 
 bos_token_id: 0
 eos_token_id: 2
