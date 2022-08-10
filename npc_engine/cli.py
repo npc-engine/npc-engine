@@ -108,7 +108,6 @@ def download_default_models(models_path: str):  # pragma: no cover
     model_names = [
         "npc-engine/exported-paraphrase-MiniLM-L6-v2",
         "npc-engine/exported-bart-light-gail-chatbot",
-        "npc-engine/exported-nemo-quartznet-ctc-stt",
         "npc-engine/exported-flowtron-waveglow-librispeech-tts",
     ]
     revs = [
