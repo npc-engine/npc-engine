@@ -63,7 +63,9 @@ def validate_local_model(models_path: str, model_id: str) -> bool:
         model_correct = False
     else:
         try:
-            _ = get_model_type_name(models_path, model_id)
+            model_type = get_model_type_name(models_path, model_id)
+            if model_type == "":
+                model_correct = False
         except FileNotFoundError:
             model_correct = False
     return model_correct
@@ -93,7 +95,8 @@ def validate_hub_model(models_path: str, model_id: str) -> bool:
         )
         with open(config_path) as f:
             config_dict = yaml.load(f, Loader=yaml.Loader)
-        if "model_type" not in config_dict:
+        model_type = get_type_from_dict(config_dict)
+        if model_type == "":
             model_correct = False
         if os.path.exists(config_path):
             os.remove(config_path)
