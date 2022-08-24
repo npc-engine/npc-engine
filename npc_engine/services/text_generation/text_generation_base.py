@@ -85,7 +85,8 @@ class TextGenerationAPI(BaseService):
 
             if isinstance(history, list):
                 while self.string_too_long(prompt):
-                    history.pop(0)
+                    deleted = history.pop(0)
+                    logger.warning(f"Deleted {deleted} from history")
                     history_prompt = self.history_template.render(
                         **context, **self.get_special_tokens()
                     )
