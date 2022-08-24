@@ -38,6 +38,7 @@ class FlowtronTTS(TextToSpeechAPI):
         sigma=0.8,
         smoothing_window=3,
         smoothing_weight=0.5,
+        n_speakers=123,
         *args,
         **kwargs
     ):
@@ -75,7 +76,7 @@ class FlowtronTTS(TextToSpeechAPI):
             providers=self.get_providers(),
             sess_options=sess_options,
         )
-        self.speaker_ids = [str(i) for i in range(127)]
+        self.speaker_ids = [str(i) for i in range(n_speakers)]
         self.speaker_ids_map = {idx: i for i, idx in enumerate(self.speaker_ids)}
 
     def get_speaker_ids(self) -> List[str]:
