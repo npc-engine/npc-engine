@@ -105,7 +105,10 @@ class ControlService:
         request_dict = json.loads(request)
         service_id = self.metadata.resolve_service(address, request_dict["method"])
         self.check_service(service_id)
-        logger.info(f"Request from {address}\n Request: {request}")
+        if address == "control":
+            logger.trace(f"Request from {address}\n Request: {request}")
+        else:
+            logger.info(f"Request from {address} ({service_id})\n Request: {request}")
         if service_id == "control":
             return JSONRPCResponseManager.handle(request, self.control_dispatcher).json
         else:

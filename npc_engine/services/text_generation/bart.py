@@ -1,12 +1,13 @@
 """BART based chatbot implementation."""
-from typing import Dict
+from asyncio.log import logger
+from typing import Dict, List, Tuple
 import numpy as np
-import scipy.special as scp
 import onnxruntime as rt
 from npc_engine.services.text_generation.text_generation_base import TextGenerationAPI
 from tokenizers import Tokenizer
 import os
 import json
+from npc_engine.services.text_generation.utils import decode_logits
 
 
 class BartChatbot(TextGenerationAPI):
@@ -38,7 +39,6 @@ class BartChatbot(TextGenerationAPI):
         model_path,
         max_steps=100,
         min_length=2,
-        repetition_penalty=1,
         bos_token_id=0,
         eos_token_id=2,
         pad_token_id=1,
@@ -54,7 +54,6 @@ class BartChatbot(TextGenerationAPI):
             max_steps: stop generation at this number of tokens
             min_length: model can't stop generating text before it's atleast
                 this long in tokens
-            repetition_penalty: probability coef for same tokens to appear multiple times
             bos_token_id: beginning of sequence token id
             eos_token_id: end of sequence token id
             pad_token_id: padding token id
@@ -68,9 +67,7 @@ class BartChatbot(TextGenerationAPI):
         self.pad_token_id = pad_token_id
 
         sess_options = rt.SessionOptions()
-        sess_options.graph_optimization_level = (
-            rt.GraphOptimizationLevel.ORT_ENABLE_ALL
-        )
+        sess_options.graph_optimization_level = rt.GraphOptimizationLevel.ORT_ENABLE_ALL
         self.encoder_model = rt.InferenceSession(
             os.path.join(model_path, "encoder_bart.onnx"),
             providers=self.get_providers(),
@@ -86,6 +83,7 @@ class BartChatbot(TextGenerationAPI):
         if os.path.exists(added_tokens_path):
             with open(added_tokens_path) as f:
                 added_tokens = json.load(f)
+            self.added_tokens = added_tokens
             added_tokens = [
                 key for key, _ in sorted(list(added_tokens.items()), key=lambda x: x[1])
             ]
@@ -111,10 +109,15 @@ class BartChatbot(TextGenerationAPI):
 
         self.max_steps = max_steps
         self.min_length = min_length
-        self.repetition_penalty = repetition_penalty
         self.trunc_length = trunc_length
 
-    def run(self, prompt: str, temperature: float = 1.0, topk: int = None) -> str:
+    def run(
+        self,
+        prompt: str,
+        temperature: float = 1.0,
+        topk: int = None,
+        num_sampled: int = 3,
+    ) -> str:
         """Run text generation from given prompt and parameters.
 
         Args:
@@ -122,6 +125,7 @@ class BartChatbot(TextGenerationAPI):
             temperature: Temperature parameter for sampling.
                 Controls how random model output is: more temperature - more randomness
             topk: If not none selects top n of predictions to sample from during generation.
+            num_sampled: Number of token sequences to generate. Best one is selected by model confidence.
 
         Returns:
             Generated text
@@ -129,32 +133,60 @@ class BartChatbot(TextGenerationAPI):
         tokens = self.tokenizer.encode(prompt)
         total = np.asarray(tokens.ids, dtype=np.int64).reshape([1, -1])
         total_enc = self.encoder_model.run(None, {"input_ids": total})[0]
+        log_probs = []
+        utterances = []
 
+        for _ in range(num_sampled):
+            utterance, log_prob = self.run_decoder(total_enc, temperature, topk)
+            log_probs.append(log_prob[0])
+            utterances.append(utterance)
+        decoded = [
+            self.tokenizer.decode(line, skip_special_tokens=True) for line in utterances
+        ]
+        lengths = [len(line) - 1 for line in utterances]
+        mean_log_probs = [
+            log_prob / length for log_prob, length in zip(log_probs, lengths)
+        ]
+        logger.warn(f"Perplexities: {mean_log_probs}")
+        logger.warn(f"Decoded: {decoded}")
+        return decoded[np.argmax(mean_log_probs)]
+
+    def run_decoder(
+        self, encoder_hidden_state: np.ndarray, temperature: float, topk: int
+    ) -> Tuple[List[float], List[float]]:
+        """Run decoder model on given encoder hidden state.
+
+        Args:
+            encoder_hidden_state: Encoder hidden state.
+            temperature: Temperature parameter for sampling.
+            topk: If not none selects top n of predictions to sample from during generation.
+
+        Returns:
+            (Decoded tokens, sequence probabilities)
+        """
         utterance = np.asarray([self.eos_token_id], dtype=np.int64).reshape([1, 1])
-
+        log_probs = [
+            0,
+        ]
         for i in range(self.max_steps):
             o = self.decoder_model.run(
                 None,
-                {"encoder_hidden_state": total_enc, "decoder_input_ids": utterance},
+                {
+                    "encoder_hidden_state": encoder_hidden_state,
+                    "decoder_input_ids": utterance,
+                },
             )
-            logits = o[0][0, -1, :]
-
+            logits = o[0][:, -1, :]
             if i < self.min_length:
-                logits[self.eos_token_id] = float("-inf")
-            if topk is not None:
-                ind = np.argpartition(logits, -topk)[-topk:]
-                new_logits = np.zeros(logits.shape)
-                new_logits[ind] = logits[ind]
-                logits = new_logits
-
-            probs = scp.softmax(logits / temperature, axis=0)
-
-            token = np.random.choice(np.arange(probs.shape[0]), p=probs)
-            token = token.reshape([1, 1])
-            utterance = np.concatenate([utterance, token], axis=1)
-            if token[0, 0] == self.eos_token_id:
+                logits[:, self.eos_token_id] = float("-inf")
+            tokens, log_probs = decode_logits(logits, temperature, topk, log_probs)
+            utterance = np.concatenate(
+                [utterance, np.asarray(tokens, dtype=utterance.dtype).reshape([-1, 1])],
+                axis=1,
+            )
+            if tokens[0] == self.eos_token_id:
                 break
-        return self.tokenizer.decode(utterance[0, :].tolist(), skip_special_tokens=True)
+        return utterance.reshape([-1]).tolist(), log_probs
 
     def get_special_tokens(self) -> Dict[str, str]:
         """Retrun dict of special tokens to be renderable from template."""

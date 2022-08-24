@@ -1,13 +1,14 @@
 """BART based chatbot implementation."""
-from typing import Any, Dict
+from copy import copy
+from typing import Any, Dict, List
 import numpy as np
-import scipy.special as scp
 import onnxruntime as rt
 from npc_engine.services.text_generation.text_generation_base import TextGenerationAPI
 from tokenizers import Tokenizer
 import os
 import json
 from npc_engine.services.utils import DTYPE_MAP
+from npc_engine.services.text_generation.utils import decode_logits
 
 
 class HfChatbot(TextGenerationAPI):
@@ -24,6 +25,7 @@ class HfChatbot(TextGenerationAPI):
         min_length: int = 2,
         repetition_penalty: float = 1,
         trunc_length: int = 512,
+        num_sampled: int = 1,
         *args,
         **kwargs,
     ):
@@ -68,13 +70,14 @@ class HfChatbot(TextGenerationAPI):
             len([i.name for i in self.model_inputs if "past_key_values" in i.name]) > 0
         )
         self.shape_dict = {
-            "batch": 1,
+            "batch": num_sampled,
             "past_encoder_sequence": 0,
             "past_decoder_sequence": 0,
             "past_sequence + sequence": 0,
         }
         self.dtypes = {i.name: DTYPE_MAP[i.type] for i in self.model_inputs}
         self.trunc_length = trunc_length
+        self.num_sampled = num_sampled
 
     def run(self, prompt: str, temperature: float = 1.0, topk: int = None) -> str:
         """Run text generation from given prompt and parameters.
@@ -89,24 +92,45 @@ class HfChatbot(TextGenerationAPI):
             Generated text
         """
         inputs = self.create_starter_inputs(prompt)
-        utterance = []
+        utterance = [[] for _ in range(self.num_sampled)]
+        log_probs = [0 for _ in range(self.num_sampled)]
         for i in range(self.max_steps):
             o = self.model.run(
                 None,
                 inputs,
             )
-            logit = o[0][0, -1, :]
+            logits = o[0][:, -1, :]
             if i < self.min_length:
-                logit[self.eos_token_id] = float("-inf")
-            token = self.decode_logit(logit, temperature, topk)
-            utterance.append(token)
+                logits[:, self.eos_token_id] = float("-inf")
+            tokens, log_probs = decode_logits(
+                logits, temperature, topk, log_probs=log_probs
+            )
+            for i, token in enumerate(tokens):
+                utterance[i].append(token)
             result_dict = {
                 outp.name: o[i] for i, outp in enumerate(self.model.get_outputs())
             }
-            inputs = self.update_inputs_with_results(inputs, result_dict, token)
-            if token == self.eos_token_id:
+            inputs = self.update_inputs_with_results(inputs, result_dict, tokens)
+            if all([token == self.eos_token_id for token in tokens]):
                 break
-        return self.tokenizer.decode(utterance, skip_special_tokens=True)
+        decoded = [
+            self.tokenizer.decode(
+                line[: line.index(self.eos_token_id)], skip_special_tokens=True
+            )
+            if self.eos_token_id in line
+            else self.tokenizer.decode(line, skip_special_tokens=True)
+            for line in utterance
+        ]
+        lengths = [
+            len(line[: line.index(self.eos_token_id)])
+            if self.eos_token_id in line
+            else len(line)
+            for line in utterance
+        ]
+        mean_log_probs = [
+            (log_prob / length) for log_prob, length in zip(log_probs, lengths)
+        ]
+        return decoded[mean_log_probs.index(max(mean_log_probs))]
 
     def create_starter_inputs(self, prompt: str = "") -> Dict[str, Any]:
         """Create starter inputs for the model.
@@ -120,23 +144,26 @@ class HfChatbot(TextGenerationAPI):
         tokens = self.tokenizer.encode(prompt).ids
         inputs = {}
         if self.is_encdec:
-            prompt_start = tokens[-1:]
+            prompt_start = [copy(tokens[-1:]) for _ in range(self.num_sampled)]
             inputs["input_ids"] = np.asarray(
-                tokens[:-1], dtype=self.dtypes["input_ids"]
-            ).reshape([1, -1])
+                [copy(tokens[:-1]) for _ in range(self.num_sampled)],
+                dtype=self.dtypes["input_ids"],
+            )
             inputs["decoder_input_ids"] = np.asarray(
                 prompt_start, dtype=self.dtypes["decoder_input_ids"]
-            ).reshape([1, -1])
+            )
             inputs["attention_mask"] = np.ones(
-                [1, 6], dtype=self.dtypes["attention_mask"]
+                inputs["input_ids"].shape, dtype=self.dtypes["attention_mask"]
             )
             inputs["decoder_attention_mask"] = np.ones(
-                [1, 3], dtype=self.dtypes["decoder_attention_mask"]
+                inputs["decoder_input_ids"].shape,
+                dtype=self.dtypes["decoder_attention_mask"],
             )
         else:
             inputs["input_ids"] = np.asarray(
-                tokens, dtype=self.dtypes["input_ids"]
-            ).reshape([1, -1])
+                [copy(tokens) for _ in range(self.num_sampled)],
+                dtype=self.dtypes["input_ids"],
+            )
             inputs["attention_mask"] = np.ones_like(
                 inputs["input_ids"], dtype=self.dtypes["attention_mask"]
             )
@@ -148,31 +175,11 @@ class HfChatbot(TextGenerationAPI):
                     inputs[i.name] = np.empty(shape_tuple, dtype=self.dtypes[i.name])
         return inputs
 
-    def decode_logit(self, logit: np.ndarray, temperature: float, topk: int) -> int:
-        """Decode logit to token.
-
-        Args:
-            logit: Logit to decode of shape (vocab_size,)
-
-        Returns:
-            Decoded token of shape
-        """
-        if topk is not None:
-            ind = np.argpartition(logit, -topk)[-topk:]
-            new_logits = np.zeros(logit.shape)
-            new_logits[ind] = logit[ind]
-            logit = new_logits
-
-        probs = scp.softmax(logit / temperature, axis=0)
-        token = np.random.choice(np.arange(probs.shape[0]), p=probs)
-        token = token.ravel()[0]
-        return token
-
     def update_inputs_with_results(
         self,
         inputs: Dict[str, np.ndarray],
         results: Dict[str, np.ndarray],
-        decoded_token: int,
+        decoded_tokens: List[int],
     ) -> Dict[str, np.ndarray]:
         """Update inputs with results from model.
 
@@ -189,10 +196,10 @@ class HfChatbot(TextGenerationAPI):
 
         if self.with_past:
             inputs[ids_name] = np.asarray(
-                [decoded_token], dtype=self.dtypes[ids_name]
-            ).reshape([1, -1])
+                [[tok] for tok in decoded_tokens], dtype=self.dtypes[ids_name]
+            )
             inputs[att_mask_name] = np.ones(
-                [1, inputs[att_mask_name].shape[-1] + 1],
+                [self.num_sampled, inputs[att_mask_name].shape[-1] + 1],
                 dtype=self.dtypes[att_mask_name],
             )
             for inp in self.model_inputs:
@@ -205,8 +212,11 @@ class HfChatbot(TextGenerationAPI):
         else:
             decoder_input_ids = inputs[ids_name]
             decoder_attention_mask = inputs[att_mask_name]
+            token_arr = np.asarray(
+                [[tok] for tok in decoded_tokens], dtype=self.dtypes[ids_name]
+            )
             decoder_input_ids = np.concatenate(
-                [decoder_input_ids, np.asarray([[decoded_token]], dtype=np.int32)],
+                [decoder_input_ids, token_arr],
                 axis=1,
             )
             decoder_attention_mask = np.ones_like(
