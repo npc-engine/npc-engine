@@ -9,9 +9,12 @@ from codecs import open
 import subprocess
 import sys
 
+
 def install(package):
     """Install package without dependencies."""
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-deps", package])
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", "--no-deps", package]
+    )
 
 
 # Get the long description from the relevant file
@@ -36,10 +39,7 @@ with open("requirements_dev.txt", encoding="utf-8") as f:
 with open("requirements_doc.txt", encoding="utf-8") as f:
     requirements_doc = f.readlines()
 
-requirements_deploy = [   
-    "pip-licenses>=3.5.3",
-    "pyinstaller==5.0"
-]
+requirements_deploy = ["pip-licenses>=3.5.3", "pyinstaller==5.0"]
 
 packages_no_deps = [
     "espnet-onnx==0.1.9",
