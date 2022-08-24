@@ -10298,8 +10298,8 @@ that will be exposed to API</p></td>
 <code class="highlight language-python"><span class="n">get_api_name</span><span class="p">()</span></code>
 
   <span class="doc doc-properties">
-      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
       <small class="doc doc-label doc-label-abstractmethod"><code>abstractmethod</code></small>
+      <small class="doc doc-label doc-label-classmethod"><code>classmethod</code></small>
   </span>
 
 </h6>
@@ -24488,7 +24488,8 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
 <span class="normal">348</span>
 <span class="normal">349</span>
 <span class="normal">350</span>
-<span class="normal">351</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">FlowtronTTS</span><span class="p">(</span><span class="n">TextToSpeechAPI</span><span class="p">):</span>
+<span class="normal">351</span>
+<span class="normal">352</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">FlowtronTTS</span><span class="p">(</span><span class="n">TextToSpeechAPI</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Implements Flowtron architecture inference.</span>
 
 <span class="sd">    Paper:</span>
@@ -24514,6 +24515,7 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
         <span class="n">sigma</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
         <span class="n">smoothing_window</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
         <span class="n">smoothing_weight</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">n_speakers</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span>
         <span class="o">*</span><span class="n">args</span><span class="p">,</span>
         <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">):</span>
@@ -24551,7 +24553,7 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
             <span class="n">providers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_providers</span><span class="p">(),</span>
             <span class="n">sess_options</span><span class="o">=</span><span class="n">sess_options</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">speaker_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">127</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">speaker_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_speakers</span><span class="p">)]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">speaker_ids_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">idx</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speaker_ids</span><span class="p">)}</span>
 
     <span class="k">def</span> <span class="nf">get_speaker_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
@@ -24855,7 +24857,7 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
 
 
 <h8 class="doc doc-heading" id="npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.__init__">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_frames</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">gate_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">smoothing_window</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">smoothing_weight</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_frames</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">gate_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">smoothing_window</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">smoothing_weight</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_speakers</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
 
 
 </h8>
@@ -24913,7 +24915,8 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
 <span class="normal">76</span>
 <span class="normal">77</span>
 <span class="normal">78</span>
-<span class="normal">79</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+<span class="normal">79</span>
+<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
     <span class="bp">self</span><span class="p">,</span>
     <span class="n">model_path</span><span class="p">,</span>
     <span class="n">max_frames</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
@@ -24921,6 +24924,7 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
     <span class="n">sigma</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
     <span class="n">smoothing_window</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">smoothing_weight</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">n_speakers</span><span class="o">=</span><span class="mi">123</span><span class="p">,</span>
     <span class="o">*</span><span class="n">args</span><span class="p">,</span>
     <span class="o">**</span><span class="n">kwargs</span>
 <span class="p">):</span>
@@ -24958,7 +24962,7 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
         <span class="n">providers</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">get_providers</span><span class="p">(),</span>
         <span class="n">sess_options</span><span class="o">=</span><span class="n">sess_options</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">speaker_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">127</span><span class="p">)]</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">speaker_ids</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n_speakers</span><span class="p">)]</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">speaker_ids_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">idx</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">speaker_ids</span><span class="p">)}</span>
 </code></pre></div></td></tr></table></div>
         </details>
@@ -24989,9 +24993,9 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\services\tts\flowtron\flowtron.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">81</span>
-<span class="normal">82</span>
-<span class="normal">83</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_speaker_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">82</span>
+<span class="normal">83</span>
+<span class="normal">84</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_speaker_ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Return available ids of different speakers.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">speaker_ids</span>
 </code></pre></div></td></tr></table></div>
@@ -25081,8 +25085,7 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\services\tts\flowtron\flowtron.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 85</span>
-<span class="normal"> 86</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 86</span>
 <span class="normal"> 87</span>
 <span class="normal"> 88</span>
 <span class="normal"> 89</span>
@@ -25139,7 +25142,8 @@ and <code>vocoder.onnx</code> is neural vocoder.</p>
 <span class="normal">140</span>
 <span class="normal">141</span>
 <span class="normal">142</span>
-<span class="normal">143</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speaker_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_chunks</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+<span class="normal">143</span>
+<span class="normal">144</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">speaker_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">n_chunks</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Create a generator for iterative generation of speech.</span>
 
 <span class="sd">    Args:</span>
