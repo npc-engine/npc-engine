@@ -24,9 +24,7 @@ class TestControlService:
     """Test that starts npc-engine server and tests all the APIs"""
 
     def setup_class(cls):
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-        cls.context = zmq.asyncio.Context()
+        cls.context = zmq.asyncio.Context(5)
         path = os.path.join(
             os.path.sep.join(os.path.dirname(__file__).split(os.path.sep)[:-1]),
             "resources",
@@ -43,15 +41,21 @@ class TestControlService:
 
         old_sp = npc_engine.server.control_service.service_process
         npc_engine.server.control_service.service_process = wrapped_service
-
+        print("STARTING")
         model_manager = ControlService(self.context, self.metadata)
+        print("STARTED")
         service = "mock-paraphrase-MiniLM-L6-v2"
         assert model_manager.get_service_status(service) == ServiceState.STOPPED
+        print("GET SERVICE STATUS")
         with pytest.raises(ValueError, match=f"Service {service} is not running"):
+            print("before stop_service")
             model_manager.stop_service(service)
+        print("stop_service")
         model_manager.start_service(service)
+        print("started")
         while model_manager.services[service]["dispatch_coroutine"] is None:
             await asyncio.sleep(0.1)
+        print("dispatch_coroutine")
         assert model_manager.get_service_status(service) == ServiceState.RUNNING
         model_manager.stop_service(service)
         assert model_manager.get_service_status(service) == ServiceState.STOPPED
