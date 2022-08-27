@@ -8,6 +8,7 @@ pyzmq>=22.3.0
 Unidecode==1.1.1
 inflect==4.1.0
 scipy==1.7.2
+sounddevice==0.4.3
 Jinja2==3.0.2
 numpy~=1.21
 setuptools~=57.0.0
