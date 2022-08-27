@@ -1,6 +1,5 @@
 """Module that implements ZMQ server communication over JSON-RPC 2.0 (https://www.jsonrpc.org/specification)."""
 from abc import ABC, abstractmethod
-import sys
 import os
 import json
 import logging
@@ -37,8 +36,6 @@ class BaseServer(ABC):
             start_services: Start services on initialization.
         """
         self.context = zmq_context
-        if sys.platform == "win32":
-            asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
         self.socket_ipc = self.context.socket(zmq.ROUTER)
         self.socket_ipc.setsockopt(zmq.LINGER, 0)
         ipc_uri = build_ipc_uri("self")

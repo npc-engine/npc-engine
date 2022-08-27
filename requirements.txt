@@ -21,3 +21,4 @@ scikit-learn==1.0.2
 jinja2schema==0.1.4
 appdirs==1.4.4
 aiohttp>=3.8.1
+tornado>6.1.0
