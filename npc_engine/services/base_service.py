@@ -34,7 +34,7 @@ class BaseService(FactoryMixin, ABC):
         self.zmq_context = context
         self.socket = context.socket(zmq.REP)
         self.socket.setsockopt(zmq.LINGER, 0)
-        logger.error(f"Service {service_id} binding to {uri}")
+        logger.info(f"Service {service_id} binding to {uri}")
         if uri.startswith("ipc://"):
             os.makedirs(Path(uri.replace("ipc://", "")).parent, exist_ok=True)
             os.chmod(Path(uri.replace("ipc://", "")).parent, 777)
@@ -73,13 +73,13 @@ class BaseService(FactoryMixin, ABC):
             dispatcher.update(self.build_api_dict())
             dispatcher.update({"status": self.status})
             while True:
-                logger.error(f"{self.service_id} waiting for request")
+                logger.info(f"{self.service_id} waiting for request")
                 request = self.socket.recv_string()
-                logger.error(f"{self.service_id} received request {request}")
+                logger.info(f"{self.service_id} received request {request}")
                 response = JSONRPCResponseManager.handle(request, dispatcher)
-                logger.error(f"{self.service_id} sending response {response.json}")
+                logger.info(f"{self.service_id} sending response {response.json}")
                 self.socket.send_string(response.json)
-                logger.error(f"{self.service_id} response sent")
+                logger.info(f"{self.service_id} response sent")
         except Exception as e:
             logger.exception(e)
             raise e
@@ -134,7 +134,7 @@ class BaseService(FactoryMixin, ABC):
                     raise RuntimeError(f"Provider {provider} is not available")
         else:
             self.providers = (
-                ["DmlExecutionProvider"] 
-                if "DmlExecutionProvider" in rt.get_available_providers() 
+                ["DmlExecutionProvider"]
+                if "DmlExecutionProvider" in rt.get_available_providers()
                 else rt.get_available_providers()
             )

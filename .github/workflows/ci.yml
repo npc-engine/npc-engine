@@ -24,7 +24,4 @@ jobs:
           python -m pip install --upgrade pip
           pip install tox tox-gh-actions
           pip install .[dev,cpu]
-      # Required for tests
-      - uses: FedericoCarboni/setup-ffmpeg@v1
-        name: Setup FFMPEG for STT tests
       - run: tox
