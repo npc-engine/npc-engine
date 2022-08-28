@@ -37,14 +37,6 @@ Model description:
 
 # Exported [FlowtronTTS](https://arxiv.org/abs/2005.05957) with [WaveGlow](https://arxiv.org/abs/1811.00002) vocoder
 --------------------
-mock-nemo-quartznet-ctc-stt
-NemoSTT
-Service description:
-Text to speech pipeline based on Nemo toolkit.
-Model description:
-
-# Exported [Nemo](https://github.com/NVIDIA/NeMo) models for Speech to Text with [OpenSLR 11](https://www.openslr.org/11/) librispeech 3-gram language model
---------------------
 mock-paraphrase-MiniLM-L6-v2
 TransformerSemanticSimilarity
 Service description:

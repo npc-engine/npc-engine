@@ -5,6 +5,7 @@ import time
 from npc_engine.service_clients import ControlClient
 import zmq
 import aiohttp
+import asyncio
 import pytest
 from npc_engine.cli import run
 import npc_engine.server.control_service
@@ -165,22 +166,6 @@ class TestHTTPServer:
                 print(message)
                 assert "result" in message
 
-            request = {
-                "jsonrpc": "2.0",
-                "method": "generate_reply",
-                "id": 0,
-                "params": [ctx],
-            }
-            async with session.get(
-                "http://localhost:5555", verify_ssl=False, json=request
-            ) as resp:
-                message = await resp.json()
-                try:
-                    print(message)
-                except UnicodeEncodeError:
-                    pass
-                assert "result" in message
-
     @pytest.mark.asyncio
     async def test_similarity_api(self):
         async with aiohttp.ClientSession() as session:
@@ -256,6 +241,53 @@ class TestHTTPServer:
                 message = await resp.json()
                 print(message)
                 assert "result" in message
+
+    @pytest.mark.asyncio
+    async def test_concurrent_request(self):
+        async with aiohttp.ClientSession() as session:
+
+            request = {
+                "jsonrpc": "2.0",
+                "method": "get_context_template",
+                "id": 0,
+                "params": [],
+            }
+            resp, resp2 = await asyncio.gather(
+                session.get(
+                    "http://localhost:5555", verify_ssl=False, json=request
+                ),
+                session.get(
+                    "http://localhost:5555", verify_ssl=False, json=request
+                )
+            )
+            message = await resp.json()
+            message2 = await resp2.json()
+            print(message)
+            assert "result" in message
+            ctx = message["result"]
+
+            request = {
+                "jsonrpc": "2.0",
+                "method": "generate_reply",
+                "id": 0,
+                "params": [ctx],
+            }
+            resp, resp2 = await asyncio.gather(
+                session.get(
+                    "http://localhost:5555", verify_ssl=False, json=request
+                ),
+                session.get(
+                    "http://localhost:5555", verify_ssl=False, json=request
+                ),
+            )
+            message = await resp.json()
+            message2 = await resp2.json()
+            try:
+                print(message)
+                print(message2)
+            except UnicodeEncodeError:
+                pass
+            assert "result" in message
 
     def teardown_class(cls):
         services = cls.cc.get_services_metadata()

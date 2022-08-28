@@ -34,7 +34,7 @@ def service_process(metadata: MetadataManager, service_id: str, logger) -> None:
     Starts the service and runs it's loop.
     """
     set_logger(logger)
-    context = zmq.Context()
+    context = zmq.Context(3)
     service = services.BaseService.create(
         context,
         metadata.services[service_id].path,
@@ -78,6 +78,9 @@ class ControlService:
                 "process": None,
                 "socket": None,
                 "state": ServiceState.STOPPED,
+                "in_queue": None,
+                "out_queue": None,
+                "dispatch_coroutine": None,
             }
             for service_id in self.metadata.services.keys()
         }
@@ -115,10 +118,12 @@ class ControlService:
             if self.services[service_id]["state"] != ServiceState.RUNNING:
                 raise ValueError(f"Service {service_id} is not running")
             else:
-                socket = self.services[service_id]["socket"]
-                await socket.send_string(request)
-                response = await socket.recv_string()
-        return response
+                self.services[service_id]["in_queue"].put_nowait(request)
+                try:
+                    result = await self.services[service_id]["out_queue"].get()
+                except asyncio.CancelledError:
+                    result = ""
+                return result
 
     def check_service(self, service_id):
         """Check if the service process is running."""
@@ -160,20 +165,19 @@ class ControlService:
         self.services[service_id]["socket"].connect(
             self.metadata.services[service_id].uri
         )
-        try:
-            asyncio.create_task(self.confirm_state_coroutine(service_id))
-        except RuntimeError:
-            logger.warning(
-                "Create task to confirm service state failed."
-                + " Probably asyncio loop is not running."
-                + " Trying to execute it via asyncio.run()"
-            )
-            asyncio.run(self.confirm_state_coroutine(service_id))
+        self.services[service_id]["in_queue"] = asyncio.Queue()
+        self.services[service_id]["out_queue"] = asyncio.Queue()
+        loop = asyncio.get_event_loop()
+        loop.create_task(
+            self.confirm_state_coroutine(service_id),
+            name=f"confirm_state_coroutine_{service_id}",
+        )
 
     async def confirm_state_coroutine(self, service_id):
         """Confirm the state of the service."""
         request = json.dumps({"jsonrpc": "2.0", "method": "status", "id": 1})
         socket = self.services[service_id]["socket"]
+        logger.info(f"Confirming state of {service_id}")
         try:
             await socket.send_string(request)
         except zmq.Again:
@@ -183,6 +187,7 @@ class ControlService:
             await self.confirm_state_coroutine(service_id)
             return
 
+        logger.info(f"Waiting for state of {service_id}")
         response = None
         while response is None:
             try:
@@ -195,7 +200,12 @@ class ControlService:
 
         resp_dict = json.loads(response)
         if resp_dict["result"] == ServiceState.RUNNING:
+            logger.info(f"{service_id} is running")
             self.services[service_id]["state"] = ServiceState.RUNNING
+            self.services[service_id]["dispatch_coroutine"] = asyncio.create_task(
+                self.message_dispatch_coroutine(service_id),
+                name=f"confirm_state_coroutine_{service_id}",
+            )
         elif resp_dict["result"] == ServiceState.STARTING:
             logger.info(f"Service {service_id} responds but still starting")
             await asyncio.sleep(1)
@@ -205,6 +215,24 @@ class ControlService:
                 f"Service {service_id} failed to start and returned incorrect state."
             )
             self.services[service_id]["state"] = ServiceState.ERROR
+
+    async def message_dispatch_coroutine(self, service_id: str):
+        """Dispatch messages from the service."""
+        try:
+            while self.services[service_id]["state"] == ServiceState.RUNNING:
+                request = await self.services[service_id]["in_queue"].get()
+                logger.info(f"Dispatching message {request} to {service_id}")
+                await self.services[service_id]["socket"].send_string(request)
+                response = await self.services[service_id]["socket"].recv_string()
+                logger.info(f"Received response {response} from {service_id}")
+                self.services[service_id]["out_queue"].put_nowait(response)
+        except RuntimeError as e:
+            if e.args[0] == "Event loop is closed":
+                logger.info(f"{service_id} is shutting down")
+                return
+            else:
+                logger.error(f"{service_id} is shutting down. Exception: {e}")
+                raise e
 
     def stop_service(self, service_id):
         """Stop the service."""
@@ -217,6 +245,8 @@ class ControlService:
         self.services[service_id]["process"].terminate()
         self.services[service_id]["process"] = None
         self.services[service_id]["state"] = ServiceState.STOPPED
+        self.services[service_id]["dispatch_coroutine"].cancel()
+        self.services[service_id]["dispatch_coroutine"] = None
 
     def restart_service(self, service_id):
         """Restart the service."""

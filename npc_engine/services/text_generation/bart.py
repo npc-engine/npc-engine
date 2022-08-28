@@ -1,5 +1,4 @@
 """BART based chatbot implementation."""
-from asyncio.log import logger
 from typing import Dict, List, Tuple
 import numpy as np
 import onnxruntime as rt
@@ -147,8 +146,6 @@ class BartChatbot(TextGenerationAPI):
         mean_log_probs = [
             log_prob / length for log_prob, length in zip(log_probs, lengths)
         ]
-        logger.warn(f"Perplexities: {mean_log_probs}")
-        logger.warn(f"Decoded: {decoded}")
         return decoded[np.argmax(mean_log_probs)]
 
     def run_decoder(
