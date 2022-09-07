@@ -68,7 +68,7 @@ setup(
     [console_scripts]
     npc-engine=npc_engine.cli:cli
     """,
-    python_requires=">=3.7.0",
+    python_requires=">=3.8.0,<3.9.0",
     license="MIT",
     author="eublefar",
     author_email="evil.unicorn1@gmail.com",
@@ -87,7 +87,6 @@ setup(
         "Operating System :: Microsoft :: Windows",
         "Topic :: Software Development :: Libraries",
         "License :: OSI Approved :: MIT License",
-        "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
     ],
     include_package_data=True,
