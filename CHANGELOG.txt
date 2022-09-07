@@ -1,4 +1,9 @@
-Minor:   
-- Performance fix that removes freezes during TTS and text generation.
-- Corrected release build process.
-- Minor fixes.
+Major:   
+- Add option for chatbot requests to sample multiple sequences and return the best one based on sum of log probabilities.
+- Add queues for execution of service requests.
+
+Minor:
+- Add number of speakers to TTS config.
+- Restrict python to only 3.8
+- Model validation hotfix
+
