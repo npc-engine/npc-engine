@@ -38,7 +38,7 @@ class FlowtronTTS(TextToSpeechAPI):
         sigma=0.8,
         smoothing_window=3,
         smoothing_weight=0.5,
-        n_speakers=123,
+        n_speakers=2000,
         *args,
         **kwargs
     ):

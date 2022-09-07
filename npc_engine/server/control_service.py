@@ -34,7 +34,7 @@ def service_process(metadata: MetadataManager, service_id: str, logger) -> None:
     Starts the service and runs it's loop.
     """
     set_logger(logger)
-    context = zmq.Context(3)
+    context = zmq.Context()
     service = services.BaseService.create(
         context,
         metadata.services[service_id].path,
@@ -149,8 +149,12 @@ class ControlService:
         """Start the service."""
         service_id = self.metadata.resolve_service(service_id, None)
         self.check_service(service_id)
-        if self.services[service_id]["state"] == ServiceState.RUNNING:
+        if (
+            self.services[service_id]["state"] == ServiceState.RUNNING
+            or self.services[service_id]["state"] == ServiceState.STARTING
+        ):
             raise ValueError(f"Service {service_id} is already running")
+
         process = Process(
             target=service_process,
             args=(self.metadata, service_id, logger),
