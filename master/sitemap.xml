@@ -2,52 +2,52 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://npc-engine.com/master/</loc>
-         <lastmod>2022-09-08</lastmod>
+         <lastmod>2022-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://npc-engine.com/master/not_ready/</loc>
-         <lastmod>2022-09-08</lastmod>
+         <lastmod>2022-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://npc-engine.com/master/inference_engine/api_classes/</loc>
-         <lastmod>2022-09-08</lastmod>
+         <lastmod>2022-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://npc-engine.com/master/inference_engine/benchmarks/</loc>
-         <lastmod>2022-09-08</lastmod>
+         <lastmod>2022-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://npc-engine.com/master/inference_engine/building/</loc>
-         <lastmod>2022-09-08</lastmod>
+         <lastmod>2022-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://npc-engine.com/master/inference_engine/exporting_models/</loc>
-         <lastmod>2022-09-08</lastmod>
+         <lastmod>2022-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://npc-engine.com/master/inference_engine/models/</loc>
-         <lastmod>2022-09-08</lastmod>
+         <lastmod>2022-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://npc-engine.com/master/inference_engine/overview/</loc>
-         <lastmod>2022-09-08</lastmod>
+         <lastmod>2022-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://npc-engine.com/master/inference_engine/reference/</loc>
-         <lastmod>2022-09-08</lastmod>
+         <lastmod>2022-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://npc-engine.com/master/inference_engine/running_server/</loc>
-         <lastmod>2022-09-08</lastmod>
+         <lastmod>2022-10-24</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>

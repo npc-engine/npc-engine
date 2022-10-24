@@ -11,7 +11,7 @@
         <link rel="canonical" href="https://npc-engine.com/master/inference_engine/reference/">
       
       <link rel="icon" href="../../resources/fav.svg">
-      <meta name="generator" content="mkdocs-1.3.1, mkdocs-material-8.4.3">
+      <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.7">
     
     
       
@@ -19,7 +19,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.6b80c2a2.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
@@ -30,6 +30,7 @@
         
       
       
+
     
     
     
@@ -50,6 +51,7 @@
     
       
 
+    
     
     
   </head>
@@ -129,7 +131,7 @@
       </label>
       <nav class="md-search__options" aria-label="Search">
         
-        <button type="reset" class="md-search__icon md-icon" aria-label="Clear" tabindex="-1">
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
       </nav>
@@ -3245,10 +3247,11 @@
               </div>
             
           
-          <div class="md-content" data-md-component="content">
-            <article class="md-content__inner md-typeset">
-              
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
                 
+                  
 
   <a href="https://github.com/npc-engine/npc-engine/edit/master/docs/inference_engine/reference.md" title="Edit this page" class="md-content__button md-icon">
     
@@ -3412,8 +3415,7 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\cli.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">163</span>
-<span class="normal">164</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">164</span>
 <span class="normal">165</span>
 <span class="normal">166</span>
 <span class="normal">167</span>
@@ -3432,7 +3434,8 @@
 <span class="normal">180</span>
 <span class="normal">181</span>
 <span class="normal">182</span>
-<span class="normal">183</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">183</span>
+<span class="normal">184</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span>
     <span class="s2">&quot;--models-path&quot;</span><span class="p">,</span>
     <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NPC_ENGINE_MODELS_PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;./models&quot;</span><span class="p">),</span>
@@ -3444,7 +3447,7 @@
 
 <span class="sd">    model_id argument follows service resolution rules of the npc-engine.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">model_manager</span> <span class="o">=</span> <span class="n">MetadataManager</span><span class="p">(</span><span class="n">models_path</span><span class="p">,</span> <span class="s2">&quot;not_used&quot;</span><span class="p">)</span>
+    <span class="n">model_manager</span> <span class="o">=</span> <span class="n">MetadataManager</span><span class="p">(</span><span class="n">models_path</span><span class="p">,</span> <span class="s2">&quot;not_used&quot;</span><span class="p">,</span> <span class="s2">&quot;not_used&quot;</span><span class="p">)</span>
     <span class="n">metadata</span> <span class="o">=</span> <span class="n">model_manager</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">(</span><span class="n">model_id</span><span class="p">)</span>
 
     <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
@@ -3478,8 +3481,7 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\cli.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">100</span>
-<span class="normal">101</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">101</span>
 <span class="normal">102</span>
 <span class="normal">103</span>
 <span class="normal">104</span>
@@ -3503,7 +3505,8 @@
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">125</span>
+<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span>
     <span class="s2">&quot;--models-path&quot;</span><span class="p">,</span>
     <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NPC_ENGINE_MODELS_PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;./models&quot;</span><span class="p">),</span>
@@ -3554,8 +3557,7 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\cli.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">186</span>
-<span class="normal">187</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">187</span>
 <span class="normal">188</span>
 <span class="normal">189</span>
 <span class="normal">190</span>
@@ -3580,7 +3582,8 @@
 <span class="normal">209</span>
 <span class="normal">210</span>
 <span class="normal">211</span>
-<span class="normal">212</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">212</span>
+<span class="normal">213</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span>
     <span class="s2">&quot;--models-path&quot;</span><span class="p">,</span>
     <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
@@ -3632,8 +3635,7 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\cli.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">143</span>
-<span class="normal">144</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">144</span>
 <span class="normal">145</span>
 <span class="normal">146</span>
 <span class="normal">147</span>
@@ -3649,7 +3651,8 @@
 <span class="normal">157</span>
 <span class="normal">158</span>
 <span class="normal">159</span>
-<span class="normal">160</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">160</span>
+<span class="normal">161</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span>
     <span class="s2">&quot;--models-path&quot;</span><span class="p">,</span>
     <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NPC_ENGINE_MODELS_PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;./models&quot;</span><span class="p">),</span>
@@ -3657,7 +3660,7 @@
 <span class="p">)</span>
 <span class="k">def</span> <span class="nf">list_models</span><span class="p">(</span><span class="n">models_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;List the models in the folder.&quot;&quot;&quot;</span>
-    <span class="n">metadata_manager</span> <span class="o">=</span> <span class="n">MetadataManager</span><span class="p">(</span><span class="n">models_path</span><span class="p">,</span> <span class="s2">&quot;not_used&quot;</span><span class="p">)</span>
+    <span class="n">metadata_manager</span> <span class="o">=</span> <span class="n">MetadataManager</span><span class="p">(</span><span class="n">models_path</span><span class="p">,</span> <span class="s2">&quot;not_used&quot;</span><span class="p">,</span> <span class="s2">&quot;not_used&quot;</span><span class="p">)</span>
     <span class="n">metadata_list</span> <span class="o">=</span> <span class="n">metadata_manager</span><span class="o">.</span><span class="n">get_services_metadata</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">metadata</span> <span class="ow">in</span> <span class="n">metadata_list</span><span class="p">:</span>
         <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">])</span>
@@ -3680,7 +3683,7 @@
 
 
 <h4 id="npc_engine.cli.run" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">start_all</span><span class="p">,</span> <span class="n">models_path</span><span class="p">,</span> <span class="n">http</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">start_all</span><span class="p">,</span> <span class="n">models_path</span><span class="p">,</span> <span class="n">http</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span></code>
 
 
 </h4>
@@ -3692,8 +3695,7 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\cli.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">80</span>
-<span class="normal">81</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">81</span>
 <span class="normal">82</span>
 <span class="normal">83</span>
 <span class="normal">84</span>
@@ -3709,12 +3711,13 @@
 <span class="normal">94</span>
 <span class="normal">95</span>
 <span class="normal">96</span>
-<span class="normal">97</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_all</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">models_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">http</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="normal">97</span>
+<span class="normal">98</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_all</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">models_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">http</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Load the models and start JSONRPC server.&quot;&quot;&quot;</span>
     <span class="kn">from</span> <span class="nn">npc_engine.server.control_service</span> <span class="kn">import</span> <span class="n">ControlService</span>
 
     <span class="n">context</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">asyncio</span><span class="o">.</span><span class="n">Context</span><span class="p">(</span><span class="n">io_threads</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-    <span class="n">metadata_manager</span> <span class="o">=</span> <span class="n">MetadataManager</span><span class="p">(</span><span class="n">models_path</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+    <span class="n">metadata_manager</span> <span class="o">=</span> <span class="n">MetadataManager</span><span class="p">(</span><span class="n">models_path</span><span class="p">,</span> <span class="n">port</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span>
     <span class="n">metadata_manager</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
     <span class="n">control_service</span> <span class="o">=</span> <span class="n">ControlService</span><span class="p">(</span><span class="n">context</span><span class="p">,</span> <span class="n">metadata_manager</span><span class="p">)</span>
 
@@ -3740,7 +3743,7 @@
 
 
 <h4 id="npc_engine.cli.run_command" class="doc doc-heading">
-<code class="highlight language-python"><span class="n">run_command</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">start_all</span><span class="p">,</span> <span class="n">models_path</span><span class="p">,</span> <span class="n">http</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="n">run_command</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">start_all</span><span class="p">,</span> <span class="n">models_path</span><span class="p">,</span> <span class="n">http</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span></code>
 
 
 </h4>
@@ -3767,7 +3770,8 @@
 <span class="normal">74</span>
 <span class="normal">75</span>
 <span class="normal">76</span>
-<span class="normal">77</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s2">&quot;run&quot;</span><span class="p">)</span>
+<span class="normal">77</span>
+<span class="normal">78</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">(</span><span class="s2">&quot;run&quot;</span><span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;--port&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;5555&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The port to listen on.&quot;</span><span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span>
     <span class="s2">&quot;--start-all/--dont-start&quot;</span><span class="p">,</span>
@@ -3780,9 +3784,10 @@
     <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The path to the folder with service configs&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;--http/--zmq&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;Whether to use HTTP or ZMQ.&quot;</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">run_command</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_all</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">models_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">http</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;--host&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;0.0.0.0/0&quot;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s2">&quot;The host to listen on.&quot;</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">run_command</span><span class="p">(</span><span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">start_all</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">models_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">http</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Start the server.&quot;&quot;&quot;</span>
-    <span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">start_all</span><span class="p">,</span> <span class="n">models_path</span><span class="p">,</span> <span class="n">http</span><span class="p">)</span>
+    <span class="n">run</span><span class="p">(</span><span class="n">port</span><span class="p">,</span> <span class="n">start_all</span><span class="p">,</span> <span class="n">models_path</span><span class="p">,</span> <span class="n">http</span><span class="p">,</span> <span class="n">host</span><span class="p">)</span>
 </code></pre></div></td></tr></table></div>
         </details>
     </div>
@@ -3832,8 +3837,7 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\cli.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
-<span class="normal">129</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
 <span class="normal">132</span>
@@ -3844,7 +3848,8 @@
 <span class="normal">137</span>
 <span class="normal">138</span>
 <span class="normal">139</span>
-<span class="normal">140</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">140</span>
+<span class="normal">141</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span>
     <span class="s2">&quot;--models-path&quot;</span><span class="p">,</span>
     <span class="n">default</span><span class="o">=</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NPC_ENGINE_MODELS_PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;./models&quot;</span><span class="p">),</span>
@@ -3882,10 +3887,10 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\cli.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">215</span>
-<span class="normal">216</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">216</span>
 <span class="normal">217</span>
-<span class="normal">218</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="normal">218</span>
+<span class="normal">219</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="nd">@cli</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
 <span class="k">def</span> <span class="nf">version</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot;Get the npc engine version.&quot;&quot;&quot;</span>
     <span class="n">click</span><span class="o">.</span><span class="n">echo</span><span class="p">(</span><span class="n">click</span><span class="o">.</span><span class="n">style</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">__version__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">bold</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
@@ -5554,14 +5559,16 @@
 <span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
-<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MetadataManager</span><span class="p">:</span>
+<span class="normal">153</span>
+<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">class</span> <span class="nc">MetadataManager</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;Class that manages service name resolution and metadata.&quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;5000&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Create model manager and load models from the given path.&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">services</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scan_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">models_path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
 
     <span class="k">def</span> <span class="nf">resolve_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_or_type</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Resolve service id or type to service id.&quot;&quot;&quot;</span>
@@ -5706,12 +5713,13 @@
 
 
 
+
   <div class="doc doc-object doc-function">
 
 
 
 <h6 id="npc_engine.server.metadata_manager.MetadataManager.__init__" class="doc doc-heading">
-<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span></code>
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="s1">&#39;5000&#39;</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;localhost&#39;</span><span class="p">)</span></code>
 
 
 </h6>
@@ -5727,11 +5735,13 @@
 <span class="normal">23</span>
 <span class="normal">24</span>
 <span class="normal">25</span>
-<span class="normal">26</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="normal">26</span>
+<span class="normal">27</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;5000&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Create model manager and load models from the given path.&quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">services</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_scan_path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">models_path</span> <span class="o">=</span> <span class="n">path</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">host</span>
 </code></pre></div></td></tr></table></div>
         </details>
     </div>
@@ -5758,8 +5768,7 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\server\metadata_manager.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 98</span>
-<span class="normal"> 99</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal"> 99</span>
 <span class="normal">100</span>
 <span class="normal">101</span>
 <span class="normal">102</span>
@@ -5785,7 +5794,8 @@
 <span class="normal">122</span>
 <span class="normal">123</span>
 <span class="normal">124</span>
-<span class="normal">125</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">_scan_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ServiceDescriptor</span><span class="p">]:</span>
+<span class="normal">125</span>
+<span class="normal">126</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">_scan_path</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ServiceDescriptor</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Scan services defined in the given path.&quot;&quot;&quot;</span>
     <span class="n">norm_path</span> <span class="o">=</span> <span class="n">ntpath</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">sep</span><span class="p">)</span>
     <span class="n">paths</span> <span class="o">=</span> <span class="p">[</span>
@@ -5838,8 +5848,7 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\server\metadata_manager.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">59</span>
-<span class="normal">60</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">60</span>
 <span class="normal">61</span>
 <span class="normal">62</span>
 <span class="normal">63</span>
@@ -5859,7 +5868,8 @@
 <span class="normal">77</span>
 <span class="normal">78</span>
 <span class="normal">79</span>
-<span class="normal">80</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_dependency_cycles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="normal">80</span>
+<span class="normal">81</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">check_dependency_cycles</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Check if there are any dependency cycles.&quot;&quot;&quot;</span>
     <span class="c1"># build graph</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="p">{}</span>
@@ -5906,8 +5916,7 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\server\metadata_manager.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">127</span>
-<span class="normal">128</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">128</span>
 <span class="normal">129</span>
 <span class="normal">130</span>
 <span class="normal">131</span>
@@ -5932,7 +5941,8 @@
 <span class="normal">150</span>
 <span class="normal">151</span>
 <span class="normal">152</span>
-<span class="normal">153</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="normal">153</span>
+<span class="normal">154</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">service_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="sd">&quot;&quot;&quot;Print the model from the path.&quot;&quot;&quot;</span>
     <span class="n">service_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">resolve_service</span><span class="p">(</span><span class="n">service_id</span><span class="p">)</span>
     <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="p">[</span><span class="n">service_id</span><span class="p">]</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;config.yml&quot;</span><span class="p">)</span>
@@ -5984,9 +5994,9 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\server\metadata_manager.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">48</span>
-<span class="normal">49</span>
-<span class="normal">50</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_services_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">49</span>
+<span class="normal">50</span>
+<span class="normal">51</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">get_services_metadata</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;List the models in the folder.&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">get_metadata</span><span class="p">(</span><span class="n">service</span><span class="p">)</span> <span class="k">for</span> <span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="p">]</span>
 </code></pre></div></td></tr></table></div>
@@ -6014,12 +6024,12 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\server\metadata_manager.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">52</span>
-<span class="normal">53</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">53</span>
 <span class="normal">54</span>
 <span class="normal">55</span>
 <span class="normal">56</span>
-<span class="normal">57</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resolve_by_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">):</span>
+<span class="normal">57</span>
+<span class="normal">58</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resolve_by_method</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_name</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Resolve service id by method name.&quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">service_id</span><span class="p">,</span> <span class="n">service</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">services</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">method_name</span> <span class="ow">in</span> <span class="n">service</span><span class="o">.</span><span class="n">api_methods</span><span class="p">:</span>
@@ -6050,8 +6060,7 @@
 
         <details class="quote">
           <summary>Source code in <code>npc_engine\server\metadata_manager.py</code></summary>
-          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">28</span>
-<span class="normal">29</span>
+          <div class="highlight"><table class="highlighttable"><tr><td class="linenos"><div class="linenodiv"><pre><span></span><span class="normal">29</span>
 <span class="normal">30</span>
 <span class="normal">31</span>
 <span class="normal">32</span>
@@ -6068,7 +6077,8 @@
 <span class="normal">43</span>
 <span class="normal">44</span>
 <span class="normal">45</span>
-<span class="normal">46</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resolve_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_or_type</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="normal">46</span>
+<span class="normal">47</span></pre></div></td><td class="code"><div><pre><span></span><code><span class="k">def</span> <span class="nf">resolve_service</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">id_or_type</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Resolve service id or type to service id.&quot;&quot;&quot;</span>
     <span class="n">service_id</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">id_or_type</span> <span class="o">==</span> <span class="s2">&quot;control&quot;</span><span class="p">:</span>
@@ -6826,7 +6836,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">on_startup</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_msg_loop_ipc</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">on_startup</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_interrupt_loop</span><span class="p">)</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting server&quot;</span><span class="p">)</span>
-        <span class="n">web</span><span class="o">.</span><span class="n">run_app</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
+        <span class="n">web</span><span class="o">.</span><span class="n">run_app</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
 
     <span class="k">async</span> <span class="k">def</span> <span class="nf">handle_request</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Handle request.&quot;&quot;&quot;</span>
@@ -7074,7 +7084,7 @@
     <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">on_startup</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_msg_loop_ipc</span><span class="p">)</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">on_startup</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">add_interrupt_loop</span><span class="p">)</span>
     <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting server&quot;</span><span class="p">)</span>
-    <span class="n">web</span><span class="o">.</span><span class="n">run_app</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
+    <span class="n">web</span><span class="o">.</span><span class="n">run_app</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metadata</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
 </code></pre></div></td></tr></table></div>
         </details>
     </div>
@@ -24294,10 +24304,12 @@ hyperparameter. Some cleaners are English-specific. You'll typically want to use
 
 
 
-              
-            </article>
-            
-          </div>
+
+                
+              </article>
+            </div>
+          
+          
         </div>
         
       </main>
@@ -24401,10 +24413,10 @@ hyperparameter. Some cleaners are English-specific. You'll typically want to use
       <div class="md-dialog__inner md-typeset"></div>
     </div>
     
-    <script id="__config" type="application/json">{"base": "../..", "features": ["header.autohide", "navigation.instant", "navigation.tabs", "navigation.sections"], "search": "../../assets/javascripts/workers/search.ecf98df9.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
+    <script id="__config" type="application/json">{"base": "../..", "features": ["header.autohide", "navigation.instant", "navigation.tabs", "navigation.sections"], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.2ab50757.min.js"></script>
+      <script src="../../assets/javascripts/bundle.8492ddcf.min.js"></script>
       
     
   </body>
