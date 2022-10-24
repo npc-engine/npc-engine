@@ -72,12 +72,8 @@ def cli(verbose: bool):
     help="The path to the folder with service configs",
 )
 @click.option("--http/--zmq", default=False, help="Whether to use HTTP or ZMQ.")
-def run_command(port: str, start_all: bool, models_path: str, http: bool):
-    """Start the server."""
-    run(port, start_all, models_path, http)
-
-
-def run(port: str, start_all: bool, models_path: str, http: bool):
+@click.option("--host", default="0.0.0.0/0", help="The host to listen on.")
+def run(port: str, start_all: bool, models_path: str, http: bool, host: str):
     """Load the models and start JSONRPC server."""
     from npc_engine.server.control_service import ControlService
 
