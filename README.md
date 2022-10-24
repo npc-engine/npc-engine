@@ -75,7 +75,7 @@ You can also use it directly through ZMQ or HTTP. See [Documentation](https://np
 
 ## Docker
 
-If you wish to host NPC Engine somewhere you can use our the docker image.
+If you wish to host NPC Engine somewhere you can use our the docker image. It's Linux image with TensorRT ONNX Runtime provider.
 
 You can build it yourself with:
 
