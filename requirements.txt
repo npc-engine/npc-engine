@@ -4,7 +4,7 @@ json-rpc==1.13.0
 tokenizers==0.11.6
 loguru==0.5.3
 PyYAML==6.0
-pyzmq>=22.3.0
+pyzmq==22.3.0
 Unidecode==1.1.1
 inflect==4.1.0
 scipy==1.7.2

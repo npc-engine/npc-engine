@@ -16,7 +16,7 @@ def server_func(models_path):
 
     logger.remove()
     freeze_support()
-    run("55555", True, models_path, False)
+    run("55555", True, models_path, False, "localhost")
 
 
 def wrapped_service(*args, **kwargs):

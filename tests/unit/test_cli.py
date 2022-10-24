@@ -47,6 +47,9 @@ Model description:
 --------------------
     """
     result = runner.invoke(list_models, ["--models-path", "tests\\resources\\models"])
+    if result.exit_code != 0:
+        print("OUTPUT:", result.output, result.stdout)
+        print(result.output)
     assert result.exit_code == 0
     assert result.output.strip() == test_models.strip()
 

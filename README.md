@@ -73,6 +73,25 @@ You can also use it directly through ZMQ or HTTP. See [Documentation](https://np
     --exclude-module tkinter --exclude-module matplotlib .\npc_engine\cli.py --onedir
     ```
 
+## Docker
+
+If you wish to host NPC Engine somewhere you can use our the docker image. It's Linux image with TensorRT ONNX Runtime provider.
+
+You can build it yourself with:
+
+```bash
+docker build -t npc-engine .
+```
+
+To run the image you must mount the models directory to `/app/models` e.g.
+
+```bash
+docker run --gpus all -it --mount type=bind,source=%cd%\tests\resources\models,target=/app/models -p 5000:5000 npc-engine/inference-engine:latest npc-engine run --port 5000
+```
+
+Where `--gpus all` will give access to the GPU, `-it` will output logs and let you use the container interactively, `--mount` will mount the models directory to the container, `-p 5000:5000` will expose the port 5000 on the host machine.
+
+
 ## Community
 
 We have a [Discord](https://discord.gg/R4zBNmnfrU) server where you can get support, ask questions and show off your creations.
