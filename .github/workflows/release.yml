@@ -64,6 +64,9 @@ jobs:
         with:
           username: npcengine
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Get the version
+        id: get_version
+        uses: dawidd6/action-get-tag@v1
       -
         name: Build and push
         uses: docker/build-push-action@v3
