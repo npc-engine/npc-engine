@@ -149,7 +149,7 @@ def set_models_path(models_path: str):
 )
 def list_models(models_path: str):
     """List the models in the folder."""
-    metadata_manager = MetadataManager(models_path, "not_used")
+    metadata_manager = MetadataManager(models_path, "not_used", "not_used")
     metadata_list = metadata_manager.get_services_metadata()
     for metadata in metadata_list:
         click.echo(metadata["id"])
@@ -173,7 +173,7 @@ def describe(models_path: str, model_id: str):
 
     model_id argument follows service resolution rules of the npc-engine.
     """
-    model_manager = MetadataManager(models_path, "not_used")
+    model_manager = MetadataManager(models_path, "not_used", "not_used")
     metadata = model_manager.get_metadata(model_id)
 
     click.echo(metadata["id"])

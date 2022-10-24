@@ -19,7 +19,7 @@ ServiceDescriptor = namedtuple(
 class MetadataManager:
     """Class that manages service name resolution and metadata."""
 
-    def __init__(self, path: str, port: str, host: str):
+    def __init__(self, path: str, port: str = "5000", host: str = "localhost"):
         """Create model manager and load models from the given path."""
         self.services = self._scan_path(path)
         self.models_path = path

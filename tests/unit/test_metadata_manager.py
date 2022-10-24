@@ -17,7 +17,7 @@ class TestMetadataManager:
             "models",
         )
 
-        model_manager = MetadataManager(path, "5555")
+        model_manager = MetadataManager(path, "5555", "localhost")
         metadata = model_manager.get_services_metadata()
         paths = [
             f.path
@@ -34,7 +34,9 @@ class TestMetadataManager:
 
     def test_dependencies(self):
         model_manager = MetadataManager(
-            os.path.join(os.path.dirname(__file__), "..", "resources", "models"), "5555"
+            os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
+            "5555",
+            "localhost",
         )
         model_manager.services["mock-distilgpt2"] = model_manager.services[
             "mock-distilgpt2"
@@ -43,7 +45,9 @@ class TestMetadataManager:
 
     def test_dep_cycle(self):
         model_manager = MetadataManager(
-            os.path.join(os.path.dirname(__file__), "..", "resources", "models"), "5555"
+            os.path.join(os.path.dirname(__file__), "..", "resources", "models"),
+            "5555",
+            "localhost",
         )
         model_manager.services["mock-distilgpt2"] = model_manager.services[
             "mock-distilgpt2"

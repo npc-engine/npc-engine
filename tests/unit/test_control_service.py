@@ -32,7 +32,7 @@ class TestControlService:
         )
         logger.remove()
         logger.add(sys.stdout, level="DEBUG", enqueue=True)
-        cls.metadata = MetadataManager(path, "5555")
+        cls.metadata = MetadataManager(path, "5555", "localhost")
 
     @pytest.mark.asyncio
     async def test_service_manager_start_stop_service(self):
