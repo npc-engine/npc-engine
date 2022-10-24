@@ -70,5 +70,5 @@ jobs:
         with:
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/npc-engine:${{ steps.get_version.outputs.tag }}
-            ${{ secrets.DOCKERHUB_USERNAME }}/npc-engine:latest
+            npcengine/npc-engine:${{ steps.get_version.outputs.tag }}
+            npcengine/npc-engine:latest
