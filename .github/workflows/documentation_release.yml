@@ -1,8 +1,6 @@
 name: "Release Documentation"
 
 on:
-  on:
-    workflow_dispatch:
   push:
     tags:
       - "v*.*.*"
