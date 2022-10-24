@@ -21,7 +21,7 @@ def server_func(models_path):
     logger.remove()
     freeze_support()
 
-    run("5555", True, models_path, True)
+    run("5555", True, models_path, True, "localhost")
 
 
 def wrapped_service(*args, **kwargs):
@@ -253,12 +253,8 @@ class TestHTTPServer:
                 "params": [],
             }
             resp, resp2 = await asyncio.gather(
-                session.get(
-                    "http://localhost:5555", verify_ssl=False, json=request
-                ),
-                session.get(
-                    "http://localhost:5555", verify_ssl=False, json=request
-                )
+                session.get("http://localhost:5555", verify_ssl=False, json=request),
+                session.get("http://localhost:5555", verify_ssl=False, json=request),
             )
             message = await resp.json()
             message2 = await resp2.json()
@@ -273,12 +269,8 @@ class TestHTTPServer:
                 "params": [ctx],
             }
             resp, resp2 = await asyncio.gather(
-                session.get(
-                    "http://localhost:5555", verify_ssl=False, json=request
-                ),
-                session.get(
-                    "http://localhost:5555", verify_ssl=False, json=request
-                ),
+                session.get("http://localhost:5555", verify_ssl=False, json=request),
+                session.get("http://localhost:5555", verify_ssl=False, json=request),
             )
             message = await resp.json()
             message2 = await resp2.json()

@@ -180,7 +180,7 @@ class HTTPServer(BaseServer):
         self.app.on_startup.append(self.add_msg_loop_ipc)
         self.app.on_startup.append(self.add_interrupt_loop)
         logger.info("Starting server")
-        web.run_app(self.app, host="localhost", port=int(self.metadata.port))
+        web.run_app(self.app, host=self.metadata.host, port=int(self.metadata.port))
 
     async def handle_request(self, request):
         """Handle request."""
