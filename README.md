@@ -75,12 +75,16 @@ You can also use it directly through ZMQ or HTTP. See [Documentation](https://np
 
 ## Docker
 
-If you wish to host NPC Engine somewhere you can use our the docker image. It's Linux image with TensorRT ONNX Runtime provider.
+If you wish to host NPC Engine somewhere you can use our the docker image. It's Linux image with either TensorRT or CPU ONNX Runtime providers.
 
 You can build it yourself with:
 
 ```bash
-docker build -t npc-engine .
+docker build -t npc-engine . -f Dockerfile.cuda
+```
+or  
+```bash
+docker build -t npc-engine . -f Dockerfile.cpu
 ```
 
 To run the image you must mount the models directory to `/app/models` e.g.
@@ -89,7 +93,7 @@ To run the image you must mount the models directory to `/app/models` e.g.
 docker run --gpus all -it --mount type=bind,source=%cd%\tests\resources\models,target=/app/models -p 5000:5000 npc-engine/inference-engine:latest npc-engine run --port 5000
 ```
 
-Where `--gpus all` will give access to the GPU, `-it` will output logs and let you use the container interactively, `--mount` will mount the models directory to the container, `-p 5000:5000` will expose the port 5000 on the host machine.
+Where `--gpus all` will give access to the GPU (not needed when built for CPU), `-it` will output logs and let you use the container interactively, `--mount` will mount the models directory to the container, `-p 5000:5000` will expose the port 5000 on the host machine.
 
 
 ## Community

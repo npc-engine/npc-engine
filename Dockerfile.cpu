@@ -1,0 +1,5 @@
+FROM python:3.8.15-slim-buster
+COPY . /app/
+RUN ls -la /app/*
+WORKDIR /app
+RUN pip install --no-cache .[cpu]

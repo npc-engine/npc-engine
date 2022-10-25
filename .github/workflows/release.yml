@@ -71,6 +71,7 @@ jobs:
         name: Build and push
         uses: docker/build-push-action@v3
         with:
+          file: ./Dockerfile.cpu
           push: true
           tags: |
             npcengine/npc-engine:${{ steps.get_version.outputs.tag }}
