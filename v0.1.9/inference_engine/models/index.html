@@ -1,0 +1,2732 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://npc-engine.com/v0.1.9/inference_engine/models/">
+      
+      <link rel="icon" href="../../resources/fav.svg">
+      <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.7">
+    
+    
+      
+        <title>Services - npc-engine</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.20d9efc8.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.cbb835fc.min.css">
+        
+          
+          
+          <meta name="theme-color" content="#000000">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/_mkdocstrings.css">
+    
+      <link rel="stylesheet" href="../../css/style.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="" data-md-color-primary="black" data-md-color-accent="yellow">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-services-are-configured" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+      <div data-md-component="outdated" hidden>
+        
+      </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="npc-engine" class="md-header__button md-logo" aria-label="npc-engine" data-md-component="logo">
+      
+  <img src="../../resources/settings.svg" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            npc-engine
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Services
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/npc-engine/npc-engine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+
+
+  <li class="md-tabs__item">
+    <a href="../.." class="md-tabs__link">
+      Home
+    </a>
+  </li>
+
+      
+        
+  
+  
+    
+  
+
+
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../overview/" class="md-tabs__link md-tabs__link--active">
+        Inference Engine
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="npc-engine" class="md-nav__button md-logo" aria-label="npc-engine" data-md-component="logo">
+      
+  <img src="../../resources/settings.svg" alt="logo">
+
+    </a>
+    npc-engine
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/npc-engine/npc-engine" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81z"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Inference Engine
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Inference Engine" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Inference Engine
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../overview/" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../running_server/" class="md-nav__link">
+        Running The Server
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../building/" class="md-nav__link">
+        Build From Source
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../exporting_models/" class="md-nav__link">
+        Exporting models
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api_classes/" class="md-nav__link">
+        API Classes
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          Services
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Services
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-services-are-configured" class="md-nav__link">
+    How services are configured?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-is-their-api-exposed" class="md-nav__link">
+    How is their API exposed?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#existing-service-classes" class="md-nav__link">
+    Existing service classes
+  </a>
+  
+    <nav class="md-nav" aria-label="Existing service classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.sequence_classifier.hf_classifier.HfClassifier" class="md-nav__link">
+    HfClassifier
+  </a>
+  
+    <nav class="md-nav" aria-label="HfClassifier">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.sequence_classifier.hf_classifier.HfClassifier.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.sequence_classifier.hf_classifier.HfClassifier.compute_scores_batch" class="md-nav__link">
+    compute_scores_batch()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot" class="md-nav__link">
+    HfChatbot
+  </a>
+  
+    <nav class="md-nav" aria-label="HfChatbot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.create_starter_inputs" class="md-nav__link">
+    create_starter_inputs()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.get_special_tokens" class="md-nav__link">
+    get_special_tokens()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.run" class="md-nav__link">
+    run()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.string_too_long" class="md-nav__link">
+    string_too_long()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.update_inputs_with_results" class="md-nav__link">
+    update_inputs_with_results()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot" class="md-nav__link">
+    BartChatbot
+  </a>
+  
+    <nav class="md-nav" aria-label="BartChatbot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.get_special_tokens" class="md-nav__link">
+    get_special_tokens()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.run" class="md-nav__link">
+    run()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.run_decoder" class="md-nav__link">
+    run_decoder()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.string_too_long" class="md-nav__link">
+    string_too_long()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity" class="md-nav__link">
+    TransformerSemanticSimilarity
+  </a>
+  
+    <nav class="md-nav" aria-label="TransformerSemanticSimilarity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.compute_embedding" class="md-nav__link">
+    compute_embedding()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.compute_embedding_batch" class="md-nav__link">
+    compute_embedding_batch()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.metric" class="md-nav__link">
+    metric()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.tts.flowtron.FlowtronTTS" class="md-nav__link">
+    FlowtronTTS
+  </a>
+  
+    <nav class="md-nav" aria-label="FlowtronTTS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.get_speaker_ids" class="md-nav__link">
+    get_speaker_ids()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.run" class="md-nav__link">
+    run()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-models" class="md-nav__link">
+    Default Models
+  </a>
+  
+    <nav class="md-nav" aria-label="Default Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fantasy-chatbot" class="md-nav__link">
+    Fantasy Chatbot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantic-similarity-sentence-transformersall-minilm-l6-v2" class="md-nav__link">
+    Semantic Similarity sentence-transformers/all-MiniLM-L6-v2
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flowtrontts-with-waveglow-vocoder" class="md-nav__link">
+    FlowtronTTS with Waveglow vocoder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#speech-to-text-nemo-models" class="md-nav__link">
+    Speech to text NeMo models
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-new-services" class="md-nav__link">
+    Creating new Services
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating new Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-other-services-from-your-service" class="md-nav__link">
+    Using other services from your service
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/" class="md-nav__link">
+        Reference
+      </a>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#how-services-are-configured" class="md-nav__link">
+    How services are configured?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-is-their-api-exposed" class="md-nav__link">
+    How is their API exposed?
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#existing-service-classes" class="md-nav__link">
+    Existing service classes
+  </a>
+  
+    <nav class="md-nav" aria-label="Existing service classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.sequence_classifier.hf_classifier.HfClassifier" class="md-nav__link">
+    HfClassifier
+  </a>
+  
+    <nav class="md-nav" aria-label="HfClassifier">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.sequence_classifier.hf_classifier.HfClassifier.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.sequence_classifier.hf_classifier.HfClassifier.compute_scores_batch" class="md-nav__link">
+    compute_scores_batch()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot" class="md-nav__link">
+    HfChatbot
+  </a>
+  
+    <nav class="md-nav" aria-label="HfChatbot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.create_starter_inputs" class="md-nav__link">
+    create_starter_inputs()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.get_special_tokens" class="md-nav__link">
+    get_special_tokens()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.run" class="md-nav__link">
+    run()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.string_too_long" class="md-nav__link">
+    string_too_long()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.hf_text_generation.HfChatbot.update_inputs_with_results" class="md-nav__link">
+    update_inputs_with_results()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot" class="md-nav__link">
+    BartChatbot
+  </a>
+  
+    <nav class="md-nav" aria-label="BartChatbot">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.get_special_tokens" class="md-nav__link">
+    get_special_tokens()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.run" class="md-nav__link">
+    run()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.run_decoder" class="md-nav__link">
+    run_decoder()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.text_generation.bart.BartChatbot.string_too_long" class="md-nav__link">
+    string_too_long()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity" class="md-nav__link">
+    TransformerSemanticSimilarity
+  </a>
+  
+    <nav class="md-nav" aria-label="TransformerSemanticSimilarity">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.compute_embedding" class="md-nav__link">
+    compute_embedding()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.compute_embedding_batch" class="md-nav__link">
+    compute_embedding_batch()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.metric" class="md-nav__link">
+    metric()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.tts.flowtron.FlowtronTTS" class="md-nav__link">
+    FlowtronTTS
+  </a>
+  
+    <nav class="md-nav" aria-label="FlowtronTTS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.__init__" class="md-nav__link">
+    __init__()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.get_speaker_ids" class="md-nav__link">
+    get_speaker_ids()
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.run" class="md-nav__link">
+    run()
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#default-models" class="md-nav__link">
+    Default Models
+  </a>
+  
+    <nav class="md-nav" aria-label="Default Models">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fantasy-chatbot" class="md-nav__link">
+    Fantasy Chatbot
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#semantic-similarity-sentence-transformersall-minilm-l6-v2" class="md-nav__link">
+    Semantic Similarity sentence-transformers/all-MiniLM-L6-v2
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flowtrontts-with-waveglow-vocoder" class="md-nav__link">
+    FlowtronTTS with Waveglow vocoder
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#speech-to-text-nemo-models" class="md-nav__link">
+    Speech to text NeMo models
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-new-services" class="md-nav__link">
+    Creating new Services
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating new Services">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-other-services-from-your-service" class="md-nav__link">
+    Using other services from your service
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+  <a href="https://github.com/npc-engine/npc-engine/edit/master/docs/inference_engine/models.md" title="Edit this page" class="md-content__button md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20.71 7.04c.39-.39.39-1.04 0-1.41l-2.34-2.34c-.37-.39-1.02-.39-1.41 0l-1.84 1.83 3.75 3.75M3 17.25V21h3.75L17.81 9.93l-3.75-3.75L3 17.25Z"/></svg>
+  </a>
+
+
+  <h1>Services</h1>
+
+<p>Service classes are specific implementations of API classes. 
+They define the loading process in <code>__init__</code> function and 
+all the abstract methods required by the API class to function.</p>
+<h2 id="how-services-are-configured">How services are configured?</h2>
+<p><a href="../reference/#npc_engine.server.metadata_manager.MetadataManager">MetadataManager</a> Scans the models folder. For each discovered subfolder ServiceManager validates the <code>config.yml</code> and creates descriptors with metadata for each service. The mandatory field of <code>config.yml</code> is <code>type</code> (or <code>model_type</code>) that must contain correct service class that was discovered and registered by <code>BaseService</code> parent class. This service class will be instantiated with parsed dictionary as parameters on <a href="../reference/#npc_engine.server.control_service.ControlService.start_service">ControlService.start_service</a> request to <code>control</code> service. </p>
+<h2 id="how-is-their-api-exposed">How is their API exposed?</h2>
+<p>When service is started <a href="../reference/#npc_engine.server.control_service.ControlService">ControlService</a> starts a new process with <a href="../reference/#npc_engine.services.base_service.BaseService">BaseService</a> message handling loop. <a href="../reference/#npc_engine.services.base_service.BaseService">BaseService</a> handles ZMQ IPC requests to it's exposed functions from API's API_METHODS class variable to the main process, while main process handles routing requests to this service. </p>
+<h2 id="existing-service-classes">Existing service classes</h2>
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h3 id="npc_engine.services.sequence_classifier.hf_classifier.HfClassifier" class="doc doc-heading">
+          <code>npc_engine.services.sequence_classifier.hf_classifier.HfClassifier</code>
+
+
+
+</h3>
+
+
+    <div class="doc doc-contents first">
+        <p class="doc doc-class-bases">
+          Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.sequence_classifier.sequence_classifier_base.SequenceClassifierAPI" href="../reference/#npc_engine.services.sequence_classifier.sequence_classifier_base.SequenceClassifierAPI">SequenceClassifierAPI</a></code></p>
+
+
+      <p>Huggingface transformers sequence classification.</p>
+<p>Uses ONNX export of Huggingface transformers
+(https://huggingface.co/models) with sequence-classification feature.
+Also requires saved tokenizer with huggingface tokenizers.</p>
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.sequence_classifier.hf_classifier.HfClassifier.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Create and load biencoder model for semantic similarity.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>model_path</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>A path where model config and weights are.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.sequence_classifier.hf_classifier.HfClassifier.compute_scores_batch" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">compute_scores_batch</span><span class="p">(</span><span class="n">texts</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Compute scores.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>texts</code></td>
+          <td>
+                <code><span title="typing.List">List</span>[<span title="typing.Union">Union</span>[str, <span title="typing.Tuple">Tuple</span>[str, str]]]</code>
+          </td>
+          <td><p>Sentence to embed</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+<th>Name</th>        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+<td><code>scores</code></td>          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>Scores for each text</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h3 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot" class="doc doc-heading">
+          <code>npc_engine.services.text_generation.hf_text_generation.HfChatbot</code>
+
+
+
+</h3>
+
+
+    <div class="doc doc-contents first">
+        <p class="doc doc-class-bases">
+          Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.text_generation.text_generation_base.TextGenerationAPI" href="../reference/#npc_engine.services.text_generation.text_generation_base.TextGenerationAPI">TextGenerationAPI</a></code></p>
+
+
+      <p>Chatbot that uses Huggingface transformer architectures.</p>
+<p>ONNX export of Huggingface transformer is required (see https://huggingface.co/docs/transformers/serialization).
+Features seq2seq-lm, causal-lm, seq2seq-lm-with-past, causal-lm-with-past are supported</p>
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">repetition_penalty</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">trunc_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="n">num_sampled</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Create the chatbot from config args and kwargs.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>model_path</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>path to scan for model files (weights and configs)</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>max_length</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>stop generation at this number of tokens</p></td>
+          <td>
+                <code>100</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>min_length</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>model can't stop generating text before it's atleast
+this long in tokens</p></td>
+          <td>
+                <code>2</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>repetition_penalty</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>probability coef for same tokens to appear multiple times</p></td>
+          <td>
+                <code>1</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>trunc_length</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>length to truncate model prompt to</p></td>
+          <td>
+                <code>512</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.create_starter_inputs" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">create_starter_inputs</span><span class="p">(</span><span class="n">prompt</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Create starter inputs for the model.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>prompt</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Prompt to start generation from.</p></td>
+          <td>
+                <code>&#39;&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, <span title="typing.Any">Any</span>]</code>
+          </td>
+          <td><p>Dict of inputs to the model</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.get_special_tokens" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_special_tokens</span><span class="p">()</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Return dict of special tokens to be renderable from template.</p>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.run" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">run</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">topk</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Run text generation from given prompt and parameters.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>prompt</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Formatted prompt.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>temperature</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Temperature parameter for sampling.
+Controls how random model output is: more temperature - more randomness</p></td>
+          <td>
+                <code>1.0</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>topk</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>If not none selects top n of predictions to sample from during generation.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Generated text</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.string_too_long" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">string_too_long</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Check if prompt is too long for the model.</p>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.text_generation.hf_text_generation.HfChatbot.update_inputs_with_results" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">update_inputs_with_results</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">results</span><span class="p">,</span> <span class="n">decoded_tokens</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Update inputs with results from model.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>inputs</code></td>
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, <span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span>]</code>
+          </td>
+          <td><p>Inputs to the model</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>results</code></td>
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, <span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span>]</code>
+          </td>
+          <td><p>Results from the model</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, <span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span>]</code>
+          </td>
+          <td><p>Updated inputs</p></td>
+        </tr>
+        <tr>
+          <td>
+                <code><span title="typing.Dict">Dict</span>[str, <span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span>]</code>
+          </td>
+          <td><p>Finished generation</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h3 id="npc_engine.services.text_generation.bart.BartChatbot" class="doc doc-heading">
+          <code>npc_engine.services.text_generation.bart.BartChatbot</code>
+
+
+
+</h3>
+
+
+    <div class="doc doc-contents first">
+        <p class="doc doc-class-bases">
+          Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.text_generation.text_generation_base.TextGenerationAPI" href="../reference/#npc_engine.services.text_generation.text_generation_base.TextGenerationAPI">TextGenerationAPI</a></code></p>
+
+
+      <p>BART based chatbot implementation class.</p>
+<p>This model class requires two ONNX models <code>encoder_bart.onnx</code> and <code>decoder_bart.onnx</code>
+that correspond to encoder and decoder from transformers
+<a href="https://huggingface.co/transformers/model_doc/encoderdecoder.html">EncoderDecoderModel</a>
+and a tokenizer.json with huggingface tokenizers definition.</p>
+<p>encoder_bart.onnx spec:</p>
+<pre><code>- inputs:
+    `input_ids`
+- outputs:
+    `encoder_hidden_state`
+</code></pre>
+<p>decoder_bart.onnx spec:</p>
+<pre><code>- inputs:
+    `encoder_hidden_state`
+    `decoder_input_ids`
+- outputs:
+    `logits`
+</code></pre>
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.text_generation.bart.BartChatbot.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_steps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">min_length</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">bos_token_id</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">eos_token_id</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">pad_token_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sep_token_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">trunc_length</span><span class="o">=</span><span class="mi">512</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Create the chatbot from config args and kwargs.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>model_path</code></td>
+          <td>
+          </td>
+          <td><p>path to scan for model files (weights and configs)</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>max_steps</code></td>
+          <td>
+          </td>
+          <td><p>stop generation at this number of tokens</p></td>
+          <td>
+                <code>100</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>min_length</code></td>
+          <td>
+          </td>
+          <td><p>model can't stop generating text before it's atleast
+this long in tokens</p></td>
+          <td>
+                <code>2</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>bos_token_id</code></td>
+          <td>
+          </td>
+          <td><p>beginning of sequence token id</p></td>
+          <td>
+                <code>0</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>eos_token_id</code></td>
+          <td>
+          </td>
+          <td><p>end of sequence token id</p></td>
+          <td>
+                <code>2</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>pad_token_id</code></td>
+          <td>
+          </td>
+          <td><p>padding token id</p></td>
+          <td>
+                <code>1</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>sep_token_id</code></td>
+          <td>
+          </td>
+          <td><p>token id for separating sequence into multiple parts</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.text_generation.bart.BartChatbot.get_special_tokens" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_special_tokens</span><span class="p">()</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Retrun dict of special tokens to be renderable from template.</p>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.text_generation.bart.BartChatbot.run" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">run</span><span class="p">(</span><span class="n">prompt</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">topk</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_sampled</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Run text generation from given prompt and parameters.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>prompt</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Fromatted prompt.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>temperature</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Temperature parameter for sampling.
+Controls how random model output is: more temperature - more randomness</p></td>
+          <td>
+                <code>1.0</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>topk</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>If not none selects top n of predictions to sample from during generation.</p></td>
+          <td>
+                <code>None</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>num_sampled</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>Number of token sequences to generate. Best one is selected by model confidence.</p></td>
+          <td>
+                <code>3</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Generated text</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.text_generation.bart.BartChatbot.run_decoder" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">run_decoder</span><span class="p">(</span><span class="n">encoder_hidden_state</span><span class="p">,</span> <span class="n">temperature</span><span class="p">,</span> <span class="n">topk</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Run decoder model on given encoder hidden state.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>encoder_hidden_state</code></td>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>Encoder hidden state.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>temperature</code></td>
+          <td>
+                <code>float</code>
+          </td>
+          <td><p>Temperature parameter for sampling.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>topk</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>If not none selects top n of predictions to sample from during generation.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="typing.Tuple">Tuple</span>[<span title="typing.List">List</span>[float], <span title="typing.List">List</span>[float]]</code>
+          </td>
+          <td><p>(Decoded tokens, sequence probabilities)</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.text_generation.bart.BartChatbot.string_too_long" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">string_too_long</span><span class="p">(</span><span class="n">prompt</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Check if prompt is too long for the model.</p>
+
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h3 id="npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity" class="doc doc-heading">
+          <code>npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity</code>
+
+
+
+</h3>
+
+
+    <div class="doc doc-contents first">
+        <p class="doc doc-class-bases">
+          Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.similarity.similarity_base.SimilarityAPI" href="../reference/#npc_engine.services.similarity.similarity_base.SimilarityAPI">SimilarityAPI</a></code></p>
+
+
+      <p>Huggingface transformers semantic similarity.</p>
+<p>Uses ONNX export of Huggingface transformers
+(https://huggingface.co/models) with biencoder architecture.
+Also requires a tokenizer.json with huggingface tokenizers definition.</p>
+<p>model.onnx spec:</p>
+<pre><code>- inputs:
+    `input_ids` of shape `(batch_size, sequence)`
+    `attention_mask` of shape `(batch_size, sequence)`
+    (Optional) `input_type_ids` of shape `(batch_size, sequence)`
+- outputs:
+    `token_embeddings` of shape `(batch_size, sequence, hidden_size)`
+</code></pre>
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">metric</span><span class="o">=</span><span class="s1">&#39;dot&#39;</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Create and load biencoder model for semantic similarity.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>model_path</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>A path where model config and weights are</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>metric</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>distance to compute semantic similarity</p></td>
+          <td>
+                <code>&#39;dot&#39;</code>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.compute_embedding" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">compute_embedding</span><span class="p">(</span><span class="n">line</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Compute sentence embedding.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>line</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Sentence to embed</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>Embedding of shape (1, embedding_size)</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.compute_embedding_batch" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">compute_embedding_batch</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Compute line embeddings in batch.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>lines</code></td>
+          <td>
+                <code><span title="typing.List">List</span>[str]</code>
+          </td>
+          <td><p>List of sentences to embed</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>Embedding batch of shape (batch_size, embedding_size)</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.similarity.similarity_transformers.TransformerSemanticSimilarity.metric" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">metric</span><span class="p">(</span><span class="n">embedding_a</span><span class="p">,</span> <span class="n">embedding_b</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Similarity between two embeddings.</p>
+<p>Embeddings are of broadcastable shapes. (1 or batch_size)</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>embedding_a</code></td>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>Embedding of shape (1 or batch_size, embedding_size)</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>embedding_b</code></td>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>Embedding of shape (1 or batch_size, embedding_size)</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span></code>
+          </td>
+          <td><p>Vector of distances (batch_size or 1,)</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-class">
+
+
+
+<h3 id="npc_engine.services.tts.flowtron.FlowtronTTS" class="doc doc-heading">
+          <code>npc_engine.services.tts.flowtron.FlowtronTTS</code>
+
+
+
+</h3>
+
+
+    <div class="doc doc-contents first">
+        <p class="doc doc-class-bases">
+          Bases: <code><a class="autorefs autorefs-internal" title="npc_engine.services.tts.tts_base.TextToSpeechAPI" href="../reference/#npc_engine.services.tts.tts_base.TextToSpeechAPI">TextToSpeechAPI</a></code></p>
+
+
+      <p>Implements Flowtron architecture inference.</p>
+<p>Paper:
+<a href="https://arxiv.org/abs/2005.05957">arXiv:2005.05957</a>
+Code:
+https://github.com/NVIDIA/flowtron</p>
+<p>Onnx export script can be found in this fork https://github.com/npc-engine/flowtron.</p>
+<p>This model class requires four ONNX models <code>encoder.onnx</code>, <code>backward_flow.onnx</code>,
+<code>forward_flow.onnx</code> and <code>vocoder.onnx</code> where first three are layers from Flowtron
+architecture (<code>flow</code> corresponding to one direction pass of affine coupling layers)
+and <code>vocoder.onnx</code> is neural vocoder.</p>
+<p>For detailed specs refer to https://github.com/npc-engine/flowtron.</p>
+
+
+
+
+
+  <div class="doc doc-children">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.__init__" class="doc doc-heading">
+<code class="highlight language-python"><span class="fm">__init__</span><span class="p">(</span><span class="n">model_path</span><span class="p">,</span> <span class="n">max_frames</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">gate_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">smoothing_window</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">smoothing_weight</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_speakers</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Create and load Flowtron and vocoder models.</p>
+
+    </div>
+
+  </div>
+
+
+
+
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.get_speaker_ids" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">get_speaker_ids</span><span class="p">()</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Return available ids of different speakers.</p>
+
+    </div>
+
+  </div>
+
+
+
+  <div class="doc doc-object doc-function">
+
+
+
+<h4 id="npc_engine.services.tts.flowtron.flowtron.FlowtronTTS.run" class="doc doc-heading">
+<code class="highlight language-python"><span class="n">run</span><span class="p">(</span><span class="n">speaker_id</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">n_chunks</span><span class="p">)</span></code>
+
+
+</h4>
+
+
+    <div class="doc doc-contents ">
+
+      <p>Create a generator for iterative generation of speech.</p>
+
+  <p><strong>Parameters:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Description</th>
+        <th>Default</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td><code>speaker_id</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Id of the speaker.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>text</code></td>
+          <td>
+                <code>str</code>
+          </td>
+          <td><p>Text to generate speech from.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+        <tr>
+          <td><code>n_chunks</code></td>
+          <td>
+                <code>int</code>
+          </td>
+          <td><p>Number of chunks to split generation into.</p></td>
+          <td>
+              <em>required</em>
+          </td>
+        </tr>
+    </tbody>
+  </table>
+
+  <p><strong>Returns:</strong></p>
+  <table>
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+        <tr>
+          <td>
+                <code><span title="typing.Iterator">Iterator</span>[<span title="numpy">np</span>.<span title="numpy.ndarray">ndarray</span>]</code>
+          </td>
+          <td><p>Generator that yields next chunk of speech in the form of f32 ndarray.</p></td>
+        </tr>
+    </tbody>
+  </table>
+
+    </div>
+
+  </div>
+
+
+
+
+
+  </div>
+
+    </div>
+
+  </div>
+
+<h2 id="default-models">Default Models</h2>
+<ul>
+<li>
+<h3 id="fantasy-chatbot">Fantasy Chatbot</h3>
+<p><a href="../reference/#npc_engine.services.text_generation.bart.BartChatbot">BartChatbot</a>
+trained on <a href="https://parl.ai/projects/light/">LIGHT Dataset</a>. 
+Model consumes both self, other personas and location dialogue is happening in.</p>
+</li>
+</ul>
+<!-- TODO: Change context to better reflect the required arguments, describe context and custom tokens -->
+
+<ul>
+<li>
+<h3 id="semantic-similarity-sentence-transformersall-minilm-l6-v2">Semantic Similarity sentence-transformers/all-MiniLM-L6-v2</h3>
+<p>Onnx export of <a href="https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2">sentence-transformers/all-MiniLM-L6-v2</a>.</p>
+</li>
+<li>
+<h3 id="flowtrontts-with-waveglow-vocoder">FlowtronTTS with Waveglow vocoder</h3>
+<p>Nvidia's <a href="https://github.com/NVIDIA/flowtron">FlowtronTTS</a> architecture using Waveglow vocoder. 
+Weights were published by the authors, this model uses 
+<a href="https://drive.google.com/file/d/1sKTImKkU0Cmlhjc_OeUDLrOLIXvUPwnO/view">Flowtron LibriTTS2K</a> version.</p>
+</li>
+<li>
+<h3 id="speech-to-text-nemo-models">Speech to text NeMo models</h3>
+<p>This model is still heavy WIP it is best to use your platform's of choice existing solutions
+e.g. <a href="https://docs.unity3d.com/ScriptReference/Windows.Speech.DictationRecognizer.html">UnityEngine.Windows.Speech.DictationRecognizer</a> in Unity.  </p>
+<p>This implementation uses several models exported from <a href="https://github.com/NVIDIA/NeMo">NeMo</a> toolkit:</p>
+<ul>
+<li><a href="https://catalog.ngc.nvidia.com/orgs/nvidia/models/quartznet15x5">QuartzNet15x5</a> for transcription.</li>
+<li><a href="https://catalog.ngc.nvidia.com/orgs/nvidia/teams/nemo/models/punctuation_en_bert">Punctuation BERT</a> for applying punctuation.</li>
+<li>Custom transformer for recognizing end of response to the context initialized from <a href="nreimers/MiniLM-L6-H384-uncased">all-MiniLM-L6-v2</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="creating-new-services">Creating new Services</h2>
+<p>You can use this dummy model example to create your own:</p>
+<pre><code class="language-python">from npc_engine.services.text_generation.text_generation_base import TextGenerationAPI
+
+class EchoService(TextGenerationAPI):
+
+    def __init__(self, model_path:str, *args, **kwargs):
+        print(&quot;model is in {model_path}&quot;)
+
+    def get_special_tokens(self):
+        return {}
+
+    def run(self, prompt, temperature=1, topk=None):
+        return prompt
+</code></pre>
+<div class="admonition note">
+<p class="admonition-title">Dont forget</p>
+<p>Import new model to npc-engine.services so that it is discovered. </p>
+</div>
+<h3 id="using-other-services-from-your-service">Using other services from your service</h3>
+<p>You can use other services from your service by using service clients.</p>
+<p>They can be created from inside the service with <code>self.create_client(name)</code> where <code>name</code> is the name of the dependency.
+These clients expose the same API as the dependency and can be just called from your service.</p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../api_classes/" class="md-footer__link md-footer__link--prev" aria-label="Previous: API Classes" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              API Classes
+            </div>
+          </div>
+        </a>
+      
+      
+        
+        <a href="../reference/" class="md-footer__link md-footer__link--next" aria-label="Next: Reference" rel="next">
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Reference
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11H4Z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+        <div class="md-social">
+  
+    
+    
+      
+      
+    
+    <a href="https://discord.gg/R4zBNmnfrU" target="_blank" rel="noopener" title="discord.gg" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M524.531 69.836a1.5 1.5 0 0 0-.764-.7A485.065 485.065 0 0 0 404.081 32.03a1.816 1.816 0 0 0-1.923.91 337.461 337.461 0 0 0-14.9 30.6 447.848 447.848 0 0 0-134.426 0 309.541 309.541 0 0 0-15.135-30.6 1.89 1.89 0 0 0-1.924-.91 483.689 483.689 0 0 0-119.688 37.107 1.712 1.712 0 0 0-.788.676C39.068 183.651 18.186 294.69 28.43 404.354a2.016 2.016 0 0 0 .765 1.375 487.666 487.666 0 0 0 146.825 74.189 1.9 1.9 0 0 0 2.063-.676A348.2 348.2 0 0 0 208.12 430.4a1.86 1.86 0 0 0-1.019-2.588 321.173 321.173 0 0 1-45.868-21.853 1.885 1.885 0 0 1-.185-3.126 251.047 251.047 0 0 0 9.109-7.137 1.819 1.819 0 0 1 1.9-.256c96.229 43.917 200.41 43.917 295.5 0a1.812 1.812 0 0 1 1.924.233 234.533 234.533 0 0 0 9.132 7.16 1.884 1.884 0 0 1-.162 3.126 301.407 301.407 0 0 1-45.89 21.83 1.875 1.875 0 0 0-1 2.611 391.055 391.055 0 0 0 30.014 48.815 1.864 1.864 0 0 0 2.063.7A486.048 486.048 0 0 0 610.7 405.729a1.882 1.882 0 0 0 .765-1.352c12.264-126.783-20.532-236.912-86.934-334.541ZM222.491 337.58c-28.972 0-52.844-26.587-52.844-59.239s23.409-59.241 52.844-59.241c29.665 0 53.306 26.82 52.843 59.239 0 32.654-23.41 59.241-52.843 59.241Zm195.38 0c-28.971 0-52.843-26.587-52.843-59.239s23.409-59.241 52.843-59.241c29.667 0 53.307 26.82 52.844 59.239 0 32.654-23.177 59.241-52.844 59.241Z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://www.patreon.com/npcengine" target="_blank" rel="noopener" title="www.patreon.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M512 194.8c0 101.3-82.4 183.8-183.8 183.8-101.7 0-184.4-82.4-184.4-183.8 0-101.6 82.7-184.3 184.4-184.3C429.6 10.5 512 93.2 512 194.8zM0 501.5h90v-491H0v491z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://assetstore.unity.com/packages/tools/ai/npc-engine-208498" target="_blank" rel="noopener" title="assetstore.unity.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="m243.583 91.603 80.112 46.781c2.88 1.642 2.985 6.199 0 7.841l-95.192 55.629a8.747 8.747 0 0 1-8.954 0l-95.192-55.629c-2.932-1.589-2.984-6.252 0-7.841l80.06-46.781V0L0 119.417v238.835l78.384-45.775v-93.563c-.052-3.338 3.823-5.722 6.703-3.921l95.192 55.629a9.092 9.092 0 0 1 4.503 7.842v111.205c.052 3.338-3.823 5.722-6.703 3.92l-80.112-46.781-78.384 45.775L224 512l204.417-119.417-78.384-45.775-80.112 46.781c-2.828 1.749-6.807-.529-6.703-3.92V278.464c0-3.338 1.833-6.305 4.503-7.842l95.193-55.629c2.827-1.748 6.806.477 6.702 3.921v93.563L448 358.252V119.417L243.583 0v91.603Z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://www.youtube.com/channel/UCOtXe2JwUTHXrA4V9DwANlQ" target="_blank" rel="noopener" title="www.youtube.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M549.655 124.083c-6.281-23.65-24.787-42.276-48.284-48.597C458.781 64 288 64 288 64S117.22 64 74.629 75.486c-23.497 6.322-42.003 24.947-48.284 48.597-11.412 42.867-11.412 132.305-11.412 132.305s0 89.438 11.412 132.305c6.281 23.65 24.787 41.5 48.284 47.821C117.22 448 288 448 288 448s170.78 0 213.371-11.486c23.497-6.321 42.003-24.171 48.284-47.821 11.412-42.867 11.412-132.305 11.412-132.305s0-89.438-11.412-132.305zm-317.51 213.508V175.185l142.739 81.205-142.739 81.201z"/></svg>
+    </a>
+  
+    
+    
+    <a href="mailto:hello@npc-engine.com" target="_blank" rel="noopener" title="" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M0 128c0-35.35 28.65-64 64-64h384c35.3 0 64 28.65 64 64v256c0 35.3-28.7 64-64 64H64c-35.35 0-64-28.7-64-64V128zm48 0v22.1l172.5 141.6c20.6 17 50.4 17 71 0L464 150.1v-23c0-7.9-7.2-16-16-16H64c-8.84 0-16 8.1-16 16v.9zm0 84.2V384c0 8.8 7.16 16 16 16h384c8.8 0 16-7.2 16-16V212.2L322 328.8c-38.4 31.5-93.6 31.5-132.9 0L48 212.2z"/></svg>
+    </a>
+  
+    
+    
+      
+      
+    
+    <a href="https://github.com/npc-engine" target="_blank" rel="noopener" title="github.com" class="md-social__link">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"/></svg>
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["header.autohide", "navigation.instant", "navigation.tabs", "navigation.sections"], "search": "../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}, "version": {"default": "stable", "provider": "mike"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.8492ddcf.min.js"></script>
+      
+    
+  </body>
+</html>
