@@ -7,7 +7,7 @@ from dataclasses_json import dataclass_json
 class StrEnum(str, Enum):
     """Class for creating enum str."""
     def __str__(self):
-        """getting source from enum values."""
+        """Get source from enum values."""
         return self.value
 
 
