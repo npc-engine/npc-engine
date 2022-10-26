@@ -1,7 +1,9 @@
 """Control interface client implementation."""
 import zmq
+
 from typing import Any, Dict, List
 from npc_engine.service_clients.service_client import ServiceClient
+from npc_engine.utils import ServerRequest
 
 
 class ControlClient(ServiceClient):
@@ -11,74 +13,45 @@ class ControlClient(ServiceClient):
         """Connect to the server on the port."""
         super().__init__(zmq_context, "control")
 
-    def start_service(self, service_id):
+    def start_service(self, service_id: str):
         """Send a start service request to the server."""
-        request = {
-            "jsonrpc": "2.0",
-            "method": "start_service",
-            "id": 0,
-            "params": [service_id],
-        }
+        request = ServerRequest(jsonrpc="2.0", method="start_service", id=0, params=[service_id]).to_json()
         self.send_request(request)
 
-    def stop_service(self, service_id):
+    def stop_service(self, service_id: str):
         """Send a stop service request to the server."""
-        request = {
-            "jsonrpc": "2.0",
-            "method": "stop_service",
-            "id": 0,
-            "params": [service_id],
-        }
+        request = ServerRequest(jsonrpc="2.0", method="stop_service", id=0, params=[service_id]).to_json()
         self.send_request(request)
 
     def get_service_status(self, service_id) -> str:
         """Send a get service status request to the server."""
-        request = {
-            "jsonrpc": "2.0",
-            "method": "get_service_status",
-            "id": 0,
-            "params": [service_id],
-        }
+        request = ServerRequest(jsonrpc="2.0", method="get_service_status", id=0, params=[service_id]).to_json()
         return self.send_request(request)
 
     def restart_service(self, service_id):
         """Send a restart service request to the server."""
-        request = {
-            "jsonrpc": "2.0",
-            "method": "restart_service",
-            "id": 0,
-            "params": [service_id],
-        }
+        request = ServerRequest(jsonrpc="2.0", method="restart_service", id=0, params=[service_id]).to_json()
         self.send_request(request)
 
     def get_services_metadata(self) -> List[Dict[str, Any]]:
         """Send a get services metadata request to the server."""
-        request = {
-            "jsonrpc": "2.0",
-            "method": "get_services_metadata",
-            "id": 0,
-            "params": [],
-        }
+        request = ServerRequest(jsonrpc="2.0", method="get_services_metadata", id=0, params=[]).to_json()
         return self.send_request(request)
 
     def get_service_metadata(self, service_id: str) -> Dict[str, Any]:
         """Send a get services metadata request to the server."""
-        request = {
-            "jsonrpc": "2.0",
-            "method": "get_service_metadata",
-            "id": 0,
-            "params": [service_id],
-        }
+        request = ServerRequest(
+            jsonrpc="2.0", method="get_service_metadata", id=0, params=[service_id, ]
+        ).to_json()
         return self.send_request(request)
 
     def check_dependency(self, service_id, dependency_id) -> bool:
         """Send a check dependency request to the server."""
-        request = {
-            "jsonrpc": "2.0",
-            "method": "check_dependency",
-            "id": 0,
-            "params": [service_id, dependency_id],
-        }
+
+        request = ServerRequest(
+            jsonrpc="2.0", method="check_dependency", id=0, params=[service_id, dependency_id]
+        ).to_json()
+
         return self.send_request(request)
 
     @classmethod

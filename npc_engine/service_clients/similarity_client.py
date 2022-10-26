@@ -2,6 +2,7 @@
 from typing import List
 import zmq
 from npc_engine.service_clients.service_client import ServiceClient
+from npc_engine.utils import ServerRequest
 
 
 class SimilarityClient(ServiceClient):
@@ -18,14 +19,8 @@ class SimilarityClient(ServiceClient):
             query: A string to compute similarity with contexts.
             context: A list of strings to compute similiarity with query.
         """
-        request = {
-            "jsonrpc": "2.0",
-            "method": "compare",
-            "id": 0,
-            "params": [query, context],
-        }
-        reply = self.send_request(request)
-        return reply
+        request = ServerRequest(jsonrpc="2.0", method="compare", id=0, params=[query, context]).to_json()
+        return self.send_request(request)
 
     @classmethod
     def get_api_name(cls) -> str:
