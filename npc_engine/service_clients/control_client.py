@@ -47,7 +47,6 @@ class ControlClient(ServiceClient):
 
     def check_dependency(self, service_id, dependency_id) -> bool:
         """Send a check dependency request to the server."""
-
         request = ServerRequest(
             jsonrpc="2.0", method="check_dependency", id=0, params=[service_id, dependency_id]
         ).to_json()
