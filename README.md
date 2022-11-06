@@ -105,6 +105,7 @@ If you would like to donate, you can check out our [Patreon](https://www.patreon
 ### Our Patrons
 
 - Marrech Games
+- עינ הרע
 
 ## Authors
 
