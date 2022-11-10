@@ -2,6 +2,7 @@
 from typing import List, Tuple, Union
 import zmq
 from npc_engine.service_clients.service_client import ServiceClient
+from npc_engine.utils import ServerRequest
 
 
 class SequenceClassifierClient(ServiceClient):
@@ -21,14 +22,8 @@ class SequenceClassifierClient(ServiceClient):
         Args:
             texts: Batch of texts to classify.
         """
-        request = {
-            "jsonrpc": "2.0",
-            "method": "classify",
-            "id": 0,
-            "params": [texts],
-        }
-        reply = self.send_request(request)
-        return reply
+        request = ServerRequest(jsonrpc="2.0", method="classify", id=0, params=[texts]).to_json()
+        return self.send_request(request)
 
     @classmethod
     def get_api_name(cls) -> str:

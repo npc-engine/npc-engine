@@ -7,11 +7,13 @@ import zmq.asyncio
 
 from npc_engine import services
 from npc_engine.server.metadata_manager import MetadataManager
+from npc_engine.utils import StrEnum
+
 from jsonrpc import JSONRPCResponseManager, Dispatcher
 from loguru import logger
 
 
-class ServiceState:
+class ServiceState(StrEnum):
     """Enum for the state of the service."""
 
     STARTING = "starting"
@@ -125,7 +127,7 @@ class ControlService:
                     result = ""
                 return result
 
-    def check_service(self, service_id):
+    def check_service(self, service_id: str) -> None:
         """Check if the service process is running."""
         if (
             service_id != "control"
@@ -139,13 +141,13 @@ class ControlService:
             self.services[service_id]["state"] = ServiceState.ERROR
             raise ValueError(f"Error in service {service_id}. Process is not alive.")
 
-    def get_service_status(self, service_id):
+    def get_service_status(self, service_id: str) -> None:
         """Get the status of the service."""
         service_id = self.metadata.resolve_service(service_id, None)
         self.check_service(service_id)
         return self.services[service_id]["state"]
 
-    def start_service(self, service_id):
+    def start_service(self, service_id: str) -> None:
         """Start the service."""
         service_id = self.metadata.resolve_service(service_id, None)
         self.check_service(service_id)
@@ -177,7 +179,7 @@ class ControlService:
             name=f"confirm_state_coroutine_{service_id}",
         )
 
-    async def confirm_state_coroutine(self, service_id):
+    async def confirm_state_coroutine(self, service_id: str) -> None:
         """Confirm the state of the service."""
         request = json.dumps({"jsonrpc": "2.0", "method": "status", "id": 1})
         socket = self.services[service_id]["socket"]
@@ -220,7 +222,7 @@ class ControlService:
             )
             self.services[service_id]["state"] = ServiceState.ERROR
 
-    async def message_dispatch_coroutine(self, service_id: str):
+    async def message_dispatch_coroutine(self, service_id: str) -> None:
         """Dispatch messages from the service."""
         try:
             while self.services[service_id]["state"] == ServiceState.RUNNING:
@@ -238,7 +240,7 @@ class ControlService:
                 logger.error(f"{service_id} is shutting down. Exception: {e}")
                 raise e
 
-    def stop_service(self, service_id):
+    def stop_service(self, service_id: str) -> None:
         """Stop the service."""
         service_id = self.metadata.resolve_service(service_id, None)
         self.check_service(service_id)
@@ -252,12 +254,12 @@ class ControlService:
         self.services[service_id]["dispatch_coroutine"].cancel()
         self.services[service_id]["dispatch_coroutine"] = None
 
-    def restart_service(self, service_id):
+    def restart_service(self, service_id: str) -> None:
         """Restart the service."""
         self.stop_service(service_id)
         self.start_service(service_id)
 
-    def check_dependency(self, service_id, dependency):
+    def check_dependency(self, service_id: str, dependency: str) -> None:
         """Check if the service has the dependency."""
         service_id = self.metadata.resolve_service(service_id, None)
         self.metadata.services[service_id].dependencies.append(dependency)
